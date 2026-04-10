@@ -63,7 +63,7 @@ function renderRiwayatTable($conn, $start, $limit) {
       JOIN pembayaran pby ON t.id_transaksi = pby.id_transaksi
       WHERE LOWER(TRIM(t.status_pesanan)) = 'selesai'
         AND LOWER(TRIM(pby.status)) = 'sudah bayar'
-      GROUP BY t.id_transaksi
+      GROUP BY t.id_transaksi, t.nomor_meja, t.nama_pemesan, t.status_pesanan, t.waktu_pemesanan, t.total, pby.metode, pby.status, pby.waktu_bayar, pby.bukti_file
       ORDER BY pby.waktu_bayar DESC
       LIMIT $start, $limit
     ";
@@ -167,7 +167,7 @@ if (isset($_GET['rekap'])) {
       LEFT JOIN varian_produk vp ON d.id_varian = vp.id_varian
       JOIN pembayaran p ON t.id_transaksi = p.id_transaksi
       WHERE p.status = 'sudah bayar' AND $where
-      GROUP BY t.id_transaksi
+      GROUP BY t.id_transaksi, t.nomor_meja, t.nama_pemesan, t.total, p.metode, p.waktu_bayar
       ORDER BY p.waktu_bayar DESC
     ";
     $res = mysqli_query($conn, $sql);
@@ -527,9 +527,21 @@ document.getElementById("btnCetakPDF").addEventListener("click", () => {
   wrapper.style.fontSize = "13px";
   wrapper.style.lineHeight = "1.5";
   wrapper.style.color = "#333";
-  wrapper.innerHTML = header;
+  wrapper.style.padding = "10px";
+  wrapper.style.background = "#fff";
+
+  // Sisipkan header
+  const headerDiv = document.createElement("div");
+  headerDiv.innerHTML = header;
+  wrapper.appendChild(headerDiv);
+
+  // Sisipkan konten rekap (clone)
   wrapper.appendChild(clone);
-  wrapper.innerHTML += footer;
+
+  // Sisipkan footer — JANGAN pakai innerHTML+= (akan destroy clone di atas)
+  const footerDiv = document.createElement("div");
+  footerDiv.innerHTML = footer;
+  wrapper.appendChild(footerDiv);
 
   // ✅ Tambahkan gaya CSS anti-terpotong ke elemen rekap-item
   const rekapItems = wrapper.querySelectorAll(".rekap-item, .rekap-summary");
@@ -586,10 +598,13 @@ function showNotification(message, type = "error") {
             const data = await res.json();
             console.log("Cek pesanan kasir:", data);
 
+            let initiallyFirst = typeof window.isFirstPoll === 'undefined';
+            window.isFirstPoll = false;
+
             if (data.ada_pesanan) {
-              if (lastOrderId === null) {
+              if (initiallyFirst && lastOrderId === null) {
                 lastOrderId = data.id;
-              } else if (data.id !== lastOrderId) {
+              } else if (lastOrderId === null || Number(data.id) > Number(lastOrderId)) {
                 lastOrderId = data.id;
                 showNotificationKasir();
               }

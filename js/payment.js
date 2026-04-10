@@ -259,7 +259,7 @@ function closeReceipt() {
   localStorage.removeItem("cart");
   const modal = document.getElementById("receiptModal");
   if (modal) modal.style.display = "none";
-  window.location.href = "/Project/menu.php";
+  window.location.href = "/seraya/menu.php";
 }
 
 // MAIN
@@ -382,7 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Tunggu sedikit biar user lihat notifikasi lalu bersihkan cart & redirect
         setTimeout(() => {
           localStorage.removeItem("cart");
-          window.location.href = "/Project/menu.php";
+          window.location.href = "/seraya/menu.php";
         }, 1200);
       } catch (err) {
         console.error("❌ Error saat proses bayar di kasir:", err);

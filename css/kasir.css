@@ -1042,7 +1042,7 @@ body::before {
 }
 
 /* ✅ 820px - Tablet besar (tetap dua kolom, layout menyesuaikan) */
-@media (max-width: 820px) {
+@media (max-width: 840px) {
   html {
     font-size: 80%;
   }
@@ -1420,5 +1420,29 @@ body::before {
     margin: 0 4px;
     color: #b71c1c;
     font-weight: 600;
+  }
+
+  /* ✅ Responsive Modal Rekap (Mobile) */
+  #rekapModal {
+    padding: 15px;
+    box-sizing: border-box;
+  }
+  #rekapModal .modal-content {
+    width: 100%;
+    max-width: 340px;
+    padding: 20px 15px;
+    border-radius: 16px;
+    max-height: 85vh;
+  }
+  #rekapModal .modal-content h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  #rekapModal .modal-content .btn-cetak,
+  #rekapModal .modal-content #closeRekapModal {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    font-size: 13px;
   }
 }

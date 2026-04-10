@@ -39,10 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Redirect sesuai level
             if ($row['level'] === 'admin') {
-                header("Location: /Project/admin_kasir/dashboard.php");
+                header("Location: /seraya/admin_kasir/dashboard.php");
                 exit;
             } elseif ($row['level'] === 'super admin') {
-                header("Location: /Project/admin_dapur/dashboard.php");
+                header("Location: /seraya/admin_dapur/dashboard.php");
                 exit;
             } else {
                 echo "<script>alert('Level tidak dikenali!'); window.location.href='login.php';</script>";

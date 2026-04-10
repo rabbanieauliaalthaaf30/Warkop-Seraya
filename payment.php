@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['keranjang'])) {
 
     // Insert pembayaran awal
     $sqlBayar = "INSERT INTO pembayaran (id_transaksi, metode, jumlah, status, bukti_file)
-                 VALUES ('$id_transaksi', '', '$total', 'belum bayar', NULL)";
+                 VALUES ('$id_transaksi', 'cash', '$total', 'belum bayar', NULL)";
     if (!mysqli_query($conn, $sqlBayar)) die("Error insert pembayaran: " . mysqli_error($conn));
 
     header("Location: payment.php?id=" . $id_transaksi);
@@ -57,10 +57,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['orderId']) && !isset(
 
     // ===== Upload bukti (jika ada) =====
     if (isset($_FILES['buktiBayar']) && $_FILES['buktiBayar']['error'] === UPLOAD_ERR_OK) {
+        $allowedExts = ['jpg', 'jpeg', 'png', 'webp'];
+        $ext = strtolower(pathinfo($_FILES['buktiBayar']['name'], PATHINFO_EXTENSION));
+
+        if (!in_array($ext, $allowedExts)) {
+            echo json_encode(["success" => false, "message" => "Format file bukti tidak valid. Hanya JPG, PNG, atau WEBP."]);
+            exit;
+        }
+
         $uploadDir = __DIR__ . "/uploads/";
         if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
-        $fileName = time() . "_" . basename($_FILES['buktiBayar']['name']);
+        // Bersihkan nama file agar lebih aman
+        $safeFileName = preg_replace("/[^a-zA-Z0-9.\-_]/", "", basename($_FILES['buktiBayar']['name']));
+        $fileName = time() . "_" . $safeFileName;
         $targetFile = $uploadDir . $fileName;
 
         if (move_uploaded_file($_FILES['buktiBayar']['tmp_name'], $targetFile)) {

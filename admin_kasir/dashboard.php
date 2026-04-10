@@ -150,10 +150,13 @@ if (!isset($_SESSION['username'])) {
             const data = await res.json();
             console.log("Cek pesanan kasir:", data);
 
+            let initiallyFirst = typeof window.isFirstPoll === 'undefined';
+            window.isFirstPoll = false;
+
             if (data.ada_pesanan) {
-              if (lastOrderId === null) {
+              if (initiallyFirst && lastOrderId === null) {
                 lastOrderId = data.id;
-              } else if (data.id !== lastOrderId) {
+              } else if (lastOrderId === null || Number(data.id) > Number(lastOrderId)) {
                 lastOrderId = data.id;
                 showNotificationKasir();
               }
