@@ -1,103 +1,206 @@
-/* ===== Modal Blur Elegan (selaras dengan login) ===== */
+/* ============================================================
+   WARKOP SERAYA — LOGOUT MODAL (Premium Modern)
+   ============================================================ */
+
+/* ── Overlay backdrop ── */
 .modal {
   display: none;
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 9999;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(10px);
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(15, 7, 7, 0.4);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modal.show {
   display: flex;
   opacity: 1;
-  animation: fadeIn 0.5s ease forwards;
+  animation: overlayIn 0.4s ease forwards;
 }
 
-/* Box modal mirip login box */
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Modal card ── */
 .modal-content {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(12px);
-  padding: 35px 30px;
-  border-radius: 20px;
-  text-align: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 28px;
+  padding: 48px 40px 36px;
   max-width: 400px;
-  width: 90%;
-  color: #333;
+  width: 92%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.4);
 
-  /* shadow sama vibe login */
-  border: 2px solid transparent;
-  background-clip: padding-box;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 0 20px rgba(220, 20, 60, 0.12);
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.2),
+    0 10px 40px rgba(220, 20, 60, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 
-  animation: fadeInUp 0.5s ease;
+  animation: cardEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Judul modal */
+@keyframes cardEnter {
+  from { opacity: 0; transform: scale(0.92) translateY(30px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+/* Top accent line with gradient */
+.modal-content::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #dc143c, #ff6b81, #dc143c);
+  background-size: 200% auto;
+  animation: gradientFlow 3s linear infinite;
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ── Premium Icon Container ── */
+.icon-box {
+  width: 80px;
+  height: 80px;
+  background: rgba(220, 20, 60, 0.08);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  position: relative;
+  font-size: 36px;
+  animation: iconPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.icon-box::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border: 2px dashed rgba(220, 20, 60, 0.2);
+  border-radius: 30px;
+  animation: rotateDashed 12s linear infinite;
+}
+
+@keyframes rotateDashed {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes iconPop {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* ── Typography ── */
 .modal-content h2 {
-  font-size: 1.4rem;
-  margin-bottom: 20px;
-  font-weight: bold;
-  color: var(--primary);
-  text-shadow: 1px 1px 3px rgba(1, 1, 3, 0.4);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
 }
 
-/* Tombol */
+.modal-content p {
+  font-size: 14px;
+  color: #666;
+  font-weight: 400;
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+/* ── Buttons ── */
 .modal-actions {
   display: flex;
-  gap: 14px;
+  gap: 16px;
   justify-content: center;
 }
 
 .modal-actions button {
   flex: 1;
-  padding: 12px 16px;
+  padding: 14px 20px;
   border: none;
-  border-radius: 10px;
+  border-radius: 16px;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
+  font-weight: 700;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.01em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Tombol Logout */
+/* Shimmer effect */
+.modal-actions button::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+}
+
+.modal-actions button:hover::after {
+  left: 150%;
+}
+
+/* Logout Button */
 #confirmLogout {
-  background: var(--primary);
+  background: #dc143c;
   color: #fff;
-  box-shadow: 0 5px 15px rgba(220, 20, 60, 0.25);
+  box-shadow: 0 8px 24px rgba(220, 20, 60, 0.3);
 }
 
 #confirmLogout:hover {
-  background: #c34760;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(220, 20, 60, 0.35);
+  background: #c21237;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(220, 20, 60, 0.45);
 }
 
-/* Tombol Batal */
+/* Cancel Button */
 #cancelLogout {
-  background: rgba(255, 255, 255, 0.9);
-  color: #333;
-  border: 1px solid #ddd;
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+  background: #f8f9fa;
+  color: #495057;
+  border: 1px solid #e9ecef;
 }
 
 #cancelLogout:hover {
-  background: #f7f7f7;
-  transform: translateY(-2px);
+  background: #e9ecef;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
 }
 
-/* Animasi */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+/* ── Exit Animations ── */
+.modal.hide {
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
+
+.modal.hide .modal-content {
+  transform: scale(0.9) translateY(20px);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 40px 24px 28px;
+  }
+  .modal-content h2 { font-size: 1.3rem; }
+  .icon-box { width: 70px; height: 70px; font-size: 30px; }
+}
+

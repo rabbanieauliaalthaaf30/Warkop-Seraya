@@ -9,13 +9,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const openModal = () => {
     if (!modal) return;
+    modal.classList.remove("hide");
     modal.classList.add("show");
     document.body.classList.add("modal-open");
   };
   const closeModal = () => {
     if (!modal) return;
-    modal.classList.remove("show");
-    document.body.classList.remove("modal-open");
+    modal.classList.add("hide");
+    setTimeout(() => {
+      modal.classList.remove("show");
+      modal.classList.remove("hide");
+      document.body.classList.remove("modal-open");
+    }, 280);
   };
 
   if (logoutBtn) {

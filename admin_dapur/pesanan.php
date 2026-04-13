@@ -180,7 +180,9 @@ if (isset($_GET['ajax'])) {
   <!-- Logout -->
   <div id="logoutModal" class="modal">
     <div class="modal-content">
+      <div class="icon-box">🚪</div>
       <h2>Yakin ingin logout?</h2>
+      <p>Sesi Anda akan diakhiri dan Anda diarahkan kembali ke halaman login.</p>
       <div class="modal-actions">
         <button id="confirmLogout">Ya, Logout</button>
         <button id="cancelLogout">Batal</button>
@@ -273,7 +275,7 @@ async function checkNewOrder() {
         lastOrderId = data.id;
       } else if (lastOrderId === null || Number(data.id) > Number(lastOrderId)) {
         lastOrderId = data.id;
-        showNotification();
+        playOrderNotification();
       }
     }
   } catch (err) {
@@ -282,7 +284,7 @@ async function checkNewOrder() {
 }
 
 // 🔔 Tampilkan notifikasi dan bunyi
-function showNotification() {
+function playOrderNotification() {
   const box = document.getElementById("notifBox");
   const audio = document.getElementById("notifAudio");
 

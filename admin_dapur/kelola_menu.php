@@ -72,34 +72,42 @@ include "../koneksi.php";
   <div class="popup-kelolamenu" id="popupTambah">
     <div class="popup-content">
       <span class="close-popup" id="closeTambah">&times;</span>
+      <div class="icon-box">🍕</div>
       <h3>Tambah Menu Baru</h3>
 
       <form id="formTambah" enctype="multipart/form-data">
         <div class="form-group">
           <label>Nama Produk</label>
-          <input type="text" name="nama_produk" required>
+          <input type="text" name="nama_produk" placeholder="Nama Produk" required>
         </div>
 
         <div class="form-group">
           <label>Kategori</label>
-          <input type="text" name="kategori" required>
+          <input type="text" name="kategori" placeholder="Kategori Produk" required>
         </div>
 
         <div class="form-group">
           <label>Harga Dasar</label>
-          <input type="number" name="harga_dasar" required>
+          <input type="number" name="harga_dasar" placeholder="0" required>
         </div>
 
-        <label>Varian & Harga</label>
+        <div class="varian-section-label">Varian & Harga</div>
+        <div class="varian-header">
+          <span>Nama Varian</span>
+          <span>Harga</span>
+          <span></span>
+        </div>
         <div id="varian-container">
           <div class="varian-row">
-            <input type="text" name="varian_nama[]" placeholder="Nama varian">
-            <input type="number" name="varian_harga[]" placeholder="Harga varian">
-            <button type="button" class="remove-varian">&times;</button>
+            <input type="text" name="varian_nama[]" placeholder="Varian Produk">
+            <input type="number" name="varian_harga[]" placeholder="0">
+            <button type="button" class="remove-varian"><i data-feather="trash-2"></i></button>
           </div>
         </div>
 
-        <button type="button" class="btn-tambah-varian" id="addVarian">+ Tambah Varian</button>
+        <button type="button" class="btn-tambah-varian" id="addVarian">
+          <i data-feather="plus-circle"></i> Tambah Varian
+        </button>
 
         <div class="form-group">
           <label>Upload Gambar</label>
@@ -107,7 +115,7 @@ include "../koneksi.php";
         </div>
 
         <div class="popup-actions">
-          <button type="submit" class="btn-simpan">Simpan</button>
+          <button type="submit" class="btn-simpan">Simpan Menu</button>
           <button type="button" class="btn-cancel" id="cancelTambah">Batal</button>
         </div>
       </form>
@@ -118,6 +126,7 @@ include "../koneksi.php";
   <div class="popup-kelolamenu" id="popupEdit">
     <div class="popup-content">
       <span class="close-popup" id="closeEdit">&times;</span>
+      <div class="icon-box">📝</div>
       <h3>Edit Menu</h3>
 
       <form id="formEdit" enctype="multipart/form-data">
@@ -138,9 +147,16 @@ include "../koneksi.php";
           <input type="number" name="harga_dasar" id="edit_harga_dasar" required>
         </div>
 
-        <label>Varian & Harga</label>
+        <div class="varian-section-label">Varian & Harga</div>
+        <div class="varian-header">
+          <span>Nama Varian</span>
+          <span>Harga</span>
+          <span></span>
+        </div>
         <div id="edit-varian-container"></div>
-        <button type="button" class="btn-tambah-varian" id="addEditVarian">+ Tambah Varian</button>
+        <button type="button" class="btn-tambah-varian" id="addEditVarian">
+          <i data-feather="plus-circle"></i> Tambah Varian
+        </button>
 
         <div class="form-group">
           <label>Ganti Gambar</label>
@@ -148,7 +164,7 @@ include "../koneksi.php";
         </div>
 
         <div class="popup-actions">
-          <button type="submit" class="btn-update">Update</button>
+          <button type="submit" class="btn-update">Update Menu</button>
           <button type="button" class="btn-cancel" id="cancelEdit">Batal</button>
         </div>
       </form>
@@ -170,7 +186,9 @@ include "../koneksi.php";
   <!-- Logout -->
   <div id="logoutModal" class="modal">
     <div class="modal-content">
+      <div class="icon-box">🚪</div>
       <h2>Yakin ingin logout?</h2>
+      <p>Sesi Anda akan diakhiri dan Anda diarahkan kembali ke halaman login.</p>
       <div class="modal-actions">
         <button id="confirmLogout">Ya, Logout</button>
         <button id="cancelLogout">Batal</button>
@@ -207,10 +225,11 @@ include "../koneksi.php";
     const c = document.getElementById('varian-container');
     const r = document.createElement('div');
     r.classList.add('varian-row');
-    r.innerHTML = `<input type="text" name="varian_nama[]" placeholder="Nama varian">
-                   <input type="number" name="varian_harga[]" placeholder="Harga varian">
-                   <button type="button" class="remove-varian">&times;</button>`;
+    r.innerHTML = `<input type="text" name="varian_nama[]" placeholder="Varian">
+                   <input type="number" name="varian_harga[]" placeholder="0">
+                   <button type="button" class="remove-varian"><i data-feather="trash-2"></i></button>`;
     c.appendChild(r);
+    feather.replace();
   };
   document.addEventListener('click', e => {
     if (e.target.classList.contains('remove-varian')) e.target.parentElement.remove();
@@ -260,10 +279,11 @@ include "../koneksi.php";
           r.classList.add('varian-row');
           r.innerHTML = `<input type="text" name="varian_nama[]" value="${v.nama_varian}">
                          <input type="number" name="varian_harga[]" value="${v.harga_varian}">
-                         <button type="button" class="remove-varian">&times;</button>`;
+                         <button type="button" class="remove-varian"><i data-feather="trash-2"></i></button>`;
           c.appendChild(r);
         });
       }
+      feather.replace();
       popupEdit.classList.add('active');
     } catch {
       showNotification('error', 'Gagal mengambil data menu');
@@ -274,10 +294,11 @@ include "../koneksi.php";
     const c = document.getElementById('edit-varian-container');
     const r = document.createElement('div');
     r.classList.add('varian-row');
-    r.innerHTML = `<input type="text" name="varian_nama[]" placeholder="Nama varian">
-                   <input type="number" name="varian_harga[]" placeholder="Harga">
-                   <button type="button" class="remove-varian">&times;</button>`;
+    r.innerHTML = `<input type="text" name="varian_nama[]" placeholder="Varian">
+                   <input type="number" name="varian_harga[]" placeholder="0">
+                   <button type="button" class="remove-varian"><i data-feather="trash-2"></i></button>`;
     c.appendChild(r);
+    feather.replace();
   };
 
   // === Submit Edit Menu ===
@@ -377,7 +398,7 @@ async function checkNewOrder() {
         lastOrderId = data.id;
       } else if (lastOrderId === null || Number(data.id) > Number(lastOrderId)) {
         lastOrderId = data.id;
-        showNotification();
+        playOrderNotification();
       }
     }
   } catch (err) {
@@ -386,7 +407,7 @@ async function checkNewOrder() {
 }
 
 // 🔔 Tampilkan notifikasi dan bunyi
-function showNotification() {
+function playOrderNotification() {
   const box = document.getElementById("notifBox");
   const audio = document.getElementById("notifAudio");
 

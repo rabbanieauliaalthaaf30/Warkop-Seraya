@@ -1,0 +1,40 @@
+[2026-04-13 17:28:10] POST DATA: Array
+(
+    [orderId] => 279
+    [method] => cash
+)
+
+[2026-04-13 17:28:10] FILES DATA: Array
+(
+)
+
+
+[2026-04-13 17:28:10] SQL_UPDATE: 
+    UPDATE pembayaran 
+    SET status = 'belum bayar',
+        metode = 'cash',
+        email = '',
+        jumlah = 25000,
+        waktu_bayar = CURRENT_TIMESTAMP
+    WHERE id_transaksi = 279
+
+[2026-04-13 18:00:15] POST DATA: Array
+(
+    [orderId] => 280
+    [method] => cash
+)
+
+[2026-04-13 18:00:15] FILES DATA: Array
+(
+)
+
+
+[2026-04-13 18:00:15] SQL_UPDATE: 
+    UPDATE pembayaran 
+    SET status = 'belum bayar',
+        metode = 'cash',
+        email = '',
+        jumlah = 25000,
+        waktu_bayar = CURRENT_TIMESTAMP
+    WHERE id_transaksi = 280
+

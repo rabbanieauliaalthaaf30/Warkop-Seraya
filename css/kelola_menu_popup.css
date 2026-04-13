@@ -1,0 +1,262 @@
+/* ============================================================
+   WARKOP SERAYA — KELOLA MENU POPUP (Premium Modern)
+   ============================================================ */
+
+/* ── Overlay background ── */
+.popup-kelolamenu, .popup-editmenu, .popup-delete {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(15, 7, 7, 0.45);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  display: flex !important; /* Force display for animation handle */
+  justify-content: center;
+  align-items: center;
+  
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.popup-kelolamenu.active, .popup-editmenu.active, .popup-delete.active {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* ── Container popup ── */
+.popup-kelolamenu .popup-content, 
+.popup-editmenu .popup-content,
+.popup-delete .popup-content {
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 28px;
+  padding: 40px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 
+    0 40px 100px rgba(0, 0, 0, 0.2),
+    0 10px 40px rgba(220, 20, 60, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  
+  transform: scale(0.92) translateY(30px);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+  scrollbar-width: thin;
+  scrollbar-color: #dc143c transparent;
+}
+
+.popup-kelolamenu.active .popup-content,
+.popup-editmenu.active .popup-content,
+.popup-delete.active .popup-content {
+  transform: scale(1) translateY(0);
+}
+
+/* Scrollbar styling */
+.popup-kelolamenu .popup-content::-webkit-scrollbar,
+.popup-editmenu .popup-content::-webkit-scrollbar {
+  width: 5px;
+}
+.popup-kelolamenu .popup-content::-webkit-scrollbar-thumb,
+.popup-editmenu .popup-content::-webkit-scrollbar-thumb {
+  background: #dc143c;
+  border-radius: 10px;
+}
+
+/* ── Header ── */
+.popup-kelolamenu .popup-content::before,
+.popup-editmenu .popup-content::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #dc143c, #ff4d6d, #dc143c);
+}
+
+.popup-kelolamenu h3, .popup-editmenu h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 24px;
+  text-align: left;
+  border: none;
+  padding: 0;
+}
+
+/* Close button */
+.close-popup {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 32px;
+  height: 32px;
+  background: #f8f9fa;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #666;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.close-popup:hover {
+  background: #dc143c;
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+/* ── Form styling ── */
+.form-group {
+  margin-bottom: 20px !important;
+}
+
+.form-group label, label[for="varian-container"] {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="file"] {
+  width: 100%;
+  padding: 14px 18px;
+  background: #f9f9f9;
+  border: 1.5px solid #eee;
+  border-radius: 14px;
+  font-size: 14.5px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  background: #fff;
+  border-color: #dc143c;
+  box-shadow: 0 0 0 4px rgba(220, 20, 60, 0.1);
+  outline: none;
+}
+
+/* ── Varian styling ── */
+.varian-row {
+  display: flex !important;
+  gap: 12px;
+  margin-bottom: 12px;
+  background: #fcfcfc;
+  padding: 8px;
+  border-radius: 14px;
+  border: 1px dashed #ddd;
+}
+
+.varian-row input {
+  padding: 10px 14px !important;
+  border: 1px solid #eee !important;
+}
+
+.remove-varian {
+  background: #fff !important;
+  color: #fb5d5d !important;
+  border: 1.5px solid #fb5d5d !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 12px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.2s ease;
+}
+
+.remove-varian:hover {
+  background: #fb5d5d !important;
+  color: #fff !important;
+}
+
+.btn-tambah-varian {
+  width: 100%;
+  background: rgba(52, 152, 219, 0.08) !important;
+  color: #3498db !important;
+  border: 2px dashed #3498db !important;
+  padding: 12px !important;
+  border-radius: 14px !important;
+  font-weight: 700 !important;
+  margin: 10px 0 24px !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-tambah-varian:hover {
+  background: #3498db !important;
+  color: #fff !important;
+  transform: translateY(-2px);
+}
+
+/* ── Actions ── */
+.popup-actions {
+  display: flex !important;
+  gap: 14px;
+  margin-top: 32px;
+}
+
+.popup-actions button {
+  flex: 1;
+  height: 52px;
+  border-radius: 16px !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.btn-simpan, .btn-update, .btn-confirm {
+  background: linear-gradient(135deg, #dc143c, #ff4c6a) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 20px rgba(220, 20, 60, 0.25) !important;
+}
+
+.btn-simpan:hover, .btn-update:hover, .btn-confirm:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 30px rgba(220, 20, 60, 0.4) !important;
+}
+
+.btn-cancel {
+  background: #f1f3f5 !important;
+  color: #495057 !important;
+}
+
+.btn-cancel:hover {
+  background: #e9ecef !important;
+  transform: translateY(-2px);
+}
+
+/* ── Delete specific ── */
+.popup-delete .popup-content {
+  max-width: 400px;
+  padding: 48px 30px 40px;
+}
+
+.popup-delete h3 {
+  text-align: center;
+  color: #dc143c;
+  font-size: 1.6rem;
+}
+
+.popup-delete p {
+  color: #666;
+  margin: 12px 0 30px;
+  font-size: 15px;
+}
+
+/* Respomsive Popup */
+@media (max-width: 480px) {
+  .popup-kelolamenu .popup-content, .popup-editmenu .popup-content {
+    padding: 30px 20px;
+  }
+}
