@@ -225,7 +225,7 @@ include "../koneksi.php";
     const c = document.getElementById('varian-container');
     const r = document.createElement('div');
     r.classList.add('varian-row');
-    r.innerHTML = `<input type="text" name="varian_nama[]" placeholder="Varian">
+    r.innerHTML = `<input type="text" name="varian_nama[]" placeholder="Varian Produk">
                    <input type="number" name="varian_harga[]" placeholder="0">
                    <button type="button" class="remove-varian"><i data-feather="trash-2"></i></button>`;
     c.appendChild(r);
