@@ -58,40 +58,53 @@ if (!isset($_SESSION['username'])) {
     <div class="main">
       <h1>Selamat Datang, Tim Kasir!</h1>
 
-     <!-- 💰 CARD PENDAPATAN -->
-<div class="card">
-  <h3>Warkop <span>Seraya</span></h3>
+      <!-- 📊 STATS CARDS -->
+      <div class="stats-grid">
+        <div class="stat-card income">
+          <div class="stat-icon">
+            <i data-feather="dollar-sign"></i>
+          </div>
+          <div class="stat-info">
+            <h4>Total Pendapatan</h4>
+            <p id="totalPendapatan">Rp 0</p>
+          </div>
+        </div>
 
-  <select id="salesPeriod">
-    <option value="today">Hari Ini</option>
-    <option value="week">Minggu Ini</option>
-    <option value="month">Bulan Ini</option>
-    <option value="custom">Pilih Tanggal</option>
-  </select>
+        <div class="stat-card orders">
+          <div class="stat-icon">
+            <i data-feather="shopping-cart"></i>
+          </div>
+          <div class="stat-info">
+            <h4>Total Transaksi</h4>
+            <p id="totalTransaksi">0 Transaksi</p>
+          </div>
+        </div>
+      </div>
 
-  <!-- 📅 Input tanggal hanya muncul jika pilih "custom" -->
-  <div class="date-range" id="dateRange" style="display: none;">
-    <input type="date" id="startDate" />
-    <span>s/d</span>
-    <input type="date" id="endDate" />
-    <button id="applyDate" class="btn-apply">Terapkan</button>
-  </div>
+      <!-- 📈 CHART CARD -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i data-feather="trending-up"></i> Statistik Penjualan</h3>
+          <select id="salesPeriod">
+            <option value="today">Hari Ini</option>
+            <option value="week">Minggu Ini</option>
+            <option value="month">Bulan Ini</option>
+            <option value="custom">Pilih Tanggal</option>
+          </select>
+        </div>
 
-  <div class="chart-container">
-    <canvas id="salesChart"></canvas>
-  </div>
+        <!-- 📅 Input tanggal hanya muncul jika pilih "custom" -->
+        <div class="date-range" id="dateRange">
+          <input type="date" id="startDate" />
+          <span>s/d</span>
+          <input type="date" id="endDate" />
+          <button id="applyDate" class="btn-apply">Terapkan</button>
+        </div>
 
-  <div class="chart-summary">
-    <div class="summary-item">
-      <h4>Total Pendapatan</h4>
-      <p id="totalPendapatan">Rp 0</p>
-    </div>
-    <div class="summary-item">
-      <h4>Total Transaksi</h4>
-      <p id="totalTransaksi">0 Transaksi</p>
-    </div>
-  </div>
-</div>
+        <div class="chart-container">
+          <canvas id="salesChart"></canvas>
+        </div>
+      </div>
 
     <!-- Logout -->
     <div id="logoutModal" class="modal">
@@ -192,5 +205,6 @@ if (!isset($_SESSION['username'])) {
 
         // ⏱ Jalankan pengecekan tiap 5 detik
         setInterval(checkNewOrderKasir, 5000);
+    </script>
   </body>
 </html>

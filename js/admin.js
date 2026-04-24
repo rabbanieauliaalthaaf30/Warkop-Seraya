@@ -136,12 +136,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 data: data,
                 backgroundColor:
                   chartType === "bar"
-                    ? "rgba(54, 162, 235, 0.6)"
-                    : "rgba(75, 192, 192, 0.3)",
-                borderColor:
-                  chartType === "bar"
-                    ? "rgba(54, 162, 235, 1)"
-                    : "rgba(75, 192, 192, 1)",
+                    ? "rgba(220, 20, 60, 0.7)"
+                    : "rgba(220, 20, 60, 0.1)",
+                borderColor: "rgba(220, 20, 60, 1)",
                 borderWidth: 2,
                 fill: true,
                 tension: 0.4,
@@ -166,14 +163,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 padding: { top: 10, bottom: 15 },
               },
               tooltip: {
-                backgroundColor: "rgba(0,0,0,0.85)",
-                borderColor: "#007bff",
-                borderWidth: 1,
+                backgroundColor: "rgba(30, 41, 59, 0.9)",
                 titleColor: "#fff",
-                bodyColor: "#e5e7eb",
-                cornerRadius: 8,
-                padding: 12,
+                bodyColor: "#f1f5f9",
+                cornerRadius: 12,
+                padding: 15,
                 displayColors: false,
+                borderColor: "rgba(220, 20, 60, 0.3)",
+                borderWidth: 1,
                 callbacks: {
                   label: (ctx) => "Rp " + ctx.raw.toLocaleString("id-ID"),
                 },
@@ -181,16 +178,17 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             scales: {
               x: {
-                ticks: { color: "#374151", font: { size: 12, weight: "500" } },
-                grid: { color: "rgba(0,0,0,0.05)" },
+                ticks: { color: "#64748b", font: { size: 11, weight: "600" } },
+                grid: { display: false },
               },
               y: {
                 beginAtZero: true,
                 ticks: {
-                  color: "#374151",
+                  color: "#64748b",
+                  font: { size: 11, weight: "600" },
                   callback: (value) => "Rp " + value.toLocaleString("id-ID"),
                 },
-                grid: { color: "rgba(0,0,0,0.05)" },
+                grid: { color: "rgba(226, 232, 240, 0.6)", drawBorder: false },
               },
             },
             animation: { duration: 1000, easing: "easeOutQuart" },
