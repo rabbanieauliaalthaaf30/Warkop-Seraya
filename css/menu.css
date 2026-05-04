@@ -1,19 +1,12 @@
 :root {
-  --primary: #c13d4f; /* modern rose red */
-  --accent: #d8a25e; /* warm golden beige */
-  --bg: linear-gradient(
-    180deg,
-    #f5ebe1 0%,
-    #f8f6f2 100%
-  ); /* warm gradient background */
-  --surface: linear-gradient(
-    145deg,
-    #fefaf7,
-    #f3e9e4
-  ); /* subtle blush surface */
-  --color: #2c2c2c; /* elegant dark text */
-  --shadow: rgba(0, 0, 0, 0.12);
-  --hv: #a93044; /* hover rose red */
+  --primary: #dc143c; /* Crimson Red for a more vibrant, premium look */
+  --accent: #eab308; /* Rich gold/yellow for accents */
+  --bg: #f8fafc; /* Crisp, clean modern very-light slate */
+  --surface: rgba(255, 255, 255, 0.85); /* Glassmorphism base */
+  --color: #1e293b; /* Deep slate for elegant text */
+  --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.08);
+  --shadow-hover: 0 20px 40px -10px rgba(220, 20, 60, 0.15);
+  --hv: #be1234; /* Darker crimson for hover */
 }
 
 /* RESET */
@@ -35,35 +28,37 @@ body {
 /* MENU HEADER */
 .menu h1 {
   text-align: center;
-  font-size: 2.6rem;
-  font-weight: 700;
+  font-size: 2.8rem;
+  font-weight: 800;
   color: var(--color);
-  background: linear-gradient(135deg, #fff8f3, #f1e5de);
-  padding: 1rem 0;
-  border-radius: 14px;
-  box-shadow: 0 8px 24px var(--shadow);
-  margin: 1.5rem auto 2rem;
+  background: var(--surface);
+  padding: 1.2rem 0;
+  border-radius: 20px;
+  box-shadow: var(--shadow-soft);
+  margin: 1.5rem auto 3rem;
   width: 90%;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(8px);
-  animation: fadeIn 0.8s ease-in-out both;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  letter-spacing: -0.5px;
 }
 
 .menu h1 span {
-  background: var(--primary);
-  background-clip: text; /* fallback standar */
-  -webkit-background-clip: text; /* untuk Chrome, Safari */
-  color: transparent; /* fallback Firefox */
-  -webkit-text-fill-color: transparent; /* Chrome/Safari */
+  background: linear-gradient(135deg, var(--primary), #ff4d6d);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
 /* SUBTITLE */
 .menu h2 {
   margin-left: 10px;
-  margin-bottom: 0.5rem;
-  color: var(--primary);
-  font-weight: 600;
-  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--color);
+  font-weight: 800;
+  font-size: 1.4rem;
   position: relative;
   letter-spacing: 0.5px;
   animation: fadeIn 1s ease-in-out both;
@@ -73,12 +68,11 @@ body {
 .menu h2::after {
   content: "";
   display: block;
-  width: 36px;
-  height: 3px;
-  background: var(--accent);
-  border-radius: 2px;
-  margin-top: 4px;
-  opacity: 0.9;
+  width: 45px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  border-radius: 4px;
+  margin-top: 6px;
 }
 
 /* SCROLL SECTION */
@@ -99,80 +93,49 @@ body {
 /* MENU CARD */
 .menu-card {
   flex: 0 0 auto;
-  width: 190px; /* lebih besar agar proporsional */
-  background: var(--surface);
-  border-radius: 16px;
+  width: 190px;
+  background: #ffffff;
+  border-radius: 20px;
   padding: 12px;
-  box-shadow: 0 8px 22px var(--shadow);
+  box-shadow: var(--shadow-soft);
   text-align: center;
   margin-bottom: 3rem;
   display: flex;
   flex-direction: column;
-  transition: all 0.35s ease;
-  border: 1px solid rgba(230, 220, 210, 0.8);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(0, 0, 0, 0.03);
   overflow: hidden;
   position: relative;
   opacity: 0;
   transform: translateY(25px);
-  animation: fadeInUp 0.8s ease-out forwards;
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Animasi bertahap berdasarkan urutan */
-.menu-card:nth-child(1) {
-  animation-delay: 0.3s;
-}
-.menu-card:nth-child(2) {
-  animation-delay: 0.45s;
-}
-.menu-card:nth-child(3) {
-  animation-delay: 0.6s;
-}
-.menu-card:nth-child(4) {
-  animation-delay: 0.75s;
-}
-.menu-card:nth-child(5) {
-  animation-delay: 0.9s;
-}
-.menu-card:nth-child(6) {
-  animation-delay: 1.05s;
-}
-
-.menu-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    145deg,
-    rgba(193, 61, 79, 0.06),
-    rgba(216, 162, 94, 0.08)
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.menu-card:hover::before {
-  opacity: 1;
-}
+.menu-card:nth-child(1) { animation-delay: 0.1s; }
+.menu-card:nth-child(2) { animation-delay: 0.2s; }
+.menu-card:nth-child(3) { animation-delay: 0.3s; }
+.menu-card:nth-child(4) { animation-delay: 0.4s; }
+.menu-card:nth-child(5) { animation-delay: 0.5s; }
+.menu-card:nth-child(6) { animation-delay: 0.6s; }
 
 .menu-card:hover {
-  transform: translateY(-5px) scale(1.03);
-  box-shadow: 0 10px 28px rgba(193, 61, 79, 0.25);
-  border-color: var(--primary);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(220, 20, 60, 0.1);
 }
 
 /* IMAGE */
 .menu-card-img {
   width: 100%;
-  height: 130px;
-  border-radius: 10px;
+  height: 140px;
+  border-radius: 12px;
   object-fit: cover;
-  filter: brightness(0.96) contrast(1.05);
-  transition: all 0.4s ease;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .menu-card:hover .menu-card-img {
-  transform: scale(1.05);
-  filter: brightness(1.05);
+  transform: scale(1.03);
 }
 
 /* TITLE */
@@ -234,40 +197,36 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(44, 44, 44, 0.55); /* lembut, tidak terlalu gelap */
+  background: rgba(15, 23, 42, 0.65);
   display: none;
   justify-content: center;
   align-items: center;
   z-index: 999;
-  backdrop-filter: blur(4px); /* efek blur halus */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 /* Card */
 .popup-card {
-  background: linear-gradient(
-    145deg,
-    #fefaf7,
-    #f3e9e4
-  ); /* sesuai tema surface */
-  border-radius: 1rem;
-  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 1.8rem;
   width: 380px;
   position: relative;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   min-height: 520px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgba(230, 220, 210, 0.8);
-  transition: all 0.35s ease;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Hover */
 .popup-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 20px rgba(193, 61, 79, 0.25), 0 0 30px rgba(216, 162, 94, 0.2);
-  border-color: var(--primary);
+  transform: scale(1.01);
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3);
 }
 
 /* Close Button */
@@ -373,57 +332,55 @@ body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-top: -10px;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 
 .popup-quantity button {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   border: none;
-  background: linear-gradient(145deg, #f8f6f2, #ece3dd);
-  color: var(--primary);
+  background: #f1f5f9;
+  color: var(--color);
   font-weight: bold;
+  font-size: 16px;
   cursor: pointer;
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1),
-    -2px -2px 6px rgba(255, 255, 255, 0.7);
-  transition: all 0.35s ease;
+  transition: all 0.2s ease;
 }
 
 .popup-quantity button:hover {
-  background: var(--primary);
-  color: #fff;
-  box-shadow: 0 0 10px rgba(193, 61, 79, 0.35);
-  transform: scale(1.08);
+  background: #e2e8f0;
+  transform: scale(1.05);
 }
 
 .popup-quantity button:active {
   transform: scale(0.95);
-  box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.2);
+  background: #cbd5e1;
 }
 
 /* Catatan */
 .popup-note {
   width: 100%;
-  height: 120px;
-  border-radius: 10px;
-  padding: 0.6rem;
-  border: 1px solid rgba(216, 162, 94, 0.4);
+  height: 100px;
+  border-radius: 12px;
+  padding: 0.8rem;
+  border: 1px solid #e2e8f0;
   resize: none;
   font-family: inherit;
-  background: #fffaf7;
-  outline-color: var(--accent);
+  background: #f8fafc;
   color: var(--color);
   margin-top: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   transition: all 0.3s ease;
 }
 
 .popup-note:focus {
+  outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 6px rgba(193, 61, 79, 0.3);
+  box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.15);
+  background: #ffffff;
 }
 
 /* Spacer */
@@ -433,47 +390,46 @@ body {
 
 /* Tombol Keranjang */
 .popup-add-button {
-  background: linear-gradient(135deg, var(--primary), var(--hv));
+  background: linear-gradient(135deg, var(--primary), #ff4d6d);
   color: white;
   padding: 14px 18px;
   width: 100%;
   border: none;
-  border-radius: 10px;
-  font-weight: 600;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.5px;
   cursor: pointer;
   margin-top: auto;
-  box-shadow: 0 6px 18px rgba(193, 61, 79, 0.25);
-  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(220, 20, 60, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .popup-add-button:hover {
-  opacity: 0.95;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(193, 61, 79, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(220, 20, 60, 0.35);
 }
 
 /* Pop up Keranjang Saya */
 .cart {
   position: fixed;
-  bottom: 80px;
-  right: 20px;
-  background: linear-gradient(145deg, #fefaf7, #f3e9e4); /* sesuai tema */
-  border-radius: 14px;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+  bottom: 90px;
+  right: 30px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25);
   width: 400px;
   display: none;
   flex-direction: column;
   z-index: 999;
-  animation: fadeIn 0.6s ease-in-out;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid rgba(230, 220, 210, 0.8);
-  backdrop-filter: blur(6px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .cart:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 18px rgba(193, 61, 79, 0.25), 0 0 28px rgba(216, 162, 94, 0.2);
-  border-color: var(--primary);
+  transform: scale(1.01);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
 }
 
 /* Header */
@@ -631,31 +587,44 @@ body {
 /* Ikon Keranjang */
 .cart-icon {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #fffaf7;
-  border-radius: 14px;
-  padding: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  font-size: 20px;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, var(--primary), #ff4d6d);
+  color: white;
+  border-radius: 50px;
+  padding: 16px 24px;
+  box-shadow: 0 10px 25px rgba(220, 20, 60, 0.3);
+  font-size: 24px;
   cursor: pointer;
   z-index: 1000;
-  animation: fadeIn 0.7s ease-in-out;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid rgba(230, 220, 210, 0.7);
+  animation: floatCart 3s ease-in-out infinite;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes floatCart {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 .cart-icon:hover {
-  transform: scale(1.08);
-  box-shadow: 0 8px 24px rgba(193, 61, 79, 0.25);
-  border-color: var(--primary);
+  transform: scale(1.1) translateY(-5px);
+  box-shadow: 0 15px 35px rgba(220, 20, 60, 0.4);
+  animation-play-state: paused;
 }
 
 #cart-count {
-  color: #111;
+  color: var(--primary);
+  background: #ffffff;
   font-size: 15px;
-  font-weight: 600;
-  margin-left: 5px;
+  font-weight: 800;
+  margin-left: 10px;
+  padding: 2px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 /* Animasi masuk */
@@ -683,17 +652,16 @@ body {
   left: 50%;
   transform: translate(-50%, -50%) scale(1);
   width: 450px;
-  background: linear-gradient(145deg, #fefaf7, #f3e9e4);
-  border-radius: 14px;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
   z-index: 9999;
   display: none; /* tetap default hidden, JS akan ubah ke flex */
   flex-direction: column;
   overflow: hidden;
   font-family: "Poppins", sans-serif;
-  border: 1px solid rgba(230, 220, 210, 0.8);
-  backdrop-filter: blur(8px);
-  animation: popupFadeIn 0.35s ease forwards;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  animation: popupFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -701,7 +669,7 @@ body {
 @keyframes popupFadeIn {
   0% {
     opacity: 0;
-    transform: translate(-50%, -45%) scale(0.9);
+    transform: translate(-50%, -45%) scale(0.95);
   }
   100% {
     opacity: 1;
@@ -711,9 +679,7 @@ body {
 
 /* Hover efek */
 .order-popup:hover {
-  transform: translate(-50%, -50%) scale(1.02);
-  box-shadow: 0 0 18px rgba(193, 61, 79, 0.25), 0 0 28px rgba(216, 162, 94, 0.2);
-  border-color: var(--primary);
+  box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.35);
 }
 
 /* Header */

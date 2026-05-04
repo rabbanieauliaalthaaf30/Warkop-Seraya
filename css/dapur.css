@@ -226,46 +226,55 @@ body::before {
   width: 100%;
 }
 
-.page-pesanan .pesanan-table {
+.page-pesanan .pesanan-table,
+.page-riwayatpesanan .pesanan-table {
   width: 90%;
   max-width: 1000px;
   margin: 0 auto;
-  border-collapse: collapse;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  background: #fff;
-  border-radius: 6px;
+  border-collapse: separate;
+  border-spacing: 0;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+  background: #ffffff;
+  border-radius: 16px;
   overflow: hidden;
   animation: fadeIn 0.7s ease-in-out;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #f1f5f9;
 }
 
-.page-pesanan .pesanan-table:hover {
-  transform: scale(1);
-  box-shadow: 0 0 15px rgba(220, 20, 60, 0.4), 0 0 30px rgba(220, 20, 60, 0.2);
-  border: 1px solid var(--primary);
+.pesanan-table th {
+  background: linear-gradient(135deg, var(--primary), #be1234);
+  color: #ffffff;
+  padding: 16px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: none;
 }
 
-.page-pesanan .pesanan-table th {
-  background: var(--primary);
-  color: #fff;
-  padding: 14px;
-  font-size: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+.pesanan-table tbody tr {
+  transition: background-color 0.2s ease;
 }
 
-.page-pesanan .pesanan-table td {
-  padding: 14px;
+.pesanan-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.pesanan-table td {
+  padding: 16px 14px;
   text-align: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  font-size: 15px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  transition: background 0.3s ease;
+  font-size: 14.5px;
+  color: #334155;
+  border: none;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
 }
 
-/* ✅ Kolom nama item (kolom ke-3) dibuat rata kiri */
-.page-pesanan .pesanan-table td:nth-child(3) {
+.page-pesanan .pesanan-table td:nth-child(3),
+.page-riwayatpesanan .pesanan-table td:nth-child(4) {
   text-align: left;
-  vertical-align: top;
+  vertical-align: middle;
   padding-left: 12px;
 }
 
@@ -278,42 +287,51 @@ body::before {
 
 /* 🔹 Tombol status pesanan */
 .status-btn {
-  display: inline-flex; /* ✅ ubah inline-block jadi inline-flex */
+  display: inline-flex;
   justify-content: center;
   align-items: center;
-  padding: 8px 16px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   text-transform: capitalize;
   color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  letter-spacing: 0.3px;
 }
 
 .status-btn:hover {
-  transform: scale(1.05);
-  opacity: 0.9;
+  transform: translateY(-2px);
 }
 
 .status-pending {
-  background: #f0ad4e;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 6px 15px rgba(245, 158, 11, 0.25);
 }
 .status-pending:hover {
-  background: #ec971f;
+  background: linear-gradient(135deg, #d97706, #b45309);
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.35);
 }
 
 .status-diproses {
-  background: #17a2b8;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  box-shadow: 0 6px 15px rgba(59, 130, 246, 0.25);
 }
 .status-diproses:hover {
-  background: #138496;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
 }
 
 .status-selesai {
-  background: #28a745;
+  background: linear-gradient(135deg, #10b981, #059669);
   cursor: default;
+  box-shadow: 0 6px 15px rgba(16, 185, 129, 0.25);
+}
+.status-selesai:hover {
+  transform: none;
 }
 
 /* Animasi */
@@ -337,53 +355,12 @@ body::before {
   width: 100%;
 }
 
-.page-riwayatpesanan .pesanan-table {
-  width: 90%;
-  max-width: 1000px;
-  margin: 0 auto;
-  border-collapse: collapse;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  background: #fff;
-  border-radius: 6px;
-  overflow: hidden;
-  animation: fadeIn 0.7s ease-in-out;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.page-riwayatpesanan .pesanan-table:hover {
-  transform: scale(1);
-  box-shadow: 0 0 15px rgba(220, 20, 60, 0.4), 0 0 30px rgba(220, 20, 60, 0.2);
-  border: 1px solid var(--primary);
-}
-
-.page-riwayatpesanan .pesanan-table th {
-  background: var(--primary);
-  color: #fff;
-  padding: 14px;
-  font-size: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.page-riwayatpesanan .pesanan-table td {
-  padding: 14px;
-  text-align: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  font-size: 15px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  transition: background 0.3s ease;
-}
-
-.page-riwayatpesanan .no-order {
-  text-align: center;
-  color: #666;
-  font-style: italic;
-  padding: 20px;
-}
+/* Tabel Riwayat Pesanan sudah digabung dengan style Tabel Utama di atas */
 
 .item-line {
-  border-bottom: 1px dashed #858080;
-  padding: 4px 0;
-  margin-bottom: 4px;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 6px 0;
+  margin-bottom: 2px;
 }
 .item-line:last-child {
   border-bottom: none;
