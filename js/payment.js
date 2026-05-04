@@ -14,8 +14,14 @@ function showNotification(message, type = "success") {
   notif.className = `notification ${type}`;
   notif.innerText = message;
   document.body.appendChild(notif);
+  
+  setTimeout(() => notif.classList.add("show"), 10);
+
   setTimeout(() => {
-    if (notif && notif.parentNode) notif.parentNode.removeChild(notif);
+    notif.classList.remove("show");
+    setTimeout(() => {
+      if (notif && notif.parentNode) notif.parentNode.removeChild(notif);
+    }, 400);
   }, 3000);
 }
 
@@ -259,7 +265,56 @@ function closeReceipt() {
   localStorage.removeItem("cart");
   const modal = document.getElementById("receiptModal");
   if (modal) modal.style.display = "none";
-  window.location.href = "/seraya/menu.php";
+  showReturnPopup();
+}
+
+// Popup konfirmasi kembali ke halaman utama
+function showReturnPopup() {
+  const overlay = document.createElement("div");
+  overlay.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.8);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;animation:fadeIn 0.3s ease;";
+  
+  const modal = document.createElement("div");
+  modal.style.cssText = "background:#fff;padding:30px;border-radius:20px;text-align:center;max-width:320px;width:100%;box-shadow:0 25px 50px rgba(0,0,0,0.25);animation:slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);";
+  
+  const title = document.createElement("h3");
+  title.textContent = "Pesanan Selesai!";
+  title.style.cssText = "margin-bottom:12px;font-size:22px;font-weight:800;color:#1e293b;";
+  
+  const desc = document.createElement("p");
+  desc.textContent = "Apakah Anda ingin kembali ke halaman utama?";
+  desc.style.cssText = "margin-bottom:25px;font-size:14px;color:#64748b;line-height:1.5;";
+  
+  const btnRow = document.createElement("div");
+  btnRow.style.cssText = "display:flex;gap:12px;justify-content:center;";
+  
+  const btnYes = document.createElement("button");
+  btnYes.textContent = "Ya, Kembali";
+  btnYes.style.cssText = "flex:1;padding:12px;background:#dc143c;color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:14px;transition:all 0.2s;";
+  btnYes.onmouseover = () => btnYes.style.background = "#b31237";
+  btnYes.onmouseout = () => btnYes.style.background = "#dc143c";
+  btnYes.onclick = () => {
+    localStorage.removeItem("cart");
+    window.location.href = "/seraya/menu.php";
+  };
+  
+  const btnNo = document.createElement("button");
+  btnNo.textContent = "Tetap Disini";
+  btnNo.style.cssText = "flex:1;padding:12px;background:#f1f5f9;color:#1e293b;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:14px;transition:all 0.2s;";
+  btnNo.onmouseover = () => btnNo.style.background = "#e2e8f0";
+  btnNo.onmouseout = () => btnNo.style.background = "#f1f5f9";
+  btnNo.onclick = () => {
+    document.body.removeChild(overlay);
+  };
+  
+  btnRow.appendChild(btnYes);
+  btnRow.appendChild(btnNo);
+  
+  modal.appendChild(title);
+  modal.appendChild(desc);
+  modal.appendChild(btnRow);
+  overlay.appendChild(modal);
+  
+  document.body.appendChild(overlay);
 }
 
 // MAIN
@@ -344,7 +399,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const emailEl = document.getElementById("email");
     const email = emailEl ? emailEl.value.trim() : "";
 
-    if (!method) return alert("Silakan pilih metode pembayaran!");
+    if (!method) return showToast("Silakan pilih metode pembayaran!", "error");
 
     // === FIX LOGIC DI SINI ===
     // Untuk metode cash: kirim ke callback_dummy.php agar backend set status_pesanan -> 'pending'
@@ -367,7 +422,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
           const parsed = JSON.parse(text);
           if (parsed && parsed.success === false) {
-            alert("Gagal: " + (parsed.message || "Error dari server"));
+            showToast("Gagal: " + (parsed.message || "Error dari server"), "error");
             return;
           }
         } catch (_) {
@@ -375,18 +430,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         showNotification(
-          "Pesanan berhasil dibuat. Silakan bayar di kasir.",
+          "Selesai bayar! Silakan menuju kasir.",
           "success"
         );
 
-        // Tunggu sedikit biar user lihat notifikasi lalu bersihkan cart & redirect
+        // Munculkan popup kembali ke halaman atau tidak
         setTimeout(() => {
-          localStorage.removeItem("cart");
-          window.location.href = "/seraya/menu.php";
+          showReturnPopup();
         }, 1200);
       } catch (err) {
         console.error("❌ Error saat proses bayar di kasir:", err);
-        alert("Gagal memproses pesanan dengan metode Bayar di Kasir.");
+        showToast("Gagal memproses pesanan dengan metode Bayar di Kasir.", "error");
       }
       return;
     }
@@ -411,7 +465,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        alert("Format email tidak valid!");
+        showToast("Format email tidak valid!", "error");
         return;
       }
 
@@ -441,7 +495,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (result.success === false) {
-          alert("❌ " + (result.message || "Gagal memproses pembayaran."));
+          showToast("❌ " + (result.message || "Gagal memproses pembayaran."), "error");
           return;
         }
 
@@ -451,7 +505,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showReceipt(order, method);
       } catch (err) {
         console.error("❌ Error submit pembayaran:", err);
-        alert("Terjadi kesalahan saat memproses pembayaran.");
+        showToast("Terjadi kesalahan saat memproses pembayaran.", "error");
       }
 
       return; // ✅ stop agar tidak lanjut ke bawah

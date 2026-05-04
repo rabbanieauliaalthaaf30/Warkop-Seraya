@@ -26,6 +26,8 @@ body::before {
 /* ===== Sidebar ===== */
 .sidebar {
   width: 270px;
+  min-width: 270px;
+  flex-shrink: 0;
   background: var(--color);
   color: #fff;
   display: flex;
@@ -178,8 +180,8 @@ body::before {
 
 /* 🎨 Kartu Chart - Dashboard Style */
 .card {
-  width: 100%;
-  max-width: 800px;
+  width: 90%;
+  max-width: 1000px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 20px;
@@ -212,8 +214,8 @@ body::before {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
-  width: 100%;
-  max-width: 800px;
+  width: 90%;
+  max-width: 1000px;
   margin-bottom: 25px;
 }
 
@@ -404,24 +406,6 @@ body::before {
   }
 }
 
-/* 📱 Responsif Mobile */
-@media (max-width: 480px) {
-  .card {
-    padding: 20px;
-  }
-
-  .chart-container {
-    height: 240px;
-  }
-
-  .summary-item p {
-    font-size: 16px;
-  }
-
-  .date-range {
-    flex-direction: column;
-  }
-}
 
 #menuPeriod {
   margin-bottom: 10px;
@@ -1013,6 +997,7 @@ body::before {
 
   .sidebar {
     width: 240px;
+    min-width: 240px;
     padding: 50px 10px 20px;
   }
 
@@ -1030,7 +1015,9 @@ body::before {
   }
 
   .page-pesanan .pesanan-table,
-  .page-riwayatpesanan .pesanan-table {
+  .page-riwayatpesanan .pesanan-table,
+  .page-dashboard .stats-grid,
+  .page-dashboard .card {
     width: 95%;
   }
 
@@ -1128,20 +1115,21 @@ body::before {
 /* ✅ 820px - Tablet besar (tetap dua kolom, layout menyesuaikan) */
 @media (max-width: 840px) {
   html {
-    font-size: 80%;
+    font-size: 85%;
   }
 
   .sidebar {
-    width: 220px;
-    padding: 40px 8px 20px;
+    width: 240px;
+    min-width: 240px;
+    padding: 50px 10px 20px;
   }
 
   .sidebar h1 {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .sidebar ul li a {
-    font-size: 14px;
+    font-size: 15px;
     padding: 8px 10px;
   }
 
@@ -1149,8 +1137,22 @@ body::before {
     padding: 25px;
   }
 
+  .page-dashboard .main h1 {
+    font-size: 26px;
+  }
+
+  .page-dashboard .chart-container {
+    height: 250px;
+  }
+
+  .page-dashboard .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    width: 90%;
+  }
+
   .page-pesanan .pesanan-table,
-  .page-riwayatpesanan .pesanan-table {
+  .page-riwayatpesanan .pesanan-table,
+  .page-dashboard .card {
     width: 90%;
   }
 
@@ -1249,29 +1251,44 @@ body::before {
 /* ✅ 768px - Tablet kecil (masih dua kolom, bukan toggle) */
 @media (max-width: 768px) {
   html {
-    font-size: 70%;
+    font-size: 80%;
   }
 
   .sidebar {
-    width: 200px;
-    padding: 35px 6px 20px;
+    width: 240px;
+    min-width: 240px;
+    padding: 50px 10px 20px;
   }
 
   .sidebar h1 {
-    font-size: 18px;
+    font-size: 22px;
   }
 
   .sidebar ul li a {
-    font-size: 13px;
-    padding: 6px 8px;
+    font-size: 15px;
+    padding: 8px 10px;
   }
 
   .main {
     padding: 20px;
   }
 
+  .page-dashboard .main h1 {
+    font-size: 24px;
+  }
+
+  .page-dashboard .chart-container {
+    height: 240px;
+  }
+
+  .page-dashboard .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    width: 80%;
+  }
+
   .page-pesanan .pesanan-table,
-  .page-riwayatpesanan .pesanan-table {
+  .page-riwayatpesanan .pesanan-table,
+  .page-dashboard .card {
     width: 80%;
   }
 
@@ -1401,6 +1418,36 @@ body::before {
   .main {
     padding: 15px;
     margin-left: 0;
+  }
+
+  .page-dashboard .main h1 {
+    font-size: 22px;
+  }
+
+  .page-dashboard .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-dashboard .card {
+    padding: 20px;
+  }
+
+  .page-dashboard .chart-container {
+    height: 240px;
+  }
+
+  .page-dashboard .summary-item p {
+    font-size: 16px;
+  }
+
+  .page-dashboard .date-range {
+    flex-direction: column;
+  }
+
+  .page-dashboard .stats-grid,
+  .page-dashboard .card {
+    width: 100%;
+    max-width: 95%;
   }
 
   .page-pesanan .pesanan-table,

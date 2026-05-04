@@ -56,7 +56,6 @@ if (!isset($_SESSION['username'])) {
 
     <!-- Main -->
     <div class="main">
-      <h1>Selamat Datang, Tim Kasir!</h1>
 
       <!-- 📊 STATS CARDS -->
       <div class="stats-grid">
