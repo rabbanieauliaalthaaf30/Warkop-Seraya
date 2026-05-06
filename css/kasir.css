@@ -144,7 +144,7 @@ body::before {
 /* Konten utama */
 .main {
   flex: 1;
-  background: #fff;
+  background: #f1f5f9;
   display: flex;
   justify-content: center;
   align-items: center;

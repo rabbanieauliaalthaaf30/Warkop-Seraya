@@ -11,8 +11,8 @@ $id_admin = $_SESSION['id_admin'] ?? null;
 
 if ($id_transaksi > 0 && ($status === 'dibayar' || $status === 'selesai')) {
     
-    // 1. Update status transaksi dan catat id_admin (Kasir) yang memproses
-    $queryTrx = "UPDATE transaksi SET status_pesanan = 'selesai', id_admin = ? WHERE id_transaksi = ?";
+    // 1. Catat id_admin (Kasir) yang memproses pembayaran pada transaksi ini
+    $queryTrx = "UPDATE transaksi SET id_admin = ? WHERE id_transaksi = ?";
     $stmtTrx = $conn->prepare($queryTrx);
     $stmtTrx->bind_param("ii", $id_admin, $id_transaksi);
     

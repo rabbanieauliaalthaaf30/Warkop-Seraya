@@ -35,17 +35,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Set session
                 $_SESSION['id_admin'] = $row['id_admin'];
                 $_SESSION['username'] = $row['username'];
-                $_SESSION['level']    = $row['level'];
+                $_SESSION['role']     = $row['role'];
 
-                // Redirect sesuai level
-                if ($row['level'] === 'admin') {
+                // Redirect sesuai role
+                if ($row['role'] === 'kasir') {
                     header("Location: /seraya/admin_kasir/dashboard.php");
                     exit;
-                } elseif ($row['level'] === 'super admin') {
+                } elseif ($row['role'] === 'dapur') {
                     header("Location: /seraya/admin_dapur/dashboard.php");
                     exit;
                 } else {
-                    $error_msg = 'Level tidak dikenali!';
+                    $error_msg = 'Role tidak dikenali!';
                 }
             } else {
                 $error_msg = 'Password salah!';

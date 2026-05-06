@@ -1,7 +1,7 @@
 :root {
   --primary: #dc143c; /* Crimson Red for a more vibrant, premium look */
   --accent: #eab308; /* Rich gold/yellow for accents */
-  --bg: #f8fafc; /* Crisp, clean modern very-light slate */
+  --bg: #f1f5f9; /* Modern light gray/slate for better contrast */
   --surface: rgba(255, 255, 255, 0.85); /* Glassmorphism base */
   --color: #1e293b; /* Deep slate for elegant text */
   --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.08);

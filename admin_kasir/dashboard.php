@@ -3,7 +3,7 @@ session_start();
 include "../koneksi.php";
 
 // Cek apakah sudah login
-if (!isset($_SESSION['username']) || $_SESSION['level'] !== 'admin') {
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
     header("Location: ../login.php");
     exit;
 }
@@ -47,6 +47,9 @@ if (!isset($_SESSION['username']) || $_SESSION['level'] !== 'admin') {
           <a href="riwayat_pesanan.php"
             ><i data-feather="clock"></i> Riwayat Pesanan</a
           >
+        </li>
+        <li>
+          <a href="kelola_akun.php"><i data-feather="users"></i> Kelola Akun</a>
         </li>
         <li>
           <a href="#" id="logoutBtn"><i data-feather="log-out"></i> Logout</a>

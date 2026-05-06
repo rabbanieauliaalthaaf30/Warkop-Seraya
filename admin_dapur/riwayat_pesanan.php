@@ -2,7 +2,7 @@
 session_start();
 include "../koneksi.php";
 
-if (!isset($_SESSION['username']) || $_SESSION['level'] !== 'super admin') {
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
     header("Location: ../login.php");
     exit;
 }
