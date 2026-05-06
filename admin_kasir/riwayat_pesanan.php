@@ -1,6 +1,6 @@
 <?php 
 session_start();
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['username']) || $_SESSION['level'] !== 'admin') {
     header("Location: ../login.php");
     exit;
 }
@@ -38,6 +38,8 @@ function renderRiwayatTable($conn, $start, $limit) {
         t.status_pesanan, 
         t.waktu_pemesanan, 
         t.total,
+        t.id_admin,
+        a.username AS nama_kasir,
         pby.metode,
         pby.status AS status_bayar,
         pby.waktu_bayar,
@@ -61,9 +63,10 @@ function renderRiwayatTable($conn, $start, $limit) {
       JOIN produk pr ON d.id_produk = pr.id_produk
       LEFT JOIN varian_produk vp ON d.id_varian = vp.id_varian
       JOIN pembayaran pby ON t.id_transaksi = pby.id_transaksi
+      LEFT JOIN admin a ON t.id_admin = a.id_admin
       WHERE LOWER(TRIM(t.status_pesanan)) = 'selesai'
         AND LOWER(TRIM(pby.status)) = 'sudah bayar'
-      GROUP BY t.id_transaksi, t.nomor_meja, t.nama_pemesan, t.status_pesanan, t.waktu_pemesanan, t.total, pby.metode, pby.status, pby.waktu_bayar, pby.bukti_file
+      GROUP BY t.id_transaksi, t.nomor_meja, t.nama_pemesan, t.status_pesanan, t.waktu_pemesanan, t.total, pby.metode, pby.status, pby.waktu_bayar, pby.bukti_file, a.username
       ORDER BY pby.waktu_bayar DESC
       LIMIT $start, $limit
     ";
@@ -78,6 +81,7 @@ function renderRiwayatTable($conn, $start, $limit) {
             echo "<td>".htmlspecialchars($row['nama_pemesan'])."</td>";
             echo "<td>".$row['pesanan']."</td>";
             echo "<td style='text-align:left;'>Rp ".number_format($row['total'], 0, ',', '.')."</td>";
+            echo "<td><span class='badge-kasir'>".htmlspecialchars($row['nama_kasir'] ?? 'System')."</span></td>";
 
             // ✅ Bukti Pembayaran (gambar mini)
             if (!empty($row['bukti_file'])) {
@@ -155,6 +159,7 @@ if (isset($_GET['rekap'])) {
         t.total,
         p.metode,
         p.waktu_bayar,
+        a.username AS nama_kasir,
         GROUP_CONCAT(
           CONCAT(pr.nama_produk,
             IF(vp.nama_varian IS NOT NULL AND vp.nama_varian <> '', 
@@ -166,8 +171,9 @@ if (isset($_GET['rekap'])) {
       JOIN produk pr ON d.id_produk = pr.id_produk
       LEFT JOIN varian_produk vp ON d.id_varian = vp.id_varian
       JOIN pembayaran p ON t.id_transaksi = p.id_transaksi
+      LEFT JOIN admin a ON t.id_admin = a.id_admin
       WHERE p.status = 'sudah bayar' AND $where
-      GROUP BY t.id_transaksi, t.nomor_meja, t.nama_pemesan, t.total, p.metode, p.waktu_bayar
+      GROUP BY t.id_transaksi, t.nomor_meja, t.nama_pemesan, t.total, p.metode, p.waktu_bayar, a.username
       ORDER BY p.waktu_bayar DESC
     ";
     $res = mysqli_query($conn, $sql);
@@ -201,7 +207,7 @@ if (isset($_GET['rekap'])) {
                     <p><b>{$no}. Meja {$r['nomor_meja']} - {$r['nama_pemesan']} (" . htmlspecialchars($r['metode']) . ")</b></p>
                     <p style='margin-left:10px;'>".htmlspecialchars($r['pesanan'])."</p>
                     <p style='margin-left:10px;'><b>Total:</b> Rp ".number_format($r['total'],0,',','.')."</p>
-                    <p style='margin-left:10px; color:gray; font-size:12px;'>".htmlspecialchars($r['waktu_bayar'])."</p>
+                    <p style='margin-left:10px; color:gray; font-size:12px;'>Kasir: " . htmlspecialchars($r['nama_kasir'] ?? '-') . " | Waktu: " . htmlspecialchars($r['waktu_bayar']) . "</p>
                     <hr>
                   </div>";
             $no++;
@@ -278,6 +284,7 @@ if (isset($_GET['ajax'])) {
             <th>Nama</th>
             <th>Pesanan</th>
             <th>Total</th>
+            <th>Kasir</th>
             <th>Bukti Pembayaran</th>
             <th>Status</th>
           </tr>

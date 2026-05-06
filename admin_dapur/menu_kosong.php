@@ -2,6 +2,10 @@
 session_start();
 include "../koneksi.php"; 
 
+if (!isset($_SESSION['username']) || $_SESSION['level'] !== 'super admin') {
+    header("Location: ../login.php");
+    exit;
+}
 // Handler AJAX untuk toggle status menu
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id'])) {
     $menuId = intval($_POST['id']);

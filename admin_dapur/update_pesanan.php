@@ -24,7 +24,7 @@ if (!in_array($status, $allowed)) {
     exit;
 }
 
-// Update status
+// Update status saja (jangan update id_admin agar tidak menimpa nama Kasir)
 $sql = "UPDATE transaksi SET status_pesanan = ? WHERE id_transaksi = ?";
 $stmt = mysqli_prepare($conn, $sql);
 mysqli_stmt_bind_param($stmt, "si", $status, $id);
@@ -32,6 +32,6 @@ mysqli_stmt_bind_param($stmt, "si", $status, $id);
 if (mysqli_stmt_execute($stmt)) {
     echo json_encode(["success" => true, "nextStatus" => $status]);
 } else {
-    echo json_encode(["success" => false, "error" => "Gagal update database"]);
+    echo json_encode(["success" => false, "error" => "Gagal update database: " . mysqli_error($conn)]);
 }
 ?>

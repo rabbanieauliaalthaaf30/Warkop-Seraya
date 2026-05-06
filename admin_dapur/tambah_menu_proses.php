@@ -1,6 +1,10 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) session_start();
 include "../koneksi.php";
 header('Content-Type: application/json');
+
+// Ambil ID Admin dari session
+$id_admin = $_SESSION['id_admin'] ?? null;
 
 // ===== Ambil & validasi data dasar =====
 $nama         = trim($_POST['nama_produk'] ?? "");
@@ -40,12 +44,12 @@ if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] === 0) {
 }
 
 // ===== Simpan produk utama =====
-// Tambahkan quantity_produk default = 1 agar tidak 0
+// Menambahkan id_admin ke query
 $stmt = $conn->prepare("
-    INSERT INTO produk (nama_produk, harga_produk, quantity_produk, image_url, kategori, available, status)
-    VALUES (?, ?, 1, ?, ?, 1, 'tersedia')
+    INSERT INTO produk (nama_produk, harga_produk, quantity_produk, image_url, kategori, available, status, id_admin)
+    VALUES (?, ?, 1, ?, ?, 1, 'tersedia', ?)
 ");
-$stmt->bind_param("sdss", $nama, $harga_dasar, $gambar, $kategori);
+$stmt->bind_param("sdssi", $nama, $harga_dasar, $gambar, $kategori, $id_admin);
 
 if (!$stmt->execute()) {
     echo json_encode(["status" => "error", "message" => "Gagal menyimpan produk: " . $stmt->error]);

@@ -1,6 +1,11 @@
 <?php
 session_start();
 include "../koneksi.php";
+
+if (!isset($_SESSION['username']) || $_SESSION['level'] !== 'super admin') {
+    header("Location: ../login.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">

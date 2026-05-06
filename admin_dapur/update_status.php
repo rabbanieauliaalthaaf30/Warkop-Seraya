@@ -1,5 +1,9 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) session_start();
 include '../koneksi.php';
+
+// Ambil ID Admin dari session
+$id_admin = $_SESSION['id_admin'] ?? null;
 
 if (isset($_POST['id_produk'])) {
     $id = intval($_POST['id_produk']); 
@@ -12,8 +16,8 @@ if (isset($_POST['id_produk'])) {
         $statusLama = $row['status'];
         $statusBaru = ($statusLama === 'tersedia') ? 'tidak tersedia' : 'tersedia';
 
-        // Update ke status baru
-        $query = "UPDATE produk SET status='$statusBaru' WHERE id_produk=$id";
+        // Update ke status baru + simpan id_admin yang mengubahnya
+        $query = "UPDATE produk SET status='$statusBaru', id_admin='$id_admin' WHERE id_produk=$id";
         if (mysqli_query($conn, $query)) {
             echo json_encode(["success" => true, "status" => ($statusBaru === 'tersedia' ? 1 : 0)]);
         } else {

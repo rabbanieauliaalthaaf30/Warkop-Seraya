@@ -3,7 +3,7 @@ session_start();
 include "../koneksi.php";
 
 // Cek apakah sudah login
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['username']) || $_SESSION['level'] !== 'super admin') {
     header("Location: ../login.php");
     exit;
 }
