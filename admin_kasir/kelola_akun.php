@@ -15,167 +15,216 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
   <title>Admin Kasir - Kelola Akun</title>
   <link rel="stylesheet" href="../css/kasir.css">
   <link rel="stylesheet" href="../css/logout.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Styling khusus untuk halaman kelola akun agar lebih premium */
+    :root {
+      --primary: #e91e63;
+      --primary-hover: #ff4081;
+      --secondary: #1e293b;
+      --bg-main: #f8fafc;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-main);
+      margin: 0;
+    }
+
+    /* Styling khusus untuk halaman kelola akun agar lebih modern & keren */
     .account-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
+      gap: 30px;
       margin-top: 20px;
     }
     .account-card {
       background: white;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-radius: 28px;
+      padding: 40px 25px;
+      box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       position: relative;
+      border: 1px solid #f1f5f9;
+      overflow: hidden;
+    }
+    .account-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-hover));
+      opacity: 0;
+      transition: opacity 0.3s;
     }
     .account-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      transform: translateY(-12px);
+      box-shadow: 0 25px 60px -15px rgba(233, 30, 99, 0.15);
+      border-color: rgba(233, 30, 99, 0.2);
+    }
+    .account-card:hover::before {
+      opacity: 1;
     }
     .avatar-circle {
-      width: 70px;
-      height: 70px;
-      background: linear-gradient(135deg, #6e8efb, #a777e3);
-      border-radius: 50%;
+      width: 90px;
+      height: 90px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      border-radius: 35%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 30px;
-      margin-bottom: 15px;
+      font-size: 38px;
+      font-weight: 700;
+      margin-bottom: 25px;
+      transform: rotate(-6deg);
+      border: 4px solid white;
+      box-shadow: 0 10px 20px rgba(233, 30, 99, 0.2);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .account-card:hover .avatar-circle {
+      transform: rotate(0deg) scale(1.1);
     }
     .role-badge {
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
       text-transform: uppercase;
-      margin-bottom: 10px;
+      letter-spacing: 0.8px;
+      margin-bottom: 15px;
     }
-    .role-kasir { background: #e3f2fd; color: #1976d2; }
+    .role-kasir { background: #fee2e2; color: var(--primary); }
     .role-dapur { background: #fff3e0; color: #f57c00; }
     
     .account-name {
-      font-size: 18px;
+      font-size: 22px;
       font-weight: 700;
-      color: #333;
-      margin-bottom: 5px;
+      color: var(--secondary);
+      margin-bottom: 30px;
     }
     .account-actions {
       display: flex;
-      gap: 10px;
-      margin-top: 20px;
+      gap: 15px;
       width: 100%;
     }
     .btn-acc {
       flex: 1;
-      padding: 10px;
+      padding: 12px;
       border: none;
-      border-radius: 8px;
+      border-radius: 14px;
       cursor: pointer;
       font-weight: 600;
-      transition: filter 0.2s;
+      transition: all 0.3s;
+      font-family: 'Poppins', sans-serif;
     }
-    .btn-edit-acc { background: #6e8efb; color: white; }
-    .btn-delete-acc { background: #ff5252; color: white; }
-    .btn-acc:hover { filter: brightness(0.9); }
+    .btn-edit-acc { background: #f1f5f9; color: var(--secondary); }
+    .btn-delete-acc { background: #fff1f2; color: #e11d48; }
+    .btn-acc:hover { transform: translateY(-3px); }
+    .btn-edit-acc:hover { background: #fee2e2; color: var(--primary); }
+    .btn-delete-acc:hover { background: #e11d48; color: white; }
 
     /* Modal Styling */
     .popup-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(15, 23, 42, 0.6);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 10000;
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(8px);
     }
     .popup-overlay.active { display: flex; }
     .popup-box {
       background: white;
       width: 90%;
-      max-width: 400px;
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      max-width: 440px;
+      border-radius: 30px;
+      padding: 40px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.25);
     }
-    .popup-box h3 { margin-bottom: 20px; text-align: center; color: #333; }
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #555; }
+    .popup-box h3 { font-size: 24px; margin-bottom: 30px; text-align: center; color: var(--secondary); }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #475569; font-size: 14px; }
     .form-group input, .form-group select {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
+      padding: 14px;
+      border: 2px solid #f1f5f9;
+      border-radius: 14px;
       font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s;
     }
+    .form-group input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.1); }
     .btn-submit {
       width: 100%;
-      padding: 12px;
-      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      padding: 16px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
       color: white;
       border: none;
-      border-radius: 10px;
+      border-radius: 14px;
       font-weight: 700;
       cursor: pointer;
       margin-top: 10px;
+      font-family: 'Poppins', sans-serif;
+      box-shadow: 0 10px 20px rgba(233, 30, 99, 0.2);
     }
     .btn-close-modal {
       width: 100%;
-      padding: 12px;
-      background: #f5f5f5;
-      color: #777;
+      padding: 14px;
+      background: #f1f5f9;
+      color: #64748b;
       border: none;
-      border-radius: 10px;
+      border-radius: 14px;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 10px;
+      margin-top: 15px;
+      font-family: 'Poppins', sans-serif;
     }
 
+    /* Notification Redesign */
     .notification {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 15px 25px;
-      border-radius: 10px;
-      color: white;
-      font-weight: 600;
-      z-index: 10001;
-      transform: translateY(100px);
-      transition: transform 0.3s ease;
+      top: 30px;
+      right: 30px;
+      min-width: 320px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 24px;
+      padding: 20px 25px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      z-index: 10005;
+      overflow: hidden;
     }
-    .notification.show { transform: translateY(0); }
-    .notification.success { background: #4caf50; }
-    .notification.error { background: #f44336; }
+    .notification.show { transform: translateX(0); }
+    .notif-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .notification.success .notif-icon { background: #dcfce7; color: #10b981; }
+    .notification.error .notif-icon { background: #fee2e2; color: #ef4444; }
+    .notif-content h4 { margin: 0; font-size: 16px; font-weight: 700; color: rgba(253, 247, 247, 0.93); }
+    .notif-content p { margin: 2px 0 0; font-size: 13px; color: #f8f2f2ff; }
+    .notif-progress { position: absolute; bottom: 0; left: 0; height: 4px; width: 100%; background: rgba(0,0,0,0.05); }
+    .notif-progress-bar { height: 100%; width: 100%; background: var(--primary); transform-origin: left; transition: transform linear; }
 
     /* Custom styles for delete modal buttons */
-    #confirmDeleteBtn {
-      background: #ff5252;
-      color: white;
-      box-shadow: 0 8px 24px rgba(255, 82, 82, 0.3);
-    }
-    #confirmDeleteBtn:hover {
-      background: #e34545;
-      transform: translateY(-3px);
-      box-shadow: 0 12px 30px rgba(255, 82, 82, 0.45);
-    }
-    #cancelDeleteBtn {
-      background: #f8f9fa;
-      color: #495057;
-      border: 1px solid #e9ecef;
-    }
-    #cancelDeleteBtn:hover {
-      background: #e9ecef;
-      transform: translateY(-3px);
-    }
+    #confirmDeleteBtn { background: var(--primary); color: white; font-family: 'Poppins', sans-serif; }
+    #cancelDeleteBtn { background: #f1f5f9; color: var(--secondary); font-family: 'Poppins', sans-serif; }
   </style>
 </head>
 
@@ -199,10 +248,10 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
 
   <!-- KONTEN UTAMA -->
   <div class="main">
-    <div class="card" style="padding: 30px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2 style="margin:0;">Kelola <span>Akun Admin</span></h2>
-        <button class="btn-submit" style="width: auto; padding: 10px 20px;" id="btnTambahAkun">+ Tambah Akun</button>
+    <div class="card" style="padding: 40px; border-radius: 30px; background: white; box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05); border: 1px solid #f1f5f9;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px;">
+        <h2 style="margin:0; font-size: 28px; font-weight: 700;">Kelola <span style="color: var(--primary);">Akun Admin</span></h2>
+        <button class="btn-submit" style="width: auto; padding: 12px 24px; margin: 0;" id="btnTambahAkun">+ Tambah Akun</button>
       </div>
 
       <div class="account-grid" id="accountGrid">
@@ -264,7 +313,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
   <!-- MODAL LOGOUT -->
   <div id="logoutModal" class="modal">
     <div class="modal-content">
-      <div class="icon-box">🚪</div>
+      <div class="icon-box" style="background: #f1f5f9; color: var(--secondary);">🚪</div>
       <h2>Yakin ingin logout?</h2>
       <p>Sesi Anda akan diakhiri dan Anda diarahkan kembali ke halaman login.</p>
       <div class="modal-actions">
@@ -277,11 +326,11 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
   <!-- MODAL KONFIRMASI HAPUS (MODERN) -->
   <div id="deleteModal" class="modal">
     <div class="modal-content">
-      <div class="icon-box" style="background: rgba(255, 82, 82, 0.1); color: #ff5252;">⚠️</div>
+      <div class="icon-box" style="background: rgba(233, 30, 99, 0.1); color: var(--primary);">⚠️</div>
       <h2>Hapus Akun?</h2>
       <p>Tindakan ini tidak dapat dibatalkan. Akun ini akan dihapus secara permanen dari sistem.</p>
       <div class="modal-actions">
-        <button id="confirmDeleteBtn" style="background: #ff5252;">Ya, Hapus</button>
+        <button id="confirmDeleteBtn">Ya, Hapus</button>
         <button id="cancelDeleteBtn">Batal</button>
       </div>
     </div>
@@ -383,14 +432,38 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
     };
 
     function showNotification(status, message) {
+      const oldNotif = document.querySelector('.notification');
+      if (oldNotif) oldNotif.remove();
+
       const notif = document.createElement('div');
       notif.className = `notification ${status}`;
-      notif.textContent = message;
+      
+      const iconName = status === 'success' ? 'check-circle' : 'alert-circle';
+      const title = status === 'success' ? 'Berhasil!' : 'Terjadi Kesalahan';
+
+      notif.innerHTML = `
+        <div class="notif-icon"><i data-feather="${iconName}"></i></div>
+        <div class="notif-content">
+          <h4>${title}</h4>
+          <p>${message}</p>
+        </div>
+        <div class="notif-progress">
+          <div class="notif-progress-bar"></div>
+        </div>
+      `;
+
       document.body.appendChild(notif);
+      feather.replace();
+
       setTimeout(() => notif.classList.add('show'), 10);
+      
+      const progressBar = notif.querySelector('.notif-progress-bar');
+      progressBar.style.transition = 'transform 3s linear';
+      progressBar.style.transform = 'scaleX(0)';
+
       setTimeout(() => {
         notif.classList.remove('show');
-        setTimeout(() => notif.remove(), 300);
+        setTimeout(() => notif.remove(), 500);
       }, 3000);
     }
   </script>
