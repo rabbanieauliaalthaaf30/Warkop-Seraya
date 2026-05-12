@@ -18,8 +18,8 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #e91e63;
-      --primary-hover: #ff4081;
+      --primary: #dc143c;
+      --primary-hover: #b71c1c;
       --secondary: #1e293b;
       --bg-main: #f8fafc;
     }
@@ -61,8 +61,8 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
     }
     .account-card:hover {
       transform: translateY(-12px);
-      box-shadow: 0 25px 60px -15px rgba(233, 30, 99, 0.15);
-      border-color: rgba(233, 30, 99, 0.2);
+      box-shadow: 0 25px 60px -15px rgba(220, 20, 60, 0.15);
+      border-color: rgba(220, 20, 60, 0.2);
     }
     .account-card:hover::before {
       opacity: 1;
@@ -81,7 +81,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
       margin-bottom: 25px;
       transform: rotate(-6deg);
       border: 4px solid white;
-      box-shadow: 0 10px 20px rgba(233, 30, 99, 0.2);
+      box-shadow: 0 10px 20px rgba(220, 20, 60, 0.2);
       transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .account-card:hover .avatar-circle {
@@ -158,7 +158,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
       font-family: 'Poppins', sans-serif;
       transition: all 0.3s;
     }
-    .form-group input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.1); }
+    .form-group input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(220, 20, 60, 0.1); }
     .btn-submit {
       width: 100%;
       padding: 16px;
@@ -170,7 +170,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
       cursor: pointer;
       margin-top: 10px;
       font-family: 'Poppins', sans-serif;
-      box-shadow: 0 10px 20px rgba(233, 30, 99, 0.2);
+      box-shadow: 0 10px 20px rgba(220, 20, 60, 0.2);
     }
     .btn-close-modal {
       width: 100%;
@@ -326,7 +326,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
   <!-- MODAL KONFIRMASI HAPUS (MODERN) -->
   <div id="deleteModal" class="modal">
     <div class="modal-content">
-      <div class="icon-box" style="background: rgba(233, 30, 99, 0.1); color: var(--primary);">⚠️</div>
+      <div class="icon-box" style="background: rgba(220, 20, 60, 0.1); color: var(--primary);">⚠️</div>
       <h2>Hapus Akun?</h2>
       <p>Tindakan ini tidak dapat dibatalkan. Akun ini akan dihapus secara permanen dari sistem.</p>
       <div class="modal-actions">
