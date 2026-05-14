@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
           "Rp " + totalPendapatan.toLocaleString("id-ID");
         totalTransaksiEl.textContent = totalTransaksi + " Transaksi";
 
-        const chartType = periode === "week" ? "line" : "bar";
+        const chartType = "line"; // Selalu gunakan line chart untuk estetika premium
         const chartTitle =
           periode === "today"
             ? "Pendapatan Hari Ini"
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // 🔄 Reset chart lama
         if (chartInstance) chartInstance.destroy();
 
-        // 🎨 Buat chart baru
+        // 🎨 Buat chart baru dengan efek Area Chart yang smooth
         chartInstance = new Chart(ctx, {
           type: chartType,
           data: {
@@ -134,19 +134,31 @@ document.addEventListener("DOMContentLoaded", function () {
               {
                 label: "Pendapatan",
                 data: data,
-                backgroundColor:
-                  chartType === "bar"
-                    ? "rgba(220, 20, 60, 0.7)"
-                    : "rgba(220, 20, 60, 0.1)",
+                backgroundColor: (context) => {
+                  const chart = context.chart;
+                  const { ctx, chartArea } = chart;
+                  if (!chartArea) return null;
+                  const gradient = ctx.createLinearGradient(
+                    0,
+                    chartArea.top,
+                    0,
+                    chartArea.bottom
+                  );
+                  gradient.addColorStop(0, "rgba(220, 20, 60, 0.4)");
+                  gradient.addColorStop(1, "rgba(220, 20, 60, 0.0)");
+                  return gradient;
+                },
                 borderColor: "rgba(220, 20, 60, 1)",
-                borderWidth: 2,
+                borderWidth: 3,
                 fill: true,
-                tension: 0.4,
+                tension: 0.45, // Membuat garis melengkung halus
                 pointBackgroundColor: "#fff",
-                pointBorderColor: "rgba(54, 162, 235, 1)",
-                pointHoverRadius: 6,
-                pointRadius: chartType === "line" ? 4 : 0,
-                pointHoverBackgroundColor: "#007bff",
+                pointBorderColor: "rgba(220, 20, 60, 1)",
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 8,
+                pointHoverBackgroundColor: "rgba(220, 20, 60, 1)",
+                pointHoverBorderColor: "#fff",
               },
             ],
           },

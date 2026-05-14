@@ -89,7 +89,7 @@ $displayed = [];
 </head>
 <body>
   <!-- Tombol Keranjang -->
-  <div class="cart-icon" onclick="toggleCart()">
+  <div class="cart-icon" onclick="toggleCart(event)">
     <i data-feather="shopping-cart"></i><span id="cart-count">0</span>
   </div>
 
@@ -224,7 +224,7 @@ $displayed = [];
           <span id="qty-display">0</span>
           <button type="button" id="btn-plus">+</button>
         </div>
-        <textarea class="popup-note" id="note" placeholder="Catatan pesanan"></textarea>
+        <textarea class="popup-note" id="note" placeholder="Catatan Pesanan"></textarea>
       </div>
       <div class="popup-spacer"></div>
       <button class="popup-add-button" id="add-to-cart-btn">Masukkan ke Keranjang</button>

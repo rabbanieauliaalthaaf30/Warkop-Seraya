@@ -194,30 +194,47 @@ if (isset($_GET['rekap'])) {
         $periodeInfo = htmlspecialchars($dari) . " → " . htmlspecialchars($sampai);
     }
 
-    echo "<div id='rekapContainer' class='rekap-list'>";
+    echo "<div id='rekapContainer' class='rekap-list' style='padding: 10px; background: #fff;'>";
     // tambahkan header ringkas periode di tampilan modal
-    echo "<div style='text-align:center; margin-bottom:10px;'>
-            <strong>{$periodeInfo}</strong>
+    echo "<div style='text-align:center; margin-bottom:20px; font-family:\"Poppins\", sans-serif;'>
+            <span style='background: #f1f5f9; padding: 5px 15px; border-radius: 20px; font-size: 13px; color: #64748b; font-weight: 600;'>
+              Periode: {$periodeInfo}
+            </span>
           </div>";
 
     if ($res && mysqli_num_rows($res) > 0) {
         $no = 1;
         while ($r = mysqli_fetch_assoc($res)) {
-            echo "<div class='rekap-item'>
-                    <p><b>{$no}. Meja {$r['nomor_meja']} - {$r['nama_pemesan']} (" . htmlspecialchars($r['metode']) . ")</b></p>
-                    <p style='margin-left:10px;'>".htmlspecialchars($r['pesanan'])."</p>
-                    <p style='margin-left:10px;'><b>Total:</b> Rp ".number_format($r['total'],0,',','.')."</p>
-                    <p style='margin-left:10px; color:gray; font-size:12px;'>Kasir: " . htmlspecialchars($r['nama_kasir'] ?? '-') . " | Waktu: " . htmlspecialchars($r['waktu_bayar']) . "</p>
-                    <hr>
+            echo "<div class='rekap-item' style='margin-bottom: 15px; border-radius: 12px; border: 1px solid #f1f5f9; padding: 15px;'>
+                    <div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;'>
+                      <span style='font-weight: 700; color: #1e293b; font-size: 14px;'>{$no}. Meja {$r['nomor_meja']} - {$r['nama_pemesan']}</span>
+                      <span style='font-size: 11px; background: #fdf2f2; color: #dc143c; padding: 2px 8px; border-radius: 6px; font-weight: 600;'>" . htmlspecialchars(strtoupper($r['metode'])) . "</span>
+                    </div>
+                    <p style='margin: 5px 0; color: #475569; font-size: 13px;'>".htmlspecialchars($r['pesanan'])."</p>
+                    <div style='display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top: 1px dashed #e2e8f0;'>
+                      <span style='font-size: 12px; color: #94a3b8;'>Waktu: " . date('d/m/Y H:i', strtotime($r['waktu_bayar'])) . "</span>
+                      <span style='font-weight: 700; color: #dc143c; font-size: 15px;'>Rp ".number_format($r['total'],0,',','.')."</span>
+                    </div>
                   </div>";
             $no++;
         }
     } else {
-        echo "<p style='text-align:center;'>Tidak ada data transaksi</p>";
+        echo "<div style='text-align:center; padding: 40px 0;'>
+                <p style='color: #94a3b8; font-size: 14px;'>Tidak ada data transaksi pada periode ini.</p>
+              </div>";
     }
-    echo "<div class='rekap-summary'>
-            <p><b>Total Transaksi:</b> ".($summary['total_transaksi'] ?? 0)."</p>
-            <p><b>Total Pendapatan:</b> Rp ".number_format(($summary['total_pendapatan'] ?? 0), 0, ',', '.')."</p>
+    
+    echo "<div class='rekap-summary' style='margin-top: 25px; background: #1e293b; color: #fff; border-radius: 15px; padding: 20px;'>
+            <div style='display:flex; justify-content:space-between; align-items:flex-end;'>
+              <div>
+                <span style='color: #94a3b8; font-size: 12px; display:block; margin-bottom:4px;'>Total Transaksi</span>
+                <span style='font-weight: 700; font-size: 18px;'>".($summary['total_transaksi'] ?? 0)."</span>
+              </div>
+              <div style='text-align:right;'>
+                <span style='color: #94a3b8; font-size: 12px; display:block; margin-bottom:4px;'>Total Pendapatan</span>
+                <span style='font-weight: 800; font-size: 18px; color: #f8fafc;'>Rp ".number_format(($summary['total_pendapatan'] ?? 0), 0, ',', '.')."</span>
+              </div>
+            </div>
           </div>";
     echo "</div>";
     exit;
@@ -480,39 +497,43 @@ document.getElementById("btnCetakPDF").addEventListener("click", () => {
     year: "numeric",
   });
 
-  // ✅ Opsi PDF baru
+  // ✅ Opsi PDF (Final Fix untuk Terpotong)
   const opt = {
-    margin: 0.5,
+    margin: [10, 0, 10, 0], // [top, left, bottom, right] dalam mm
     filename: `Laporan_Penjualan_${periodeRaw}_${tanggal.replace(/\s+/g, "_")}.pdf`,
     image: { type: "jpeg", quality: 1 },
     html2canvas: {
-      scale: 2,
+      scale: 2, 
       useCORS: true,
+      x: 0,
+      y: 0,
       scrollX: 0,
       scrollY: 0,
-      windowWidth: document.body.scrollWidth,
+      windowWidth: 800, 
     },
-    jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-    pagebreak: { mode: ["avoid-all", "css", "legacy"] }, // penting biar ga terpotong
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    pagebreak: { mode: ["avoid-all", "css", "legacy"] },
   };
 
   // ✅ Header modern (sertakan pretty periode bila ada)
   const header = `
     <div style="
       text-align:center;
-      margin-bottom:20px;
-      padding-bottom:10px;
-      border-bottom:3px solid #e91e63;
+      margin-bottom:25px;
+      padding-bottom:15px;
+      border-bottom:2px solid #dc143c;
     ">
-      <h2 style="margin:0; color:#e91e63; font-family:'Poppins',sans-serif;">
-        LAPORAN PENJUALAN WARKOP SERAYA
+      <h2 style="margin:0; color:#1e293b; font-family:'Poppins',sans-serif; letter-spacing: 1px; font-size: 22px;">
+        LAPORAN PENJUALAN <span style="color:#dc143c;">WARKOP SERAYA</span>
       </h2>
-      <p style="margin:2px 0; font-weight:500; font-size:14px;">
-        Periode: <b>${String(pretty).toUpperCase()}</b>
-      </p>
-      <p style="margin:2px 0; font-size:12px; color:#555;">
-        Dicetak: ${tanggal}
-      </p>
+      <div style="display:flex; justify-content:center; gap:15px; margin-top:8px;">
+        <span style="font-weight:600; font-size:12px; color:#64748b; background:#f1f5f9; padding:2px 10px; border-radius:12px;">
+          Periode: ${String(pretty).toUpperCase()}
+        </span>
+        <span style="font-size:12px; color:#64748b; background:#f1f5f9; padding:2px 10px; border-radius:12px;">
+          Dicetak: ${tanggal}
+        </span>
+      </div>
     </div>
   `;
 
@@ -520,25 +541,33 @@ document.getElementById("btnCetakPDF").addEventListener("click", () => {
   const footer = `
     <div style="
       text-align:center;
-      font-size:12px;
-      color:#777;
-      margin-top:20px;
-      border-top:1px dashed #ccc;
-      padding-top:5px;
+      font-size:10px;
+      color:#94a3b8;
+      margin-top:30px;
+      border-top:1px dashed #e2e8f0;
+      padding-top:10px;
+      letter-spacing: 1px;
     ">
-      <em>Warkop Seraya — Laporan Penjualan</em>
+      WARKOP SERAYA — DIGITAL SALES REPORT
     </div>
   `;
 
   // ✅ Clone isi rekap dan gabungkan
   const clone = element.cloneNode(true);
+  
+  // Sembunyikan elemen periode yang ada di dalam klon agar tidak duplikat dengan header PDF
+  const duplicatePeriode = clone.querySelector('div[style*="text-align:center"]');
+  if (duplicatePeriode) duplicatePeriode.style.display = 'none';
+
   const wrapper = document.createElement("div");
-  wrapper.style.fontFamily = "Poppins, Arial, sans-serif";
-  wrapper.style.fontSize = "13px";
-  wrapper.style.lineHeight = "1.5";
-  wrapper.style.color = "#333";
-  wrapper.style.padding = "10px";
+  wrapper.style.fontFamily = "'Poppins', Arial, sans-serif";
+  wrapper.style.fontSize = "12px";
+  wrapper.style.lineHeight = "1.6";
+  wrapper.style.color = "#1e293b";
+  wrapper.style.padding = "40px";
   wrapper.style.background = "#fff";
+  wrapper.style.width = "794px";
+  wrapper.style.boxSizing = "border-box";
 
   // Sisipkan header
   const headerDiv = document.createElement("div");
@@ -548,22 +577,33 @@ document.getElementById("btnCetakPDF").addEventListener("click", () => {
   // Sisipkan konten rekap (clone)
   wrapper.appendChild(clone);
 
-  // Sisipkan footer — JANGAN pakai innerHTML+= (akan destroy clone di atas)
+  // Sisipkan footer
   const footerDiv = document.createElement("div");
   footerDiv.innerHTML = footer;
   wrapper.appendChild(footerDiv);
 
   // ✅ Tambahkan gaya CSS anti-terpotong ke elemen rekap-item
-  const rekapItems = wrapper.querySelectorAll(".rekap-item, .rekap-summary");
+  const rekapItems = wrapper.querySelectorAll(".rekap-item");
   rekapItems.forEach((el) => {
     el.style.pageBreakInside = "avoid";
     el.style.background = "#fff";
-    el.style.borderRadius = "10px";
-    el.style.borderLeft = "4px solid #e91e63";
-    el.style.padding = "10px 15px";
-    el.style.marginBottom = "12px";
-    el.style.boxShadow = "0 1px 4px rgba(0,0,0,0.1)";
+    el.style.borderRadius = "12px";
+    el.style.border = "1px solid #f1f5f9";
+    el.style.padding = "15px";
+    el.style.marginBottom = "15px";
+    el.style.width = "100%";
+    el.style.boxSizing = "border-box";
   });
+
+  const summary = wrapper.querySelector(".rekap-summary");
+  if (summary) {
+    summary.style.pageBreakInside = "avoid";
+    summary.style.background = "#1e293b";
+    summary.style.color = "#fff";
+    summary.style.borderRadius = "15px";
+    summary.style.padding = "20px";
+    summary.style.marginTop = "25px";
+  }
 
   // ✅ Cetak PDF
   html2pdf().set(opt).from(wrapper).save();

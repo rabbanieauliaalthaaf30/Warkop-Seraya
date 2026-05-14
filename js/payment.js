@@ -115,147 +115,139 @@ function showReceipt(order, method) {
   const modal = document.getElementById("receiptModal");
   if (modal) modal.style.display = "flex";
 
-  // Download PDF (Elegant Color Edition)
+  // Download PDF (Exact Popup Design Replica)
   const downloadBtn = document.getElementById("downloadReceiptBtn");
   if (downloadBtn) {
     downloadBtn.onclick = function () {
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF("p", "mm", "a4");
+      const doc = new jsPDF("p", "mm", [80, 200]); // Ukuran struk thermal lebar 80mm
 
-      // Palet warna elegan
-      const colorTitle = [77, 54, 43]; // coffee brown
-      const colorAccent = [186, 157, 112]; // gold-beige
-      const textMain = [50, 50, 50]; // charcoal
-      const textSoft = [120, 120, 120]; // light gray
-      let y = 25;
+      const colorPrimary = [220, 20, 60]; // Crimson #dc143c
+      const colorDark = [30, 41, 59];    // Slate 800 (#1e293b)
+      const colorMuted = [100, 116, 139]; // Slate 500 (#64748b)
+      const colorLine = [203, 213, 225]; // #cbd5e1
+      let y = 15;
 
-      // === HEADER ===
-      doc.setFont("times", "bold");
-      doc.setFontSize(24);
-      doc.setTextColor(...colorTitle);
-      doc.text("WARKOP SERAYA", 105, y, { align: "center" });
+      // === HEADER: Warkop Seraya (Centered) ===
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      
+      const titleWarkop = "Warkop ";
+      const titleSeraya = "Seraya";
+      const totalTitleWidth = doc.getTextWidth(titleWarkop + titleSeraya);
+      const startX = (80 - totalTitleWidth) / 2; // Pusatkan di lebar 80mm
 
+      // "Warkop" (Dark)
+      doc.setTextColor(...colorDark);
+      doc.text(titleWarkop, startX, y);
+      
+      // "Seraya" (Crimson)
+      doc.setTextColor(...colorPrimary);
+      const serayaX = startX + doc.getTextWidth(titleWarkop);
+      doc.text(titleSeraya, serayaX, y);
+
+      // Garis Putus-putus (Dashed Line)
       y += 6;
-      doc.setFont("times", "italic");
-      doc.setFontSize(11);
-      doc.setTextColor(...textSoft);
-      doc.text("Est. 2020", 105, y, { align: "center" });
+      doc.setDrawColor(...colorLine);
+      doc.setLineWidth(0.4);
+      doc.setLineDashPattern([1.5, 1.5], 0);
+      doc.line(10, y, 70, y);
+      doc.setLineDashPattern([], 0); // Reset dash
 
+      // Subtitle: Bukti Pembayaran (Centered)
       y += 8;
-      doc.setDrawColor(...colorAccent);
-      doc.setLineWidth(0.5);
-      doc.line(50, y, 160, y);
-
-      y += 12;
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(11);
-      doc.setTextColor(...textMain);
-      doc.text("Bukti Pembayaran", 105, y, { align: "center" });
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(...colorMuted);
+      const subtitle = "BUKTI PEMBAYARAN";
+      const subtitleWidth = doc.getTextWidth(subtitle);
+      const subtitleX = (80 - subtitleWidth) / 2;
+      doc.text(subtitle, subtitleX, y);
 
       // === INFO PESANAN ===
-      y += 14;
-      const info = [
-        ["ID Pesanan :", order.id],
-        ["Nama Pemesan :", order.nama_pemesan],
-        ["Nomor Meja :", order.nomor_meja],
-        ["Metode Pembayaran :", methodText],
-        ["Waktu Transaksi :", dateTime],
-      ];
-
-      info.forEach(([label, value]) => {
-        y += 6;
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(...colorTitle);
-        doc.text(`${label}`, 35, y);
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(...textMain);
-        doc.text(`${value}`, 90, y);
-      });
-
-      // === PEMBATAS ===
       y += 10;
-      doc.setDrawColor(...colorAccent);
-      doc.setLineWidth(0.3);
-      doc.line(30, y, 180, y);
-      y += 8;
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "normal");
+      
+      const leftX = 10;
+      const rightX = 70;
+
+      const drawRow = (label, value) => {
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(...colorDark);
+        doc.text(label, leftX, y);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(...colorDark);
+        doc.text(String(value), rightX, y, { align: "right" });
+        y += 5;
+      };
+
+      drawRow("ID Pesanan:", order.id);
+      drawRow("Nama Pemesan:", order.nama_pemesan);
+      drawRow("Nomor Meja:", order.nomor_meja);
+      drawRow("Metode:", methodText);
+      drawRow("Waktu:", dateTime);
+
+      // Garis Putus-putus sebelum tabel
+      y += 2;
+      doc.setDrawColor(...colorLine);
+      doc.setLineDashPattern([1.5, 1.5], 0);
+      doc.line(10, y, 70, y);
+      doc.setLineDashPattern([], 0);
 
       // === TABEL ITEM ===
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(11);
-      doc.setTextColor(...colorTitle);
-      doc.text("Item", 35, y);
-      doc.text("Qty", 120, y);
-      doc.text("Subtotal", 175, y, { align: "right" });
+      doc.autoTable({
+        startY: y + 2,
+        margin: { left: 8, right: 8 },
+        theme: "plain",
+        styles: { fontSize: 8, cellPadding: 1.5, textColor: colorDark, font: "helvetica" },
+        headStyles: { fontStyle: "bold", textColor: colorMuted, borderBottomColor: colorLine, borderBottomWidth: 0.1 },
+        columnStyles: {
+          0: { cellWidth: 35 },
+          1: { cellWidth: 10, halign: "center" },
+          2: { cellWidth: 19, halign: "right" }
+        },
+        head: [["Item", "Qty", "Subtotal"]],
+        body: order.items.map(it => [
+          it.nama_produk,
+          it.quantity.toString(),
+          "Rp " + Number(it.subtotal).toLocaleString("id-ID")
+        ]),
+        didDrawPage: (data) => {
+          y = data.cursor.y;
+        }
+      });
 
-      y += 3;
-      doc.setDrawColor(...colorAccent);
-      doc.setLineWidth(0.2);
-      doc.line(30, y, 180, y);
-      y += 5;
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(10.5);
-      doc.setTextColor(...textMain);
-
-      if (order.items && order.items.length > 0) {
-        order.items.forEach((it) => {
-          doc.text(it.nama_produk, 35, y);
-          doc.text(it.quantity.toString(), 122, y, { align: "center" });
-          doc.text(
-            "Rp " + Number(it.subtotal).toLocaleString("id-ID"),
-            175,
-            y,
-            { align: "right" }
-          );
-
-          y += 6;
-          doc.setDrawColor(...colorAccent);
-          doc.line(32, y, 178, y);
-          y += 3;
-        });
-      }
-
-      y += 6;
-
+      // Garis Putus-putus setelah tabel
+      y += 4;
+      doc.setDrawColor(...colorLine);
+      doc.setLineDashPattern([1.5, 1.5], 0);
+      doc.line(10, y, 70, y);
+      doc.setLineDashPattern([], 0);
+      
       // === TOTAL ===
-      doc.setDrawColor(...colorAccent);
-      doc.setFillColor(249, 245, 239); // soft beige background
-      doc.roundedRect(30, y, 150, 18, 2, 2, "FD");
-
+      y += 8;
+      doc.setFontSize(11);
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(12);
-      doc.setTextColor(...colorTitle);
-      doc.text("TOTAL PEMBAYARAN", 35, y + 12);
-      doc.text(
-        `Rp ${Number(order.total).toLocaleString("id-ID")}`,
-        175,
-        y + 12,
-        { align: "right" }
-      );
+      doc.setTextColor(...colorDark);
+      doc.text("TOTAL", 10, y);
+      doc.setTextColor(...colorPrimary);
+      doc.text("Rp " + Number(order.total).toLocaleString("id-ID"), 70, y, { align: "right" });
 
       // === FOOTER ===
-      y += 35;
-      doc.setDrawColor(...colorAccent);
-      doc.line(60, y, 150, y);
-      y += 10;
-
-      doc.setFont("times", "italic");
-      doc.setFontSize(11);
-      doc.setTextColor(...colorTitle);
-      doc.text("“Warkop Seraya.”", 105, y, {
-        align: "center",
-      });
-
-      y += 10;
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      doc.setTextColor(...textSoft);
-      doc.text("“Terima kasih telah berkunjung”", 105, y, {
-        align: "center",
-      });
+      y += 20;
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "italic");
+      doc.setTextColor(150, 150, 150);
+      doc.text("Terima kasih telah berkunjung", 40, y, { align: "center" });
+      
+      y += 4;
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(...colorDark);
+      doc.text("Warkop Seraya", 40, y, { align: "center" });
 
       // === SIMPAN ===
-      doc.save("Struk_Pembayaran.pdf");
+      doc.save(`Struk_Seraya_${order.id}.pdf`);
     };
   }
 }

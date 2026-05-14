@@ -32,7 +32,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #1a0510;
+  background-color: #050a1a; /* Deep midnight blue */
   overflow: hidden;
   position: relative;
 }
@@ -44,17 +44,16 @@ body::before {
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse 90% 70% at 15% 15%, rgba(220, 20, 60, 0.55) 0%, transparent 55%),
-    radial-gradient(ellipse 70% 60% at 85% 85%, rgba(160, 10, 40, 0.45) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 80% at 80% 10%, rgba(255, 100, 80, 0.25) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 50% at 20% 85%, rgba(100, 5, 20, 0.4) 0%, transparent 55%),
-    linear-gradient(145deg, #2a0812 0%, #1a0510 40%, #0f020a 100%);
-  animation: meshPulse 14s ease-in-out infinite alternate;
+    radial-gradient(circle at 10% 20%, rgba(220, 20, 60, 0.4) 0%, transparent 45%),
+    radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.2) 0%, transparent 50%),
+    linear-gradient(145deg, #050a1a 0%, #1a0510 60%, #000 100%);
+  animation: meshPulse 10s ease-in-out infinite alternate;
 }
 
 @keyframes meshPulse {
-  0%   { opacity: 1;    transform: scale(1); }
-  100% { opacity: 0.88; transform: scale(1.03); }
+  0%   { opacity: 1; transform: scale(1) rotate(0deg); }
+  100% { opacity: 0.9; transform: scale(1.1) rotate(2deg); }
 }
 
 /* ── Layer 2: subtle dot grid overlay ── */
@@ -64,73 +63,53 @@ body::after {
   inset: 0;
   z-index: 1;
   background-image:
-    radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
-  background-size: 32px 32px;
+    radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
   pointer-events: none;
 }
 
-/* ── Blob orb 1 — kiri atas ── */
+/* ── Floating Glowing Orbs ── */
 .breeze {
   position: fixed;
   z-index: 2;
-  border-radius: 50%;
+  inset: 0;
   pointer-events: none;
-  filter: blur(80px);
 }
 
 .breeze::before,
 .breeze::after {
   content: '';
-  position: fixed;
+  position: absolute;
   border-radius: 50%;
-  filter: blur(90px);
-  pointer-events: none;
-  animation: blobDrift ease-in-out infinite alternate;
+  filter: blur(100px);
+  opacity: 0.6;
 }
 
-/* Orb utama */
-.breeze {
-  width: 520px;
-  height: 520px;
-  top: -140px;
-  left: -120px;
-  background: radial-gradient(circle, rgba(220,20,60,0.38) 0%, transparent 70%);
-  animation: blobDrift1 16s ease-in-out infinite alternate;
-}
-
-/* Orb kanan bawah */
+/* Orb 1: Top Left - Crimson */
 .breeze::before {
-  width: 420px;
-  height: 420px;
-  bottom: -100px;
-  right: -80px;
-  top: auto;
-  left: auto;
-  background: radial-gradient(circle, rgba(180,10,40,0.35) 0%, transparent 70%);
-  animation: blobDrift2 20s ease-in-out infinite alternate;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(220, 20, 60, 0.4), transparent 70%);
+  top: -200px;
+  left: -200px;
+  animation: floatOrb 20s ease-in-out infinite alternate;
 }
 
-/* Orb tengah aksen */
+/* Orb 2: Bottom Right - Blue/Indigo */
 .breeze::after {
-  width: 280px;
-  height: 280px;
-  top: 40%;
-  left: 60%;
-  background: radial-gradient(circle, rgba(255,80,60,0.18) 0%, transparent 70%);
-  animation: blobDrift3 24s ease-in-out infinite alternate;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.3), transparent 70%);
+  bottom: -150px;
+  right: -150px;
+  animation: floatOrb 25s ease-in-out infinite alternate-reverse;
 }
 
-@keyframes blobDrift1 {
-  0%   { transform: translate(0,   0)   scale(1);    }
-  100% { transform: translate(40px, 30px) scale(1.08); }
-}
-@keyframes blobDrift2 {
-  0%   { transform: translate(0,   0)    scale(1);    }
-  100% { transform: translate(-30px, -25px) scale(1.06); }
-}
-@keyframes blobDrift3 {
-  0%   { transform: translate(0,  0)   scale(1);    }
-  100% { transform: translate(20px, -20px) scale(1.1); }
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(100px, 50px) scale(1.1); }
+  66% { transform: translate(-50px, 100px) scale(0.9); }
+  100% { transform: translate(20px, -30px) scale(1.05); }
 }
 
 /* ── Container ── */
@@ -140,12 +119,17 @@ body::after {
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: floatContainer 6s ease-in-out infinite, fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes floatContainer {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* ── Judul brand ── */

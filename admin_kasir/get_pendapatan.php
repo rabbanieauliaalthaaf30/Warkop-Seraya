@@ -34,15 +34,24 @@ if ($periode == 'today') {
 elseif ($periode == 'week') {
     $sql = "
         SELECT 
-            DAYNAME(p.waktu_bayar) AS hari, 
+            CASE DAYNAME(p.waktu_bayar)
+                WHEN 'Monday' THEN 'Senin'
+                WHEN 'Tuesday' THEN 'Selasa'
+                WHEN 'Wednesday' THEN 'Rabu'
+                WHEN 'Thursday' THEN 'Kamis'
+                WHEN 'Friday' THEN 'Jumat'
+                WHEN 'Saturday' THEN 'Sabtu'
+                WHEN 'Sunday' THEN 'Minggu'
+            END AS hari, 
             SUM(t.total) AS total,
-            COUNT(t.id_transaksi) AS transaksi
+            COUNT(t.id_transaksi) AS transaksi,
+            DATE(p.waktu_bayar) as tgl
         FROM transaksi t
         JOIN pembayaran p ON t.id_transaksi = p.id_transaksi
         WHERE p.status = 'sudah bayar'
           AND YEARWEEK(p.waktu_bayar, 1) = YEARWEEK(CURDATE(), 1)
-        GROUP BY DAYNAME(p.waktu_bayar)
-        ORDER BY p.waktu_bayar ASC
+        GROUP BY tgl, hari
+        ORDER BY tgl ASC
     ";
 }
 

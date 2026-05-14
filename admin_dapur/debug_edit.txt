@@ -1,0 +1,25 @@
+Array
+(
+    [id_produk] => 67
+    [nama_produk] => Mie Kornet + Telur
+    [kategori] => Aneka Mie
+    [harga_dasar] => 20000
+    [varian_nama] => Array
+        (
+            [0] => Goreng
+            [1] => Soto
+            [2] => Ayam Bawang
+            [3] => Kari Ayam
+            [4] => Rendang
+        )
+
+    [varian_harga] => Array
+        (
+            [0] => 20000
+            [1] => 20000
+            [2] => 20000
+            [3] => 20000
+            [4] => 20000
+        )
+
+)

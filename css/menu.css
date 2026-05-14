@@ -232,14 +232,16 @@ body {
 /* Close Button */
 .popup-close {
   position: absolute;
-  top: 10px;
-  right: 14px;
+  top: 8px;
+  right: 18px;
   background: none;
   border: none;
-  font-size: 1.3rem;
+  font-size: 2.5rem;
   cursor: pointer;
   color: var(--primary);
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  line-height: 1;
+  z-index: 100;
 }
 
 .popup-close:hover {
@@ -266,11 +268,27 @@ body {
 /* Konten */
 .popup-content {
   flex: 1;
-  padding-right: 6px;
+  padding-right: 10px; /* Tambah padding untuk scrollbar */
   display: flex;
   flex-direction: column;
   gap: 10px;
-  overflow: hidden;
+  overflow-y: auto; /* Aktifkan scroll vertikal jika konten penuh */
+}
+
+/* Custom Scrollbar untuk Popup Content */
+.popup-content::-webkit-scrollbar {
+  width: 5px;
+}
+.popup-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+.popup-content::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+.popup-content::-webkit-scrollbar-thumb:hover {
+  background: var(--hv);
 }
 
 /* Gambar popup */
@@ -363,17 +381,20 @@ body {
 /* Catatan */
 .popup-note {
   width: 100%;
-  height: 100px;
+  height: 70px;
+  min-height: 70px; /* Kunci tinggi minimum */
   border-radius: 12px;
-  padding: 0.8rem;
-  border: 1px solid #e2e8f0;
+  padding: 10px 15px;
+  border: 1.5px solid #e2e8f0;
   resize: none;
   font-family: inherit;
-  background: #f8fafc;
+  font-size: 0.9rem;
+  background: #fdfdfd;
   color: var(--color);
-  margin-top: 8px;
-  margin-bottom: 12px;
+  margin-top: 5px;
+  margin-bottom: 10px;
   transition: all 0.3s ease;
+  flex-shrink: 0; /* Cegah tertekan oleh flexbox */
 }
 
 .popup-note:focus {
@@ -451,9 +472,10 @@ body {
   border: none;
   background: none;
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 1.8rem;
   cursor: pointer;
   transition: 0.3s ease;
+  line-height: 1;
 }
 
 .cart-header button:hover {
@@ -540,9 +562,10 @@ body {
   border: none;
   color: var(--primary);
   cursor: pointer;
-  font-size: 16px;
+  font-size: 22px;
   flex-shrink: 0;
   transition: 0.25s ease;
+  line-height: 1;
 }
 
 .cart-item-right button:hover {
@@ -702,9 +725,10 @@ body {
   background: none;
   border: none;
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 1.8rem;
   cursor: pointer;
   transition: 0.25s ease;
+  line-height: 1;
 }
 
 .order-header button:hover {
@@ -801,9 +825,10 @@ body {
   border: none;
   color: var(--primary);
   cursor: pointer;
-  font-size: 16px;
+  font-size: 22px;
   margin-left: 10px;
   transition: 0.25s ease;
+  line-height: 1;
 }
 
 .order-item button:hover {

@@ -262,16 +262,50 @@ function resetAddMenuPopup() {
 }
 
 // ===== CART =====
-function toggleCart() {
-  closeAllPopups();
+function toggleCart(event) {
+  if (event) event.stopPropagation();
   const cartDiv = document.getElementById("cart");
   if (!cartDiv) return;
-  cartDiv.style.display = cartDiv.style.display === "flex" ? "none" : "flex";
+
+  const isCurrentlyOpen = cartDiv.style.display === "flex";
+  closeAllPopups();
+
+  if (!isCurrentlyOpen) {
+    cartDiv.style.display = "flex";
+  }
 }
+
 function closeCart() {
   const c = document.getElementById("cart");
   if (c) c.style.display = "none";
 }
+
+// Global click listener untuk tutup popup jika klik di luar
+window.addEventListener("click", (e) => {
+  const cartDiv = document.getElementById("cart");
+  const cartIcon = document.querySelector(".cart-icon");
+  const orderPopup = document.getElementById("order-popup");
+
+  // Tutup Cart jika klik di luar cart dan bukan klik icon cart
+  if (
+    cartDiv &&
+    cartDiv.style.display === "flex" &&
+    !cartDiv.contains(e.target) &&
+    !cartIcon.contains(e.target)
+  ) {
+    closeCart();
+  }
+
+  // Tutup Order Popup jika klik di luar
+  if (
+    orderPopup &&
+    orderPopup.style.display === "flex" &&
+    !orderPopup.contains(e.target) &&
+    !e.target.closest(".checkout-btn") // Cegah langsung tutup saat klik checkout
+  ) {
+    closeAllPopups();
+  }
+});
 
 function renderCart() {
   const cartItemsDiv = document.getElementById("cart-items");
