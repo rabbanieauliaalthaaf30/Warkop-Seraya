@@ -12,17 +12,27 @@ function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-// ===== Fungsi baru: tutup semua popup =====
+// ===== Fungsi baru: tutup semua popup dengan animasi =====
 function closeAllPopups() {
   const popups = document.querySelectorAll(
     ".popup-overlay, #order-popup, #cart"
   );
-  popups.forEach((p) => (p.style.display = "none"));
+  popups.forEach((p) => {
+    if (p.classList.contains("show")) {
+      p.classList.remove("show");
+      p.classList.add("hide");
+      setTimeout(() => {
+        p.style.display = "none";
+        p.classList.remove("hide");
+      }, 400); // Sesuai durasi transisi CSS (0.4s)
+    } else {
+      p.style.display = "none";
+    }
+  });
   resetAddMenuPopup();
 }
 
 // ===== POPUP Tambahkan menu =====
-// signature: openPopup(name, hot, ice, image, variants=null, basePrice=0, id=null)
 function openPopup(
   name,
   hot,
@@ -34,14 +44,19 @@ function openPopup(
 ) {
   closeAllPopups();
 
-  // simpan id & default values (sanitize id masuk di confirm/add)
+  // simpan id & default values
   selectedId = id;
   selectedQty = 0;
   selectedName = name;
   selectedPrice = basePrice || 0;
 
   const overlay = document.querySelector(".popup-overlay");
-  if (overlay) overlay.style.display = "flex";
+  if (overlay) {
+    overlay.style.display = "flex";
+    // Trigger reflow untuk animasi
+    void overlay.offsetWidth;
+    overlay.classList.add("show");
+  }
 
   const subtitle = document.getElementById("popup-subtitle");
   if (subtitle) subtitle.innerText = name;
@@ -267,17 +282,26 @@ function toggleCart(event) {
   const cartDiv = document.getElementById("cart");
   if (!cartDiv) return;
 
-  const isCurrentlyOpen = cartDiv.style.display === "flex";
+  const isCurrentlyOpen = cartDiv.classList.contains("show");
   closeAllPopups();
 
   if (!isCurrentlyOpen) {
     cartDiv.style.display = "flex";
+    void cartDiv.offsetWidth;
+    cartDiv.classList.add("show");
   }
 }
 
 function closeCart() {
   const c = document.getElementById("cart");
-  if (c) c.style.display = "none";
+  if (c && c.classList.contains("show")) {
+    c.classList.remove("show");
+    c.classList.add("hide");
+    setTimeout(() => {
+      c.style.display = "none";
+      c.classList.remove("hide");
+    }, 400);
+  }
 }
 
 // Global click listener untuk tutup popup jika klik di luar
@@ -429,7 +453,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       closeAllPopups();
       renderOrderPopup();
-      if (orderPopup) orderPopup.style.display = "flex";
+      if (orderPopup) {
+        orderPopup.style.display = "flex";
+        void orderPopup.offsetWidth;
+        orderPopup.classList.add("show");
+      }
     });
   }
 

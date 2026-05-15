@@ -37,80 +37,56 @@ body {
   position: relative;
 }
 
-/* ── Layer 1: Mesh gradient base ── */
+/* ── Layer 1: Solid background base ── */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  z-index: 0;
-  background:
-    radial-gradient(circle at 10% 20%, rgba(220, 20, 60, 0.4) 0%, transparent 45%),
-    radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.2) 0%, transparent 50%),
-    linear-gradient(145deg, #050a1a 0%, #1a0510 60%, #000 100%);
-  animation: meshPulse 10s ease-in-out infinite alternate;
+  z-index: -1;
+  background-color: #0c0c0e; /* Deep Obsidian */
 }
 
-@keyframes meshPulse {
-  0%   { opacity: 1; transform: scale(1) rotate(0deg); }
-  100% { opacity: 0.9; transform: scale(1.1) rotate(2deg); }
-}
-
-/* ── Layer 2: subtle dot grid overlay ── */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  background-image:
-    radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
-}
-
-/* ── Floating Glowing Orbs ── */
+/* ── Geometric Swarm (Animated & Non-Gradient) ── */
 .breeze {
   position: fixed;
-  z-index: 2;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
+  overflow: hidden;
 }
 
-.breeze::before,
-.breeze::after {
-  content: '';
+.geom {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.6;
+  opacity: 0.15;
+  background-color: #fff;
+  transition: transform 0.2s ease-out;
+  animation: floatGeom 20s infinite linear;
 }
 
-/* Orb 1: Top Left - Crimson */
-.breeze::before {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(220, 20, 60, 0.4), transparent 70%);
-  top: -200px;
-  left: -200px;
-  animation: floatOrb 20s ease-in-out infinite alternate;
+.geom.square { width: 40px; height: 40px; border: 2px solid #fff; background: transparent; }
+.geom.dot { width: 8px; height: 8px; border-radius: 50%; background-color: var(--primary); }
+.geom.tri {
+  width: 0; height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 26px solid #fff;
+  background: transparent;
 }
 
-/* Orb 2: Bottom Right - Blue/Indigo */
-.breeze::after {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.3), transparent 70%);
-  bottom: -150px;
-  right: -150px;
-  animation: floatOrb 25s ease-in-out infinite alternate-reverse;
+@keyframes floatGeom {
+  0% { transform: translateY(110vh) rotate(0deg); }
+  100% { transform: translateY(-10vh) rotate(360deg); }
 }
 
-@keyframes floatOrb {
-  0% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(100px, 50px) scale(1.1); }
-  66% { transform: translate(-50px, 100px) scale(0.9); }
-  100% { transform: translate(20px, -30px) scale(1.05); }
-}
+/* Random Positions & Delays for Geoms */
+.geom:nth-child(5n+1) { left: 10%; animation-delay: 0s; animation-duration: 25s; }
+.geom:nth-child(5n+2) { left: 30%; animation-delay: -5s; animation-duration: 20s; }
+.geom:nth-child(5n+3) { left: 50%; animation-delay: -10s; animation-duration: 30s; }
+.geom:nth-child(5n+4) { left: 70%; animation-delay: -15s; animation-duration: 22s; }
+.geom:nth-child(5n+5) { left: 90%; animation-delay: -2s; animation-duration: 28s; }
+
+.geom:nth-child(even) { border-color: var(--primary); }
+.geom.dot:nth-child(3n) { background-color: #fff; }
 
 /* ── Container ── */
 .container {
@@ -119,12 +95,7 @@ body::after {
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: floatContainer 6s ease-in-out infinite, fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes floatContainer {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes fadeInUp {
@@ -152,17 +123,14 @@ body::after {
 
 /* ── Login box / card ── */
 .login-box {
-  background: rgba(255, 255, 255, 0.93);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: #ffffff;
   padding: 44px 40px 36px;
   border-radius: 24px;
   width: 400px;
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
   position: relative;
   overflow: hidden;
-  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease;
+  transition: transform 0.3s ease;
 }
 
 /* Garis aksen tipis di atas card */

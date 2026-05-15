@@ -204,6 +204,13 @@ body {
   z-index: 999;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.popup-overlay.show {
+  display: flex;
+  opacity: 1;
 }
 
 /* Card */
@@ -220,13 +227,30 @@ body {
   flex-direction: column;
   overflow: hidden;
   border: 1px solid rgba(0, 0, 0, 0.04);
+  transform: scale(0.85);
+  opacity: 0;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.popup-overlay.show .popup-card {
+  transform: scale(1);
+  opacity: 1;
 }
 
 /* Hover */
 .popup-card:hover {
   transform: scale(1.01);
   box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3);
+}
+
+/* State saat ditutup */
+.popup-overlay.hide {
+  opacity: 0;
+}
+
+.popup-overlay.hide .popup-card {
+  transform: scale(0.9);
+  opacity: 0;
 }
 
 /* Close Button */
@@ -443,9 +467,21 @@ body {
   display: none;
   flex-direction: column;
   z-index: 999;
-  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.cart.show {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.cart.hide {
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
 }
 
 .cart:hover {
@@ -673,7 +709,7 @@ body {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(0.85);
   width: 450px;
   background: #ffffff;
   border-radius: 24px;
@@ -684,20 +720,19 @@ body {
   overflow: hidden;
   font-family: "Poppins", sans-serif;
   border: 1px solid rgba(0, 0, 0, 0.05);
-  animation: popupFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Efek saat muncul */
-@keyframes popupFadeIn {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -45%) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
+.order-popup.show {
+  display: flex;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.order-popup.hide {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
 }
 
 /* Hover efek */

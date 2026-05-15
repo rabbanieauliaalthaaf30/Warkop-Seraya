@@ -221,8 +221,9 @@ $orderData = [
         <div class="bank-owner" id="bankOwner">Warkop Seraya</div> </div> </div>
 
         <!-- QR CODE -->
-        <div id="qrisImage" style="margin-top:20px; display:none; text-align:center;">
-          <img src="image_logo/barcode.jpeg" alt="QRIS Barcode" style="max-width:250px; border:1px solid #ccc; border-radius:8px; padding:5px;">
+        <div id="qrisImage" style="display:none;">
+          <span class="scan-text">Scan di sini</span>
+          <img src="image_logo/barcode.jpeg" alt="QRIS Barcode">
         </div>
 
         <div id="emailInput" style="margin-top:15px; display:none;">

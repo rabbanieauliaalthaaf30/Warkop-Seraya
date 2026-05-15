@@ -67,8 +67,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
-  <!-- 🌬️ Lapisan angin lembut -->
-  <div class="breeze"></div>
+  <!-- 🌬️ Lapisan animasi hidup (Digital Swarm) -->
+  <div class="breeze">
+    <div class="geom square"></div><div class="geom square"></div><div class="geom square"></div><div class="geom square"></div><div class="geom square"></div>
+    <div class="geom square"></div><div class="geom square"></div><div class="geom square"></div><div class="geom square"></div><div class="geom square"></div>
+    <div class="geom dot"></div><div class="geom dot"></div><div class="geom dot"></div><div class="geom dot"></div><div class="geom dot"></div>
+    <div class="geom dot"></div><div class="geom dot"></div><div class="geom dot"></div><div class="geom dot"></div><div class="geom dot"></div>
+    <div class="geom tri"></div><div class="geom tri"></div><div class="geom tri"></div><div class="geom tri"></div><div class="geom tri"></div>
+    <div class="geom tri"></div><div class="geom tri"></div><div class="geom tri"></div><div class="geom tri"></div><div class="geom tri"></div>
+  </div>
 
   <!-- 🌅 Konten utama -->
   <div class="container">
@@ -147,6 +154,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         eyeIcon.textContent = show ? '🙈' : '👁️';
       });
     }
+
+    // 🖱️ Mouse Parallax Effect
+    document.addEventListener('mousemove', (e) => {
+      const x = (window.innerWidth / 2 - e.pageX) / 40;
+      const y = (window.innerHeight / 2 - e.pageY) / 40;
+      
+      const geoms = document.querySelectorAll('.geom');
+      geoms.forEach((el, i) => {
+        const factor = (i % 5) + 1;
+        el.style.transform = `translate(${x * factor}px, ${y * factor}px) rotate(${(x + y) * factor}deg)`;
+      });
+    });
   </script>
 
 </body>

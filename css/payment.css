@@ -296,6 +296,39 @@ body {
   letter-spacing: 1px;
 }
 
+/* ================= QRIS IMAGE (ANIMATED) ================= */
+#qrisImage {
+  margin-top: 25px;
+  text-align: center;
+  animation: slideUp 0.5s ease forwards;
+}
+
+#qrisImage .scan-text {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+#qrisImage img {
+  max-width: 240px;
+  border-radius: 16px;
+  padding: 10px;
+  background: #ffffff;
+  border: 1.5px solid #1e293b; /* Thin dark blue border */
+  box-shadow: 0 10px 30px rgba(30, 41, 59, 0.1);
+  transition: all 0.3s ease;
+}
+
+#qrisImage img:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(30, 41, 59, 0.15);
+  border-color: var(--primary);
+}
+
 /* ================= INPUTS & UPLOAD ================= */
 #emailInput label,
 .upload-bukti label {
