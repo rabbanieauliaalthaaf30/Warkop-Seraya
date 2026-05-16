@@ -135,9 +135,8 @@ $displayed = [];
                 $jsName   = json_encode($nama, JSON_UNESCAPED_UNICODE);
                 $jsImg    = json_encode("image_menu/" . $img, JSON_UNESCAPED_UNICODE);
 
-                $onclick = $isAvailable
-                    ? "onclick='openPopup({$jsName}, null, null, {$jsImg}, {$jsVarian}, " . (float)$harga . ", {$id})'"
-                    : "";
+                // Always print onclick so it can be dynamically toggled via CSS/JS
+                $onclick = "onclick='openPopup({$jsName}, null, null, {$jsImg}, {$jsVarian}, " . (float)$harga . ", {$id})'";
 
                 $cardClass = $isAvailable ? 'menu-card' : 'menu-card unavailable';
                 ?>
@@ -189,9 +188,8 @@ $displayed = [];
             $jsName   = json_encode($nama, JSON_UNESCAPED_UNICODE);
             $jsImg    = json_encode("image_menu/" . $img, JSON_UNESCAPED_UNICODE);
 
-            $onclick = $isAvailable
-                ? "onclick='openPopup({$jsName}, null, null, {$jsImg}, {$jsVarian}, " . (float)$harga . ", {$id})'"
-                : "";
+            $onclick = "onclick='openPopup({$jsName}, null, null, {$jsImg}, {$jsVarian}, " . (float)$harga . ", {$id})'";
+            
             $cardClass = $isAvailable ? 'menu-card' : 'menu-card unavailable';
             ?>
             <div class="<?= $cardClass ?>" data-product-id="<?= $id ?>" <?= $onclick ?>>
@@ -272,5 +270,106 @@ $displayed = [];
 
   <script>feather.replace();</script>
   <script src="js/menu.js?v=<?php echo time(); ?>"></script>
+  
+  <script>
+    // Real-time Menu Status Polling
+    async function checkMenuStatus() {
+      try {
+        const res = await fetch('get_menu_status.php');
+        const data = await res.json();
+        
+        if (data.status === 'success') {
+          const statuses = data.data; // object mapping id_produk -> 'tersedia' or 'tidak tersedia'
+          let cartChanged = false;
+          let removedItems = [];
+          
+          document.querySelectorAll('.menu-card').forEach(card => {
+            const id = card.getAttribute('data-product-id');
+            if (!id || !statuses[id]) return;
+            
+            const currentStatus = statuses[id];
+            const isCurrentlyUnavailable = card.classList.contains('unavailable');
+            
+            if (currentStatus === 'tersedia' && isCurrentlyUnavailable) {
+              // Make it available
+              card.classList.remove('unavailable');
+              const span = card.querySelector('.menu-unavailable');
+              if (span) span.remove();
+            } else if (currentStatus !== 'tersedia' && !isCurrentlyUnavailable) {
+              // Make it unavailable
+              card.classList.add('unavailable');
+              if (!card.querySelector('.menu-unavailable')) {
+                const span = document.createElement('span');
+                span.className = 'menu-unavailable';
+                span.innerText = 'Habis';
+                card.appendChild(span);
+              }
+            }
+            
+            // Check if unavailable item is currently in the cart
+            if (currentStatus !== 'tersedia') {
+              if (typeof cart !== 'undefined' && Array.isArray(cart)) {
+                for (let i = cart.length - 1; i >= 0; i--) {
+                  if (String(cart[i].id) === String(id)) {
+                    removedItems.push(cart[i].name);
+                    cart.splice(i, 1);
+                    cartChanged = true;
+                  }
+                }
+              }
+            }
+          });
+          
+          // If items were removed from cart, update the UI
+          if (cartChanged && typeof saveCart === 'function' && typeof renderCart === 'function') {
+            saveCart();
+            renderCart();
+            if (typeof closeAllPopups === 'function') {
+              closeAllPopups(); // Close popups to prevent submitting stale order data
+            }
+            
+            let toast = document.getElementById("toast");
+            if (!toast) {
+              toast = document.createElement("div");
+              toast.id = "toast";
+              toast.className = "toast";
+              document.body.appendChild(toast);
+            }
+            
+            // Show notification
+            let uniqueNames = [...new Set(removedItems)].join(", ");
+            toast.innerText = `Maaf, ${uniqueNames} otomatis dihapus dari keranjang karena sudah habis.`;
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 5000);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch menu status:', err);
+      }
+    }
+
+    // Capture clicks on unavailable items just in case CSS doesn't block it
+    document.addEventListener('click', function(e) {
+      const card = e.target.closest('.menu-card.unavailable');
+      if (card) {
+        e.stopPropagation();
+        e.preventDefault();
+        
+        let toast = document.getElementById("toast");
+        if (!toast) {
+          toast = document.createElement("div");
+          toast.id = "toast";
+          toast.className = "toast";
+          document.body.appendChild(toast);
+        }
+        toast.innerText = "Maaf, menu ini sedang habis.";
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+      }
+    }, true); // Use capture phase to intercept before onclick fires
+
+    // Poll every 2 seconds for faster real-time updates
+    setInterval(checkMenuStatus, 2000);
+  </script>
 </body>
 </html>

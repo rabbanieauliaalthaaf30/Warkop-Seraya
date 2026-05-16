@@ -131,13 +131,21 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(15, 23, 42, 0.6);
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       z-index: 10000;
       backdrop-filter: blur(8px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .popup-overlay.active { display: flex; }
+    .popup-overlay.active { 
+      opacity: 1; 
+      visibility: visible; 
+      pointer-events: auto; 
+    }
     .popup-box {
       background: white;
       width: 90%;
@@ -145,6 +153,13 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
       border-radius: 30px;
       padding: 40px;
       box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+      transform: translateY(30px) scale(0.95);
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .popup-overlay.active .popup-box {
+      transform: translateY(0) scale(1);
+      opacity: 1;
     }
     .popup-box h3 { font-size: 24px; margin-bottom: 30px; text-align: center; color: var(--secondary); }
     .form-group { margin-bottom: 20px; }

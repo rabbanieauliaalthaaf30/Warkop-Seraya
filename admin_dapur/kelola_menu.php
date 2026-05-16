@@ -237,7 +237,10 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
     feather.replace();
   };
   document.addEventListener('click', e => {
-    if (e.target.classList.contains('remove-varian')) e.target.parentElement.remove();
+    const removeBtn = e.target.closest('.remove-varian');
+    if (removeBtn) {
+      removeBtn.closest('.varian-row').remove();
+    }
   });
 
   // === Simpan Menu Baru ===
