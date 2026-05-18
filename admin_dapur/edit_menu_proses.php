@@ -8,9 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// ===== DEBUG: simpan semua data POST ke file =====
-file_put_contents(__DIR__ . '/debug_edit.txt', print_r($_POST, true));
-
 // ===== Ambil ID (terima fallback 'id' juga) =====
 $id = intval($_POST['id_produk'] ?? $_POST['id'] ?? 0);
 if ($id <= 0) {
@@ -73,12 +70,14 @@ if (isset($_FILES['gambar']) && isset($_FILES['gambar']['error']) && $_FILES['ga
 }
 
 // ===== Update produk (pilih query sesuai ada/tidaknya gambar baru) =====
+$id_admin_editor = $_SESSION['id_admin'] ?? null; // Ambil ID admin yang sedang login
+
 if ($new_image_name !== $existing['image_url']) {
-    $up = $conn->prepare("UPDATE produk SET nama_produk = ?, kategori = ?, harga_produk = ?, image_url = ?, status = ?, quantity_produk = ? WHERE id_produk = ?");
-    $up->bind_param("ssdssii", $nama_produk, $kategori, $harga_dasar, $new_image_name, $status, $quantity, $id);
+    $up = $conn->prepare("UPDATE produk SET nama_produk = ?, kategori = ?, harga_produk = ?, image_url = ?, status = ?, quantity_produk = ?, updated_by = ? WHERE id_produk = ?");
+    $up->bind_param("ssdssiii", $nama_produk, $kategori, $harga_dasar, $new_image_name, $status, $quantity, $id_admin_editor, $id);
 } else {
-    $up = $conn->prepare("UPDATE produk SET nama_produk = ?, kategori = ?, harga_produk = ?, status = ?, quantity_produk = ? WHERE id_produk = ?");
-    $up->bind_param("ssdsii", $nama_produk, $kategori, $harga_dasar, $status, $quantity, $id);
+    $up = $conn->prepare("UPDATE produk SET nama_produk = ?, kategori = ?, harga_produk = ?, status = ?, quantity_produk = ?, updated_by = ? WHERE id_produk = ?");
+    $up->bind_param("ssdsiii", $nama_produk, $kategori, $harga_dasar, $status, $quantity, $id_admin_editor, $id);
 }
 
 if (!$up->execute()) {

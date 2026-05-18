@@ -32,7 +32,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #050a1a; /* Deep midnight blue */
+  background-color: #38060f; /* Deep dark red */
   overflow: hidden;
   position: relative;
 }
@@ -43,7 +43,7 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background-color: #0c0c0e; /* Deep Obsidian */
+  background-color: #1a0206; /* Very dark red base */
 }
 
 /* ── Geometric Swarm (Animated & Non-Gradient) ── */

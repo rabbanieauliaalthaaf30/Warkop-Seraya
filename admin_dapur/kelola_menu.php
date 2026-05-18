@@ -47,7 +47,16 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
     <!-- GRID MENU -->
     <div class="menu-grid">
       <?php
-      $result = $conn->query("SELECT * FROM produk ORDER BY id_produk DESC");
+      $result = $conn->query("
+        SELECT 
+            p.*, 
+            a.username AS nama_pembuat,
+            e.username AS nama_pengedit
+        FROM produk p 
+        LEFT JOIN admin a ON p.id_admin = a.id_admin 
+        LEFT JOIN admin e ON p.updated_by = e.id_admin
+        ORDER BY p.id_produk DESC
+      ");
       if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
           $gambar = !empty($row['image_url']) ? "../image_menu/" . $row['image_url'] : "../image_menu/default.jpg";
@@ -55,10 +64,22 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
           $harga = number_format($row['harga_produk'], 0, ',', '.');
           $nama_safe = htmlspecialchars($row['nama_produk']);
           $id = (int)$row['id_produk'];
+          $nama_pembuat = !empty($row['nama_pembuat']) ? htmlspecialchars($row['nama_pembuat']) : 'Sistem';
+          
+          // Tampilkan info pengedit jika ada
+          $info_edit = "";
+          if (!empty($row['nama_pengedit'])) {
+              $info_edit = "<br><i data-feather='edit-2' style='width: 12px; height: 12px;'></i> Diedit oleh: <strong>" . htmlspecialchars($row['nama_pengedit']) . "</strong>";
+          }
+
           echo "
           <div class='menu-card' id='menu-{$id}'>
             <img src='{$gambar}' alt='{$nama_safe}'>
             <h3>{$nama_safe}</h3>
+            <p style='font-size: 12px; color: #666; margin: -5px 0 15px 0; text-align: center; line-height: 1.4;'>
+              <i data-feather='user' style='width: 12px; height: 12px;'></i> Ditambahkan oleh: <strong>{$nama_pembuat}</strong>
+              {$info_edit}
+            </p>
             <div class='card-actions'>
               <button class='btn btn-edit' onclick=\"openEditPopup({$id})\">Edit</button>
               <button class='btn btn-delete' onclick=\"confirmDeleteMenu({$id})\">Hapus</button>
