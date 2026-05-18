@@ -159,7 +159,12 @@ function renderPesananTable($conn, $start, $limit) {
             echo "</tr>";
         }
     } else {
-        echo '<tr><td colspan="9" class="no-order">Tidak ada pesanan</td></tr>';
+        echo '<tr class="empty-row"><td colspan="9">
+                <div class="empty-state-table">
+                  <img src="https://cdn-icons-png.flaticon.com/512/11329/11329060.png" alt="Empty">
+                  <p>Belum ada pesanan masuk saat ini.</p>
+                </div>
+              </td></tr>';
     }
 }
 

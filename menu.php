@@ -141,7 +141,7 @@ $displayed = [];
                 $cardClass = $isAvailable ? 'menu-card' : 'menu-card unavailable';
                 ?>
                 <div class="<?= $cardClass ?>" data-product-id="<?= $id ?>" <?= $onclick ?>>
-                    <img src="image_menu/<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($nama) ?>" class="menu-card-img" />
+                    <img src="image_menu/<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($nama) ?>" class="menu-card-img skeleton" onload="setTimeout(() => this.classList.remove('skeleton'), 800)" />
                     <h3 class="menu-card-tittle"><?= htmlspecialchars($nama) ?></h3>
                     <p class="menu-card-price">Rp <?= number_format((float)$harga, 0, ',', '.') ?></p>
                     <?php if (!$isAvailable): ?>
@@ -193,7 +193,7 @@ $displayed = [];
             $cardClass = $isAvailable ? 'menu-card' : 'menu-card unavailable';
             ?>
             <div class="<?= $cardClass ?>" data-product-id="<?= $id ?>" <?= $onclick ?>>
-                <img src="image_menu/<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($nama) ?>" class="menu-card-img" />
+                <img src="image_menu/<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($nama) ?>" class="menu-card-img skeleton" onload="setTimeout(() => this.classList.remove('skeleton'), 800)" />
                 <h3 class="menu-card-tittle"><?= htmlspecialchars($nama) ?></h3>
                 <p class="menu-card-price">Rp <?= number_format((float)$harga, 0, ',', '.') ?></p>
                 <?php if (!$isAvailable): ?>

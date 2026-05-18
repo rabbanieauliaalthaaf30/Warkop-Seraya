@@ -84,7 +84,12 @@ function renderPesananTable($conn, $start, $limit) {
       echo "</tr>";
     }
   } else {
-    echo "<tr><td colspan='4' class='no-order'>Tidak ada pesanan</td></tr>";
+    echo '<tr class="empty-row"><td colspan="4">
+            <div class="empty-state-table">
+              <img src="https://cdn-icons-png.flaticon.com/512/11329/11329060.png" alt="Empty">
+              <p>Belum ada pesanan masuk saat ini.</p>
+            </div>
+          </td></tr>';
   }
 }
 
@@ -237,6 +242,9 @@ if (isset($_GET['ajax'])) {
         .then(res => res.text())
         .then(resp => {
           console.log("Update:", resp);
+          if (typeof showAdminToast === 'function') {
+            showAdminToast("Status berhasil diperbarui!", "success");
+          }
           if (status === "selesai") {
             e.target.outerHTML = "<span class='status-btn status-selesai'>Selesai</span>";
             const row = document.querySelector("tr[data-id='" + id + "']");
@@ -246,6 +254,12 @@ if (isset($_GET['ajax'])) {
             }
           } else {
             loadPesanan();
+          }
+        })
+        .catch(err => {
+          console.error("Error:", err);
+          if (typeof showAdminToast === 'function') {
+            showAdminToast("Gagal mengupdate status.", "error");
           }
         });
       }

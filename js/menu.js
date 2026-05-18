@@ -338,6 +338,19 @@ function renderCart() {
 
   if (!cartItemsDiv || !cartCount || !cartTotal) return;
 
+  if (cart.length === 0) {
+    cartItemsDiv.innerHTML = `
+      <div class="empty-cart-state">
+        <i data-feather="shopping-bag"></i>
+        <p>Belum ada pesanan nih, yuk pesan!</p>
+      </div>
+    `;
+    if (typeof feather !== 'undefined') feather.replace();
+    cartTotal.innerText = "Rp0";
+    cartCount.innerText = "0";
+    return;
+  }
+
   cartItemsDiv.innerHTML = "";
   let total = 0;
   let count = 0;

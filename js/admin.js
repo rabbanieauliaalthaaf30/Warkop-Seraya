@@ -1,5 +1,31 @@
 document.addEventListener("DOMContentLoaded", function () {
   // =====================
+  // ✅ TOAST NOTIFICATION ADMIN
+  // =====================
+  window.showAdminToast = function(message, type = "success") {
+    let toast = document.getElementById("admin-toast");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.id = "admin-toast";
+      document.body.appendChild(toast);
+    }
+    
+    let icon = type === 'success' ? '<i data-feather="check-circle"></i>' : '<i data-feather="alert-circle"></i>';
+    toast.className = `admin-toast ${type}`;
+    toast.innerHTML = `${icon} <span>${message}</span>`;
+    if (typeof feather !== 'undefined') feather.replace();
+    
+    // trigger animation
+    setTimeout(() => {
+      toast.classList.add("show");
+    }, 10);
+    
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000);
+  };
+
+  // =====================
   // ✅ Modal Logout
   // =====================
   const logoutBtn = document.getElementById("logoutBtn");
@@ -380,13 +406,14 @@ document.addEventListener("DOMContentLoaded", function () {
               card.classList.remove("unavailable");
               btn.textContent = "Tandai Tidak Tersedia";
             }
+            showAdminToast("Status menu berhasil diubah!", "success");
           } else {
-            alert("Gagal update: " + data.error);
+            showAdminToast("Gagal update: " + data.error, "error");
           }
         })
         .catch((err) => {
           console.error("Error:", err);
-          alert("Terjadi kesalahan saat menghubungi server.");
+          showAdminToast("Terjadi kesalahan saat menghubungi server.", "error");
         });
     });
   });
@@ -440,14 +467,15 @@ document.addEventListener("DOMContentLoaded", function () {
                   "<span class='badge badge-info'>" + status + "</span>";
               }
             }
+            showAdminToast("Status berhasil diperbarui!", "success");
           }
         } else {
-          alert("❌ Gagal update: " + (data.error || "Tidak diketahui"));
+          showAdminToast("Gagal update: " + (data.error || "Tidak diketahui"), "error");
         }
       })
       .catch((err) => {
         console.error("❌ Error AJAX:", err);
-        alert("Terjadi kesalahan saat menghubungi server.");
+        showAdminToast("Terjadi kesalahan saat menghubungi server.", "error");
       });
   });
 
