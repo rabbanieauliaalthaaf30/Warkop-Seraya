@@ -109,7 +109,17 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
 
         <div class="form-group">
           <label>Kategori</label>
-          <input type="text" name="kategori" placeholder="Kategori Produk" required>
+          <select name="kategori" required>
+            <option value="" disabled selected>Pilih Kategori Produk</option>
+            <option value="Kopi Series">Kopi Series</option>
+            <option value="Good Day">Good Day</option>
+            <option value="Nutrisari">Nutrisari</option>
+            <option value="Susu Series">Susu Series</option>
+            <option value="Signature">Signature</option>
+            <option value="Cemilan">Cemilan</option>
+            <option value="Aneka Nasi">Aneka Nasi</option>
+            <option value="Aneka Mie">Aneka Mie</option>
+          </select>
         </div>
 
         <div class="form-group">
@@ -165,7 +175,17 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
 
         <div class="form-group">
           <label>Kategori</label>
-          <input type="text" name="kategori" id="edit_kategori" required>
+          <select name="kategori" id="edit_kategori" required>
+            <option value="" disabled selected>Pilih Kategori Produk</option>
+            <option value="Kopi Series">Kopi Series</option>
+            <option value="Good Day">Good Day</option>
+            <option value="Nutrisari">Nutrisari</option>
+            <option value="Susu Series">Susu Series</option>
+            <option value="Signature">Signature</option>
+            <option value="Cemilan">Cemilan</option>
+            <option value="Aneka Nasi">Aneka Nasi</option>
+            <option value="Aneka Mie">Aneka Mie</option>
+          </select>
         </div>
 
         <div class="form-group">

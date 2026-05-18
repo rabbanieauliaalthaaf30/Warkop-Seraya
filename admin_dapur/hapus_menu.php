@@ -71,7 +71,7 @@ try {
         $conn->commit();
         echo json_encode([
             "status" => "success",
-            "message" => "✅ Menu dan semua data terkait berhasil dihapus!"
+            "message" => "Menu dan semua data terkait berhasil dihapus!"
         ]);
     } else {
         $conn->rollback();

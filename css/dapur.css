@@ -763,7 +763,8 @@ body::before {
 
 .form-group input[type="text"],
 .form-group input[type="number"],
-.form-group input[type="file"] {
+.form-group input[type="file"],
+.form-group select {
   width: 100%;
   padding: 14px 18px;
   background: #f9f9f9;
@@ -774,7 +775,8 @@ body::before {
   transition: all 0.3s ease;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
   background: #fff;
   border-color: #dc143c;
   box-shadow: 0 0 0 4px rgba(220, 20, 60, 0.1);
@@ -944,56 +946,59 @@ body::before {
   }
 }
 
-/* Notifikasi kecil pojok kanan atas */
+/* Notifikasi modern dan hidup */
 .notification {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 10px 16px;
-  border-radius: 8px;
+  top: 30px;
+  right: 30px;
+  padding: 16px 24px;
+  border-radius: 14px;
   color: #fff;
   font-weight: 600;
-  z-index: 9999;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  font-size: 14.5px;
+  letter-spacing: 0.3px;
+  z-index: 99999;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-}
-.notification.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-.notification.success {
-  background-color: #28a745;
-}
-.notification.error {
-  background-color: #dc3545;
+  transform: translateX(120%) scale(0.9);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-left: 6px solid transparent;
 }
 
-/* fallback kecil: pastikan .notification ada apabila belum di-merge ke CSS utama */
-.notification {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 10px 16px;
-  border-radius: 8px;
-  color: #fff;
-  font-weight: 600;
-  z-index: 99999;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-}
 .notification.show {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(0) scale(1);
 }
+
 .notification.success {
-  background: #28a745;
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.95), rgba(32, 201, 151, 0.95));
+  border-left-color: #155d27;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: 6px solid #155d27;
 }
+
 .notification.error {
-  background: #dc3545;
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.95), rgba(255, 107, 107, 0.95));
+  border-left-color: #921925;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: 6px solid #921925;
+}
+
+.notification.success::before {
+  content: '✅';
+  font-size: 18px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.notification.error::before {
+  content: '⚠️';
+  font-size: 18px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
 
 .pagination {
