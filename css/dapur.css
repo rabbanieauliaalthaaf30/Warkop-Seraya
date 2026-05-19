@@ -1,6 +1,6 @@
 :root {
   --primary: #dc143c;
-  --bg: #ffdd;
+  --bg: #e2e8f0;
   --color: rgba(1, 1, 1, 0.8);
   --hv: rgb(165, 11, 11);
 }
@@ -17,6 +17,7 @@ body {
   display: flex;
   min-height: 100vh;
   background-size: cover;
+  background-color: var(--bg);
 }
 
 /* Hapus blur background */
@@ -184,7 +185,7 @@ body::before {
 /* ================= MAIN ================= */
 .main {
   flex: 1;
-  background: #f1f5f9;
+  background: #e2e8f0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -524,7 +525,7 @@ body::before {
 /* ================= KELOLA MENU ================= */
 .page-kelolamenu .content {
   flex: 1;
-  background: #f1f5f9;
+  background: #e2e8f0;
   padding: 10px 10px; /* tambah kanan-kiri stabil */
   display: flex;
   flex-direction: column;
@@ -1036,7 +1037,7 @@ body::before {
 }
 
 .notification.success::before {
-  content: '✅';
+  content: '';
   font-size: 18px;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }

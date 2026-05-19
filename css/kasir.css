@@ -1,6 +1,6 @@
 :root {
   --primary: #dc143c;
-  --bg: #ffdd;
+  --bg: #e2e8f0;
   --color: rgba(1, 1, 1, 0.8);
   --hv: rgb(165, 11, 11);
 }
@@ -16,6 +16,7 @@ body {
   display: flex;
   min-height: 100vh;
   background-size: cover;
+  background-color: var(--bg);
 }
 
 /* Hapus blur background */
@@ -144,7 +145,7 @@ body::before {
 /* Konten utama */
 .main {
   flex: 1;
-  background: #f1f5f9;
+  background: #e2e8f0;
   display: flex;
   justify-content: center;
   align-items: center;
