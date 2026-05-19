@@ -201,7 +201,6 @@ if (isset($_GET['ajax'])) {
       <li><a href="dashboard.php"><i data-feather="home"></i> Beranda</a></li>
       <li><a href="pesanan.php" class="active"><i data-feather="menu"></i> Pesanan</a></li>
       <li><a href="riwayat_pesanan.php"><i data-feather="clock"></i> Riwayat Pesanan</a></li>
-      <li><a href="kelola_akun.php"><i data-feather="users"></i> Kelola Akun</a></li>
       <li><a href="#" id="logoutBtn"><i data-feather="log-out"></i> Logout</a></li>
     </ul>
   </div>

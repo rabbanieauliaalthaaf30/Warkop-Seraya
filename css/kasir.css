@@ -1371,7 +1371,33 @@ body::before {
 
   .page-dashboard .stats-grid {
     grid-template-columns: 1fr 1fr;
-    width: 80%;
+    width: 90%;
+    gap: 15px;
+  }
+
+  .page-dashboard .stat-card {
+    padding: 12px 15px !important;
+    gap: 10px !important;
+  }
+
+  .page-dashboard .stat-card .stat-icon {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 18px !important;
+  }
+
+  .page-dashboard .stat-card .stat-icon i {
+    width: 20px;
+    height: 20px;
+  }
+
+  .page-dashboard .stat-card .stat-info h4 {
+    font-size: 11px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .page-dashboard .stat-card .stat-info p {
+    font-size: 15px !important;
   }
 
   .page-riwayatpesanan .pesanan-table,
@@ -1380,7 +1406,23 @@ body::before {
   }
 
   .page-dashboard .card {
-    width: 80%;
+    width: 90%;
+  }
+
+  .page-dashboard .card-header {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .page-dashboard .card-header h3 {
+    font-size: 18px !important;
+  }
+
+  .page-dashboard .card-header select {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
   }
 
   .page-riwayatpesanan .pesanan-table th,
@@ -1534,6 +1576,13 @@ body::before {
 
   .page-dashboard .card {
     padding: 20px;
+  }
+
+  .page-dashboard .card-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
   }
 
   .page-dashboard .chart-container {

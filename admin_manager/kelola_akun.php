@@ -12,7 +12,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'manager') {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Kasir - Kelola Akun</title>
+  <title>Admin Manager - Kelola Akun</title>
   <link rel="stylesheet" href="../css/kasir.css">
   <link rel="stylesheet" href="../css/logout.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -21,13 +21,80 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'manager') {
       --primary: #dc143c;
       --primary-hover: #b71c1c;
       --secondary: #1e293b;
-      --bg-main: #f8fafc;
+      --bg-main: #e2e8f0;
     }
 
     body {
       font-family: 'Poppins', sans-serif;
       background-color: var(--bg-main);
       margin: 0;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    .page-kelolaakun .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 30px;
+      box-sizing: border-box;
+      min-width: 0;
+    }
+
+    .page-kelolaakun .account-grid {
+      width: 90%;
+      max-width: 1000px;
+      margin-top: 0;
+    }
+
+    @media (max-width: 840px) {
+      .page-kelolaakun .main {
+        padding: 30px 20px;
+      }
+      .page-kelolaakun .account-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+        gap: 20px !important;
+        width: 90% !important;
+      }
+      .account-card {
+        padding: 25px 15px !important;
+        border-radius: 20px !important;
+      }
+      .avatar-circle {
+        width: 70px !important;
+        height: 70px !important;
+        font-size: 30px !important;
+        margin-bottom: 15px !important;
+      }
+      .account-name {
+        font-size: 18px !important;
+        margin-bottom: 20px !important;
+      }
+      .btn-acc {
+        padding: 8px !important;
+        border-radius: 10px !important;
+        font-size: 13px !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-kelolaakun .main {
+        padding: 80px 15px 40px;
+      }
+      .page-kelolaakun .main > div:first-child {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 15px !important;
+        text-align: center !important;
+      }
+      .page-kelolaakun .account-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        width: 95% !important;
+      }
     }
 
     /* Styling khusus untuk halaman kelola akun agar lebih modern & keren */
@@ -252,10 +319,9 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'manager') {
   <!-- SIDEBAR -->
   <div class="sidebar">
     <h1>WARKOP<span> SERAYA</span></h1>
-    <h2>KASIR</h2>
+    <h2>MANAGER</h2>
     <ul>
       <li><a href="dashboard.php"><i data-feather="home"></i> Beranda</a></li>
-      <li><a href="pesanan.php"><i data-feather="menu"></i> Pesanan</a></li>
       <li><a href="riwayat_pesanan.php"><i data-feather="clock"></i> Riwayat Pesanan</a></li>
       <li><a href="kelola_akun.php" class="active"><i data-feather="users"></i> Kelola Akun</a></li>
       <li><a href="#" id="logoutBtn"><i data-feather="log-out"></i> Logout</a></li>
@@ -264,32 +330,48 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'manager') {
 
   <!-- KONTEN UTAMA -->
   <div class="main">
-    <div class="card" style="padding: 40px; border-radius: 30px; background: white; box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05); border: 1px solid #f1f5f9;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px;">
-        <h2 style="margin:0; font-size: 28px; font-weight: 700;">Kelola <span style="color: var(--primary);">Akun Admin</span></h2>
-        <button class="btn-submit" style="width: auto; padding: 12px 24px; margin: 0;" id="btnTambahAkun">+ Tambah Akun</button>
-      </div>
+    <div class="header-card" style="
+      background: white;
+      border-radius: 24px;
+      padding: 20px 30px;
+      box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);
+      border: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      max-width: 1000px;
+      margin-bottom: 35px;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+    ">
+      <h2 style="margin:0; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 12px;">
+        <i data-feather="users" style="color: var(--primary); width: 28px; height: 28px;"></i>
+        <span>Kelola <span style="color: var(--primary);">Akun Admin</span></span>
+      </h2>
+      <button class="btn-submit" style="width: auto; padding: 12px 24px; margin: 0;" id="btnTambahAkun">+ Tambah Akun</button>
+    </div>
 
-      <div class="account-grid" id="accountGrid">
-        <?php
-        $res = $conn->query("SELECT id_admin, username, role FROM admin ORDER BY role ASC, username ASC");
-        while ($row = $res->fetch_assoc()) {
-          $initial = strtoupper(substr($row['username'], 0, 1));
-          $roleClass = "role-" . $row['role'];
-          echo "
-          <div class='account-card' data-id='{$row['id_admin']}'>
-            <div class='avatar-circle'>{$initial}</div>
-            <div class='role-badge {$roleClass}'>{$row['role']}</div>
-            <div class='account-name'>".htmlspecialchars($row['username'])."</div>
-            <div class='account-actions'>
-              <button class='btn-acc btn-edit-acc' onclick=\"openEditModal({$row['id_admin']}, '".htmlspecialchars($row['username'])."', '{$row['role']}')\">Edit</button>
-              <button class='btn-acc btn-delete-acc' onclick=\"confirmDelete({$row['id_admin']})\">Hapus</button>
-            </div>
+    <div class="account-grid" id="accountGrid">
+      <?php
+      $res = $conn->query("SELECT id_admin, username, role FROM admin ORDER BY role ASC, username ASC");
+      while ($row = $res->fetch_assoc()) {
+        $initial = strtoupper(substr($row['username'], 0, 1));
+        $roleClass = "role-" . $row['role'];
+        echo "
+        <div class='account-card' data-id='{$row['id_admin']}'>
+          <div class='avatar-circle'>{$initial}</div>
+          <div class='role-badge {$roleClass}'>{$row['role']}</div>
+          <div class='account-name'>".htmlspecialchars($row['username'])."</div>
+          <div class='account-actions'>
+            <button class='btn-acc btn-edit-acc' onclick=\"openEditModal({$row['id_admin']}, '".htmlspecialchars($row['username'])."', '{$row['role']}')\">Edit</button>
+            <button class='btn-acc btn-delete-acc' onclick=\"confirmDelete({$row['id_admin']})\">Hapus</button>
           </div>
-          ";
-        }
-        ?>
-      </div>
+        </div>
+        ";
+      }
+      ?>
     </div>
   </div>
 

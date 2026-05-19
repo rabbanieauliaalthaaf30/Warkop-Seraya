@@ -44,6 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } elseif ($row['role'] === 'dapur') {
                     header("Location: /seraya/admin_dapur/dashboard.php");
                     exit;
+                } elseif ($row['role'] === 'manager') {
+                    header("Location: /seraya/admin_manager/dashboard.php");
+                    exit;
                 } else {
                     $error_msg = 'Role tidak dikenali!';
                 }

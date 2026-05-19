@@ -1329,7 +1329,8 @@ body::before {
     font-size: 12px;
   }
 
-  .page-menukosong .menu-grid {
+  .page-menukosong .menu-grid,
+  .page-kelolamenu .menu-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 
@@ -1390,12 +1391,14 @@ body::before {
     display: none; /* ❌ Tidak tampil di tablet */
   }
 
-  /* --- Page Menu Kosong --- */
-  .page-menukosong .menu-grid {
+  /* --- Page Menu Kosong & Kelola Menu --- */
+  .page-menukosong .menu-grid,
+  .page-kelolamenu .menu-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .page-menukosong .menu-card img {
+  .page-menukosong .menu-card img,
+  .page-kelolamenu .menu-card img {
     height: 80px;
   }
 
@@ -1462,12 +1465,14 @@ body::before {
     padding: 14px;
   }
 
-  /* --- Page Menu Kosong --- */
-  .page-menukosong .menu-grid {
+  /* --- Page Menu Kosong & Kelola Menu --- */
+  .page-menukosong .menu-grid,
+  .page-kelolamenu .menu-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .page-menukosong .menu-card {
+  .page-menukosong .menu-card,
+  .page-kelolamenu .menu-card {
     min-width: 140px;
     padding: 6px;
   }

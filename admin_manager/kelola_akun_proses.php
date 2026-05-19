@@ -89,3 +89,4 @@ if ($action === 'add') {
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Action tidak dikenali']);
 }
+?>
