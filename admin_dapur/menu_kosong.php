@@ -86,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id'])) {
   <!-- Logout Modal -->
   <div id="logoutModal" class="modal">
     <div class="modal-content">
-      <div class="icon-box">🚪</div>
+      <div class="icon-box"><i data-feather="log-out"></i></div>
       <h2>Yakin ingin logout?</h2>
       <p>Sesi Anda akan diakhiri dan Anda diarahkan kembali ke halaman login.</p>
       <div class="modal-actions">

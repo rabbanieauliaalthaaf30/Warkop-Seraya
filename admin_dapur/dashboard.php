@@ -17,11 +17,36 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
     <!-- CSS -->
     <link rel="stylesheet" href="../css/dapur.css" />
     <link rel="stylesheet" href="../css/logout.css" />
+    <link rel="stylesheet" href="../css/welcome.css" />
 
     <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
   </head>
   <body class="page-dashboard">
+    <?php if (isset($_SESSION['show_welcome_anim']) && $_SESSION['show_welcome_anim'] === true): ?>
+    <div class="welcome-splash-overlay role-dapur" id="welcomeSplash">
+      <div class="splash-bg-glow"></div>
+      <div class="splash-particles">
+        <span class="particle p1"></span>
+        <span class="particle p2"></span>
+        <span class="particle p3"></span>
+        <span class="particle p4"></span>
+        <span class="particle p5"></span>
+      </div>
+      <div class="splash-card">
+        <div class="splash-icon-container">
+          <div class="splash-icon-pulse"></div>
+          <div class="splash-icon-inner">🍳</div>
+        </div>
+        <h1 class="splash-title">WARKOP <span>SERAYA</span></h1>
+        <h2 class="splash-subtitle">Selamat Bekerja, Tim Dapur! Mempersiapkan pesanan lezat pelanggan... 🔥</h2>
+        <div class="splash-progress">
+          <div class="splash-progress-bar"></div>
+        </div>
+      </div>
+    </div>
+    <?php unset($_SESSION['show_welcome_anim']); endif; ?>
+
     <!-- Tombol toggle untuk mobile -->
     <button class="menu-toggle" id="menu-toggle">
       <i data-feather="menu"></i>
@@ -64,7 +89,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
     <!-- Logout -->
     <div id="logoutModal" class="modal">
       <div class="modal-content">
-        <div class="icon-box">🚪</div>
+        <div class="icon-box"><i data-feather="log-out"></i></div>
         <h2>Yakin ingin logout?</h2>
         <p>Sesi Anda akan diakhiri dan Anda diarahkan kembali ke halaman login.</p>
         <div class="modal-actions">

@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['id_admin'] = $row['id_admin'];
                 $_SESSION['username'] = $row['username'];
                 $_SESSION['role']     = $row['role'];
+                $_SESSION['show_welcome_anim'] = true;
 
                 // Redirect sesuai role
                 if ($row['role'] === 'kasir') {
@@ -69,6 +70,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="stylesheet" href="css/login.css" />
 </head>
 <body>
+
+  <!-- 🚀 Page Transition Overlay -->
+  <div class="page-transition-overlay" id="pageTransition">
+    <div class="transition-wipe"></div>
+    <div class="transition-content">
+      <div class="transition-logo">WARKOP <span>SERAYA</span></div>
+      <div class="transition-loader">
+        <div class="transition-loader-dot"></div>
+        <div class="transition-loader-dot"></div>
+        <div class="transition-loader-dot"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- 🌬️ Lapisan animasi hidup (Digital Swarm) -->
   <div class="breeze">
@@ -169,6 +183,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         el.style.transform = `translate(${x * factor}px, ${y * factor}px) rotate(${(x + y) * factor}deg)`;
       });
     });
+
+    // 🚀 Login Form — AJAX + Page Transition
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(loginForm);
+        const btn = loginForm.querySelector('.btn');
+        const btnText = btn.querySelector('.btn-text');
+        
+        // Disable button & show loading
+        btn.disabled = true;
+        btnText.textContent = 'Memproses...';
+
+        fetch('login.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => {
+          // If redirected (login success), the response URL will differ
+          if (res.redirected) {
+            // 🎬 Play exit transition then redirect
+            playPageTransition(res.url);
+          } else {
+            // Login failed — reload page to show error
+            return res.text().then(html => {
+              document.open();
+              document.write(html);
+              document.close();
+            });
+          }
+        })
+        .catch(err => {
+          console.error('Login error:', err);
+          btn.disabled = false;
+          btnText.textContent = 'Login';
+        });
+      });
+    }
+
+    function playPageTransition(redirectUrl) {
+      const overlay = document.getElementById('pageTransition');
+      const container = document.querySelector('.container');
+      const breeze = document.querySelector('.breeze');
+
+      // 1. Animate login card out
+      if (container) {
+        container.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+        container.style.opacity = '0';
+        container.style.transform = 'scale(0.9) translateY(-30px)';
+        container.style.filter = 'blur(8px)';
+      }
+
+      // 2. Fade out geometric particles
+      if (breeze) {
+        breeze.style.transition = 'opacity 0.4s ease';
+        breeze.style.opacity = '0';
+      }
+
+      // 3. After card exits, bring in the wipe overlay
+      setTimeout(() => {
+        overlay.classList.add('active');
+      }, 350);
+
+      // 4. Redirect after full transition completes
+      setTimeout(() => {
+        window.location.href = redirectUrl;
+      }, 1200);
+    }
   </script>
 
 </body>

@@ -21,7 +21,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'manager') {
       --primary: #dc143c;
       --primary-hover: #b71c1c;
       --secondary: #1e293b;
-      --bg-main: #f8fafc;
+      --bg-main: #e2e8f0;
     }
 
     body {
@@ -50,7 +50,47 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'manager') {
       position: relative;
       border: 1px solid #f1f5f9;
       overflow: hidden;
+      
+      /* Entrance Animation */
+      opacity: 0;
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.98) translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .main > .card {
+      animation: fadeInScale 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .account-card:nth-child(1) { animation-delay: 0.15s; }
+    .account-card:nth-child(2) { animation-delay: 0.25s; }
+    .account-card:nth-child(3) { animation-delay: 0.35s; }
+    .account-card:nth-child(4) { animation-delay: 0.45s; }
+    .account-card:nth-child(5) { animation-delay: 0.55s; }
+    .account-card:nth-child(6) { animation-delay: 0.65s; }
+    .account-card:nth-child(7) { animation-delay: 0.75s; }
+    .account-card:nth-child(8) { animation-delay: 0.85s; }
+
     .account-card::before {
       content: '';
       position: absolute;
@@ -330,7 +370,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'manager') {
   <!-- MODAL LOGOUT -->
   <div id="logoutModal" class="modal">
     <div class="modal-content">
-      <div class="icon-box" style="background: #f1f5f9; color: var(--secondary);">🚪</div>
+      <div class="icon-box"><i data-feather="log-out"></i></div>
       <h2>Yakin ingin logout?</h2>
       <p>Sesi Anda akan diakhiri dan Anda diarahkan kembali ke halaman login.</p>
       <div class="modal-actions">

@@ -1,4 +1,24 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // ===================================
+  // ✅ WELCOME SPLASH ENTRANCE ANIMATION
+  // ===================================
+  const splash = document.getElementById("welcomeSplash");
+  if (splash) {
+    document.body.style.overflow = "hidden";
+
+    const progressBar = splash.querySelector(".splash-progress-bar");
+    if (progressBar) {
+      setTimeout(() => { progressBar.style.width = "100%"; }, 150);
+    }
+
+    setTimeout(() => {
+      splash.classList.add("fade-out");
+      document.body.style.overflow = "";
+    }, 2000);
+
+    setTimeout(() => { splash.remove(); }, 2600);
+  }
+
   // =====================
   // ✅ TOAST NOTIFICATION ADMIN
   // =====================
