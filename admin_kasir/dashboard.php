@@ -170,33 +170,24 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
 
     <script>
    // NOTIFIKASI PESANAN MASUK
-       let lastOrderId = null;
-
-        // ✅ Izinkan audio setelah interaksi pertama
-        document.addEventListener("click", () => {
-          const audio = document.getElementById("notifAudio");
-          if (audio) {
-            audio.play().then(() => {
-              audio.pause(); // cukup untuk aktifkan izin
-            }).catch(() => {});
-          }
-        }, { once: true });
+       // ✅ Ambil lastOrderId dari sessionStorage agar tidak reset saat pindah halaman
+       let lastOrderId = sessionStorage.getItem('kasir_lastOrderId');
+       let isFirstPoll = true;
 
         // 🔁 Fungsi cek pesanan baru
         async function checkNewOrderKasir() {
           try {
             const res = await fetch("../admin_kasir/cek_pesanan.php");
             const data = await res.json();
-            console.log("Cek pesanan kasir:", data);
-
-            let initiallyFirst = typeof window.isFirstPoll === 'undefined';
-            window.isFirstPoll = false;
 
             if (data.ada_pesanan) {
-              if (initiallyFirst && lastOrderId === null) {
-                lastOrderId = data.id;
-              } else if (lastOrderId === null || Number(data.id) > Number(lastOrderId)) {
-                lastOrderId = data.id;
+              if (isFirstPoll) {
+                lastOrderId = String(data.id);
+                sessionStorage.setItem('kasir_lastOrderId', lastOrderId);
+                isFirstPoll = false;
+              } else if (!lastOrderId || Number(data.id) > Number(lastOrderId)) {
+                lastOrderId = String(data.id);
+                sessionStorage.setItem('kasir_lastOrderId', lastOrderId);
                 showNotificationKasir();
               }
             }
@@ -210,11 +201,17 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
           const box = document.getElementById("notifBox");
           const audio = document.getElementById("notifAudio");
 
-          // ✅ Tampilkan box
-          box.style.display = "block";
+          if (!box || !audio) return;
+
+          box.classList.remove("hide");
+          box.style.display = "flex";
+          
           setTimeout(() => {
-            box.style.display = "none";
-          }, 5000);
+            box.classList.add("hide");
+            setTimeout(() => {
+              box.style.display = "none";
+            }, 400);
+          }, 4600);
 
           // ✅ Pastikan suara diputar
           audio.currentTime = 0;

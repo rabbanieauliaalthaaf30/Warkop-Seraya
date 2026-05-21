@@ -628,40 +628,31 @@ function showNotification(message, type = "error") {
 }
 
  // NOTIFIKASI PESANAN MASUK
-       let lastOrderId = null;
+ // ✅ Ambil lastOrderId dari sessionStorage agar tidak reset saat pindah halaman
+ let lastOrderId = sessionStorage.getItem('kasir_lastOrderId');
+ let isFirstPoll = true;
 
-        // ✅ Izinkan audio setelah interaksi pertama
-        document.addEventListener("click", () => {
-          const audio = document.getElementById("notifAudio");
-          if (audio) {
-            audio.play().then(() => {
-              audio.pause(); // cukup untuk aktifkan izin
-            }).catch(() => {});
-          }
-        }, { once: true });
+  // 🔁 Fungsi cek pesanan baru
+  async function checkNewOrderKasir() {
+    try {
+      const res = await fetch("../admin_kasir/cek_pesanan.php");
+      const data = await res.json();
 
-        // 🔁 Fungsi cek pesanan baru
-        async function checkNewOrderKasir() {
-          try {
-            const res = await fetch("../admin_kasir/cek_pesanan.php");
-            const data = await res.json();
-            console.log("Cek pesanan kasir:", data);
-
-            let initiallyFirst = typeof window.isFirstPoll === 'undefined';
-            window.isFirstPoll = false;
-
-            if (data.ada_pesanan) {
-              if (initiallyFirst && lastOrderId === null) {
-                lastOrderId = data.id;
-              } else if (lastOrderId === null || Number(data.id) > Number(lastOrderId)) {
-                lastOrderId = data.id;
-                showNotificationKasir();
-              }
-            }
-          } catch (err) {
-            console.error("Error cek pesanan kasir:", err);
-          }
+      if (data.ada_pesanan) {
+        if (isFirstPoll) {
+          lastOrderId = String(data.id);
+          sessionStorage.setItem('kasir_lastOrderId', lastOrderId);
+          isFirstPoll = false;
+        } else if (!lastOrderId || Number(data.id) > Number(lastOrderId)) {
+          lastOrderId = String(data.id);
+          sessionStorage.setItem('kasir_lastOrderId', lastOrderId);
+          showNotificationKasir();
         }
+      }
+    } catch (err) {
+      console.error("Error cek pesanan kasir:", err);
+    }
+  }
 
         // 🔔 Fungsi tampilkan notifikasi
         function showNotificationKasir() {

@@ -189,56 +189,81 @@ if (isset($_GET['ajax'])) {
 
     <!-- Javascript -->
     <script src="../js/admin.js"></script>
-    <!-- 🔔 Notifikasi Pesanan -->
+<!-- 🔔 Notifikasi Pesanan -->
 <audio id="notifAudio" src="notif/notif.mp3" preload="auto"></audio>
-<div id="notifBox" style="
-  display:none;
-  position:fixed;
-  top:20px;
-  right:20px;
-  background:#ffc107;
-  padding:15px 20px;
-  border-radius:10px;
-  font-weight:bold;
-  color:#222;
-  box-shadow:0 4px 8px rgba(0,0,0,0.3);
-  z-index:9999;
-">
-  Pesanan baru masuk!
+<style>
+@keyframes slideInNotif {
+  from { transform: translateX(120%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes fadeOutNotif {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(120%); opacity: 0; }
+}
+.notif-toast {
+  display: none;
+  align-items: center;
+  gap: 14px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(28, 28, 30, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 4px solid #ffc107;
+  padding: 16px 20px;
+  border-radius: 12px;
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  font-family: system-ui, -apple-system, sans-serif;
+  width: 320px;
+  animation: slideInNotif 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: all 0.3s ease;
+}
+.notif-toast.hide {
+  animation: fadeOutNotif 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+</style>
+
+<div id="notifBox" class="notif-toast">
+  <div style="background: rgba(255, 193, 7, 0.15); color: #ffc107; padding: 10px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+    </svg>
+  </div>
+  <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+    <div style="font-size: 11px; font-weight: 700; color: #ffc107; letter-spacing: 0.8px; text-transform: uppercase;">Pesanan Baru</div>
+    <div style="font-size: 14px; color: #e5e5ea; font-weight: 500; line-height: 1.3;">Ada pesanan baru masuk!</div>
+  </div>
 </div>
 
 <script>
-let lastOrderId = null;
-
-// ✅ Aktifkan izin audio setelah user klik pertama kali di halaman
-document.addEventListener("click", () => {
-  const audio = document.getElementById("notifAudio");
-  if (audio) {
-    audio.play().then(() => audio.pause()).catch(() => {});
-    console.log("✅ Izin audio aktif");
-  }
-}, { once: true });
+// ✅ Ambil lastOrderId dari sessionStorage agar tidak reset saat pindah halaman
+let lastOrderId = sessionStorage.getItem('dapur_lastOrderId');
+let isFirstPoll = true;
 
 // 🔁 Cek pesanan baru tiap 5 detik
 async function checkNewOrder() {
   try {
     const res = await fetch("../admin_dapur/cek_pesanan.php");
     const data = await res.json();
-    console.log("Cek pesanan:", data);
-
-    let initiallyFirst = typeof window.isFirstPoll === 'undefined';
-    window.isFirstPoll = false;
 
     if (data.ada_pesanan) {
-      if (initiallyFirst && lastOrderId === null) {
-        lastOrderId = data.id;
-      } else if (lastOrderId === null || Number(data.id) > Number(lastOrderId)) {
-        lastOrderId = data.id;
+      if (isFirstPoll) {
+        lastOrderId = String(data.id);
+        sessionStorage.setItem('dapur_lastOrderId', lastOrderId);
+        isFirstPoll = false;
+      } else if (!lastOrderId || Number(data.id) > Number(lastOrderId)) {
+        lastOrderId = String(data.id);
+        sessionStorage.setItem('dapur_lastOrderId', lastOrderId);
         playOrderNotification();
       }
     }
   } catch (err) {
-    console.error("❌ Error cek pesanan:", err);
+    console.error("Error cek pesanan:", err);
   }
 }
 
@@ -249,13 +274,20 @@ function playOrderNotification() {
 
   if (!box || !audio) return;
 
-  box.style.display = "block";
-  setTimeout(() => box.style.display = "none", 5000);
+  box.classList.remove("hide");
+  box.style.display = "flex";
+  
+  setTimeout(() => {
+    box.classList.add("hide");
+    setTimeout(() => {
+      box.style.display = "none";
+    }, 400);
+  }, 4600);
 
   audio.currentTime = 0;
   audio.play()
-    .then(() => console.log("✅ Suara notifikasi diputar"))
-    .catch(err => console.warn("⚠️ Audio gagal diputar:", err));
+    .then(() => console.log("Suara notifikasi diputar"))
+    .catch(err => console.warn("Audio gagal diputar:", err));
 }
 
 // 🔁 Jalankan cek otomatis

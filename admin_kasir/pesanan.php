@@ -328,7 +328,7 @@ if (isset($_GET['ajax'])) {
             }
           });
         }
-
+        
         // ✅ Gambar bukti klik untuk modal
         if (e.target.classList.contains("bukti-img")) {
           const modal = document.getElementById("imgModal");
@@ -349,65 +349,56 @@ if (isset($_GET['ajax'])) {
       });
 
       // NOTIFIKASI PESANAN MASUK
-       let lastOrderId = null;
+      // ✅ Ambil lastOrderId dari sessionStorage agar tidak reset saat pindah halaman
+      let lastOrderId = sessionStorage.getItem('kasir_lastOrderId');
+      let isFirstPoll = true;
 
-        // ✅ Izinkan audio setelah interaksi pertama
-        document.addEventListener("click", () => {
-          const audio = document.getElementById("notifAudio");
-          if (audio) {
-            audio.play().then(() => {
-              audio.pause(); // cukup untuk aktifkan izin
-            }).catch(() => {});
-          }
-        }, { once: true });
+      // 🔁 Fungsi cek pesanan baru
+      async function checkNewOrderKasir() {
+        try {
+          const res = await fetch("../admin_kasir/cek_pesanan.php");
+          const data = await res.json();
 
-        // 🔁 Fungsi cek pesanan baru
-        async function checkNewOrderKasir() {
-          try {
-            const res = await fetch("../admin_kasir/cek_pesanan.php");
-            const data = await res.json();
-            console.log("Cek pesanan kasir:", data);
-
-            let initiallyFirst = typeof window.isFirstPoll === 'undefined';
-            window.isFirstPoll = false;
-
-            if (data.ada_pesanan) {
-              if (initiallyFirst && lastOrderId === null) {
-                lastOrderId = data.id;
-              } else if (lastOrderId === null || Number(data.id) > Number(lastOrderId)) {
-                lastOrderId = data.id;
-                showNotificationKasir();
-              }
+          if (data.ada_pesanan) {
+            if (isFirstPoll) {
+              lastOrderId = String(data.id);
+              sessionStorage.setItem('kasir_lastOrderId', lastOrderId);
+              isFirstPoll = false;
+            } else if (!lastOrderId || Number(data.id) > Number(lastOrderId)) {
+              lastOrderId = String(data.id);
+              sessionStorage.setItem('kasir_lastOrderId', lastOrderId);
+              showNotificationKasir();
             }
-          } catch (err) {
-            console.error("Error cek pesanan kasir:", err);
           }
+        } catch (err) {
+          console.error("Error cek pesanan kasir:", err);
         }
+      }
 
-        // 🔔 Fungsi tampilkan notifikasi
-        function showNotificationKasir() {
-          const box = document.getElementById("notifBox");
-          const audio = document.getElementById("notifAudio");
+      // 🔔 Fungsi tampilkan notifikasi
+      function showNotificationKasir() {
+        const box = document.getElementById("notifBox");
+        const audio = document.getElementById("notifAudio");
 
-          // ✅ Tampilkan box
-          box.style.display = "block";
-          setTimeout(() => {
-            box.style.display = "none";
-          }, 5000);
+        // ✅ Tampilkan box
+        box.style.display = "block";
+        setTimeout(() => {
+          box.style.display = "none";
+        }, 5000);
 
-          // ✅ Pastikan suara diputar
-          audio.currentTime = 0;
-          const playPromise = audio.play();
+        // ✅ Pastikan suara diputar
+        audio.currentTime = 0;
+        const playPromise = audio.play();
 
-          if (playPromise !== undefined) {
-            playPromise
-              .then(() => console.log("Suara notifikasi diputar"))
-              .catch(err => console.warn("Audio gagal diputar:", err));
-          }
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => console.log("Suara notifikasi diputar"))
+            .catch(err => console.warn("Audio gagal diputar:", err));
         }
+      }
 
-        // ⏱ Jalankan pengecekan tiap 5 detik
-        setInterval(checkNewOrderKasir, 5000);
+      // ⏱ Jalankan pengecekan tiap 5 detik
+      setInterval(checkNewOrderKasir, 5000);
     </script>
   </body>
 </html>
