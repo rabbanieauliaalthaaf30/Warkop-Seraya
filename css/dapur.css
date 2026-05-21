@@ -245,19 +245,251 @@ body::before {
 .page-dashboard .main {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: stretch;
   min-height: 100vh;
-  text-align: center;
-  padding: 40px;
+  padding: 36px 40px;
+  gap: 28px;
+  overflow-y: auto;
 }
 
-.page-dashboard .main h1 {
-  font-size: 36px;
-  color: #222;
-  margin-bottom: 15px;
-  animation: fadeIn 0.7s ease-in-out;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* ── Welcome Header ── */
+.dapur-welcome-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
+  border: 1px solid rgba(220, 20, 60, 0.12);
+  border-radius: 20px;
+  padding: 28px 32px;
+  box-shadow: 0 4px 20px rgba(220, 20, 60, 0.08);
+  animation: fadeIn 0.6s ease;
+}
+
+.dapur-welcome-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary) 0%, #ff4b6e 100%);
+  color: #ffffff;
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  animation: splashIconBounce 3s ease-in-out infinite alternate;
+  filter: drop-shadow(0 8px 16px rgba(220, 20, 60, 0.25));
+  flex-shrink: 0;
+}
+
+.dapur-welcome-icon svg {
+  width: 36px;
+  height: 36px;
+  stroke-width: 2.2;
+}
+
+.dapur-welcome-text h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+
+.dapur-welcome-text h1 span {
+  color: var(--primary);
+}
+
+.dapur-welcome-text p {
+  font-size: 14.5px;
+  color: #64748b;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* ── Stats Grid ── */
+.dapur-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  animation: fadeIn 0.7s ease 0.1s both;
+}
+
+.dapur-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 22px 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f1f5f9;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.dapur-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px;
+  height: 100%;
+  border-radius: 4px 0 0 4px;
+}
+
+.dapur-stat-card.pending::before  { background: linear-gradient(180deg, #f59e0b, #d97706); }
+.dapur-stat-card.diproses::before { background: linear-gradient(180deg, #3b82f6, #2563eb); }
+.dapur-stat-card.selesai::before  { background: linear-gradient(180deg, #10b981, #059669); }
+.dapur-stat-card.menu::before     { background: linear-gradient(180deg, #dc143c, #be1234); }
+
+.dapur-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Alert state untuk pesanan pending */
+.dapur-stat-card.pending.has-alert {
+  border-color: rgba(245, 158, 11, 0.3);
+  background: linear-gradient(135deg, #fffbeb, #fff);
+  animation: pulseCard 2s ease-in-out infinite;
+}
+
+@keyframes pulseCard {
+  0%, 100% { box-shadow: 0 4px 16px rgba(245, 158, 11, 0.15); }
+  50%       { box-shadow: 0 4px 24px rgba(245, 158, 11, 0.35); }
+}
+
+.dapur-stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dapur-stat-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2;
+}
+
+.dapur-stat-card.pending  .dapur-stat-icon { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+.dapur-stat-card.diproses .dapur-stat-icon { background: rgba(59, 130, 246, 0.12); color: #2563eb; }
+.dapur-stat-card.selesai  .dapur-stat-icon { background: rgba(16, 185, 129, 0.12); color: #059669; }
+.dapur-stat-card.menu     .dapur-stat-icon { background: rgba(220, 20, 60, 0.1);   color: var(--primary); }
+
+.dapur-stat-info h4 {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.dapur-stat-info p {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1;
+  margin-bottom: 4px;
+  transition: all 0.3s ease;
+}
+
+.dapur-stat-info span {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* ── Quick Actions ── */
+.dapur-quick-actions {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 28px 28px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f1f5f9;
+  animation: fadeIn 0.7s ease 0.2s both;
+}
+
+.dapur-quick-actions h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.dapur-quick-actions h3 svg {
+  width: 18px;
+  height: 18px;
+  color: var(--primary);
+}
+
+.dapur-action-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.dapur-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 16px;
+  background: #f8fafc;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  text-decoration: none;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+}
+
+.dapur-action-btn svg {
+  width: 26px;
+  height: 26px;
+  color: var(--primary);
+  stroke-width: 1.8;
+  transition: transform 0.25s ease;
+}
+
+.dapur-action-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(220, 20, 60, 0.25);
+}
+
+.dapur-action-btn:hover svg {
+  color: #fff;
+  transform: scale(1.15);
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .dapur-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .dapur-action-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .page-dashboard .main { padding: 20px 16px; gap: 18px; }
+  .dapur-stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .dapur-action-grid { grid-template-columns: 1fr 1fr; }
+  .dapur-welcome-header { flex-direction: column; text-align: center; }
+  .dapur-stat-info p { font-size: 26px; }
+}
+
+@keyframes splashIconBounce {
+  0%   { transform: translateY(-4px) rotate(-2deg); }
+  100% { transform: translateY(4px) rotate(2deg); }
 }
 
 /* ================= PESANAN ================= */

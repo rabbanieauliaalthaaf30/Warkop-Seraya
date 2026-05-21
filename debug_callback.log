@@ -738,3 +738,23 @@
         waktu_bayar = CURRENT_TIMESTAMP
     WHERE id_transaksi = 342
 
+[2026-05-20 20:22:43] POST DATA: Array
+(
+    [orderId] => 344
+    [method] => cash
+)
+
+[2026-05-20 20:22:43] FILES DATA: Array
+(
+)
+
+
+[2026-05-20 20:22:43] SQL_UPDATE: 
+    UPDATE pembayaran 
+    SET status = 'belum bayar',
+        metode = 'cash',
+        email = '',
+        jumlah = 7000,
+        waktu_bayar = CURRENT_TIMESTAMP
+    WHERE id_transaksi = 344
+
