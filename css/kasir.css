@@ -123,10 +123,12 @@ body::before {
 .sidebar::-webkit-scrollbar {
   width: 6px;
 }
+
 .sidebar::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 4px;
 }
+
 .sidebar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
 }
@@ -136,6 +138,7 @@ body::before {
     transform: translateX(-40px);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -168,7 +171,7 @@ body::before {
   color: #333;
   padding: 16px 24px;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   font-weight: 600;
   z-index: 10000;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -177,11 +180,19 @@ body::before {
   gap: 12px;
   border-left: 6px solid #10b981;
 }
-.admin-toast.error { border-left-color: #ef4444; }
-.admin-toast.warning { border-left-color: #f59e0b; }
+
+.admin-toast.error {
+  border-left-color: #ef4444;
+}
+
+.admin-toast.warning {
+  border-left-color: #f59e0b;
+}
+
 .admin-toast.show {
   right: 20px;
 }
+
 .empty-state-table {
   padding: 40px !important;
   color: #64748b !important;
@@ -189,6 +200,7 @@ body::before {
   font-weight: 500 !important;
   text-align: center;
 }
+
 .empty-state-table img {
   width: 80px;
   opacity: 0.5;
@@ -196,6 +208,7 @@ body::before {
   border: none !important;
   box-shadow: none !important;
 }
+
 .empty-state-table img:hover {
   transform: none !important;
   box-shadow: none !important;
@@ -408,8 +421,15 @@ body::before {
 }
 
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* 📊 Grafik */
@@ -443,6 +463,7 @@ body::before {
     opacity: 0;
     transform: translateY(15px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -487,6 +508,7 @@ body::before {
 .menu-toggle:active {
   transform: scale(0.95);
 }
+
 /* ===== Halaman Pesanan & Riwayat ===== */
 .page-pesanan .main,
 .page-riwayatpesanan .main {
@@ -549,7 +571,8 @@ body::before {
 }
 
 .pesanan-table td .item-line:last-child {
-  border-bottom: none; /* hilangkan garis di item terakhir */
+  border-bottom: none;
+  /* hilangkan garis di item terakhir */
 }
 
 .page-pesanan .pesanan-table td:nth-child(3),
@@ -561,13 +584,14 @@ body::before {
 
 .pesanan-table td img.bukti-img {
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   border: 2px solid #fff;
 }
+
 .pesanan-table td img.bukti-img:hover {
   transform: scale(1.4) translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   z-index: 10;
   position: relative;
 }
@@ -589,12 +613,14 @@ body::before {
   justify-content: center;
   align-items: center;
 }
+
 .img-modal img {
   max-width: 90%;
   max-height: 90%;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
 }
+
 .img-modal .close {
   position: absolute;
   top: 20px;
@@ -617,7 +643,7 @@ body::before {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   border: none;
   margin: 3px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   letter-spacing: 0.3px;
 }
 
@@ -626,26 +652,31 @@ body::before {
   color: #fff !important;
   box-shadow: 0 6px 15px rgba(16, 185, 129, 0.25);
 }
+
 .btn-success:hover {
   background: linear-gradient(135deg, #059669, #047857);
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
 }
+
 .btn-primary {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: #fff !important;
   box-shadow: 0 6px 15px rgba(59, 130, 246, 0.25);
 }
+
 .btn-primary:hover {
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
 }
+
 .btn-warning {
   background: linear-gradient(135deg, #f59e0b, #d97706);
   color: #fff !important;
   box-shadow: 0 6px 15px rgba(245, 158, 11, 0.25);
 }
+
 .btn-warning:hover {
   background: linear-gradient(135deg, #d97706, #b45309);
   transform: translateY(-2px);
@@ -661,13 +692,34 @@ body::before {
   border-radius: 20px;
   text-transform: capitalize;
   letter-spacing: 0.3px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
-.badge-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-.badge-warning { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
-.badge-danger { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-.badge-secondary { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
-.badge-kasir { 
+
+.badge-success {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.badge-warning {
+  background: #fef9c3;
+  color: #854d0e;
+  border: 1px solid #fef08a;
+}
+
+.badge-danger {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.badge-secondary {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.badge-kasir {
   display: inline-block;
   padding: 4px 10px;
   background: #f1f5f9;
@@ -695,11 +747,13 @@ body::before {
   color: #28a745;
   background: #eafaf1;
 }
+
 .status-box.bayar {
   border-color: #007bff;
   color: #007bff;
   background: #eaf4fe;
 }
+
 .status-box.belum {
   border-color: #e74c3c;
   color: #e74c3c;
@@ -750,8 +804,10 @@ body::before {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   border: 1px solid #eee;
   width: fit-content;
-  margin: 20px auto 25px 0; /* biar rata kiri */
-  animation: fadeIn 0.7s ease-in-out; /* 🔥 animasi masuk elegan */
+  margin: 20px auto 25px 0;
+  /* biar rata kiri */
+  animation: fadeIn 0.7s ease-in-out;
+  /* 🔥 animasi masuk elegan */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -779,9 +835,11 @@ body::before {
   transition: all 0.2s ease-in-out;
   animation: fadeIn 0.9s ease-in-out;
 }
+
 .rekap-filter select:hover {
   border-color: var(--primary);
 }
+
 .rekap-filter select:focus {
   outline: none;
   border-color: var(--primary);
@@ -802,6 +860,7 @@ body::before {
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
   animation: fadeIn 1s ease-in-out;
 }
+
 .rekap-filter button:hover {
   transform: translateY(-2px);
   background: linear-gradient(135deg, #b71c1c, #880e4f);
@@ -856,6 +915,7 @@ body::before {
     opacity: 0;
     transform: translateY(-5px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -931,10 +991,12 @@ body::before {
 #rekapModal .modal-content::-webkit-scrollbar {
   width: 6px;
 }
+
 #rekapModal .modal-content::-webkit-scrollbar-track {
   background: #f1f5f9;
   border-radius: 20px;
 }
+
 #rekapModal .modal-content::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, var(--primary), #60a5fa);
   border-radius: 20px;
@@ -945,7 +1007,8 @@ body::before {
   text-align: center;
   font-size: 1.5rem;
   margin-bottom: 25px;
-  color: var(--slate); /* Deep Slate */
+  color: var(--slate);
+  /* Deep Slate */
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -955,6 +1018,7 @@ body::before {
 .rekap-list {
   padding: 5px 0;
 }
+
 .rekap-item {
   background: #ffffff;
   border-radius: 16px;
@@ -967,16 +1031,19 @@ body::before {
   border-right: 1px solid #f1f5f9;
   border-bottom: 1px solid #f1f5f9;
 }
+
 .rekap-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   border-left-width: 8px;
 }
+
 .rekap-item p {
   margin: 4px 0;
   font-size: 14px;
   color: #475569;
 }
+
 .rekap-item b {
   color: #1e293b;
 }
@@ -990,12 +1057,14 @@ body::before {
 
 /* Ringkasan total */
 .rekap-summary {
-  background: #f0f9ff; /* Light Blue */
+  background: #f0f9ff;
+  /* Light Blue */
   border-radius: 16px;
   padding: 20px;
   margin-top: 20px;
   border-left: 5px solid #0369a1;
 }
+
 .rekap-summary p {
   margin: 6px 0;
   font-weight: 700;
@@ -1004,6 +1073,7 @@ body::before {
   display: flex;
   justify-content: space-between;
 }
+
 .rekap-summary p:last-child {
   font-size: 1.2rem;
   color: var(--primary);
@@ -1026,6 +1096,7 @@ body::before {
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 #rekapModal button:hover {
   background: #e2e8f0;
   color: #1e293b;
@@ -1041,6 +1112,7 @@ body::before {
   margin-top: 15px !important;
   box-shadow: 0 10px 15px -3px rgba(67, 56, 202, 0.3);
 }
+
 .btn-cetak:hover {
   transform: translateY(-2px);
   filter: brightness(1.1);
@@ -1048,13 +1120,27 @@ body::before {
 }
 
 @keyframes popUp {
-  from { opacity: 0; transform: scale(0.95) translateY(10px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 @media print {
-  .rekap-item { border: 1px solid #ddd; border-left: 4px solid var(--primary); }
-  .rekap-summary { background: #f0f9ff !important; border-left: 4px solid #0369a1; }
+  .rekap-item {
+    border: 1px solid #ddd;
+    border-left: 4px solid var(--primary);
+  }
+
+  .rekap-summary {
+    background: #f0f9ff !important;
+    border-left: 4px solid #0369a1;
+  }
 }
 
 /* ================= RESPONSIVE ================= */
@@ -1100,12 +1186,15 @@ body::before {
   }
 
   .pagination {
-    margin-top: 40px; /* ✅ lebih lega dari tabel */
+    margin-top: 40px;
+    /* ✅ lebih lega dari tabel */
     text-align: center;
     display: flex;
-    flex-wrap: wrap; /* ✅ biar bisa turun ke baris kedua */
+    flex-wrap: wrap;
+    /* ✅ biar bisa turun ke baris kedua */
     justify-content: center;
-    gap: 6px 5px; /* ✅ jarak antar tombol (vertical, horizontal) */
+    gap: 6px 5px;
+    /* ✅ jarak antar tombol (vertical, horizontal) */
   }
 
   .pagination a {
@@ -1115,7 +1204,8 @@ body::before {
   }
 
   .rekap-filter {
-    flex-wrap: wrap; /* biar bisa turun ke baris berikut */
+    flex-wrap: wrap;
+    /* biar bisa turun ke baris berikut */
     justify-content: flex-start;
     gap: 8px;
     width: 100%;
@@ -1132,7 +1222,8 @@ body::before {
   .rekap-filter select,
   .rekap-filter button,
   .tanggal-range {
-    flex: 1 1 48%; /* dua item per baris */
+    flex: 1 1 48%;
+    /* dua item per baris */
     min-width: 150px;
     box-sizing: border-box;
   }
@@ -1149,8 +1240,10 @@ body::before {
     flex-basis: 100%;
     justify-content: flex-start;
     gap: 6px;
-    margin-left: 0; /* pastikan tidak bergeser kanan */
-    padding-left: 0; /* sejajar dengan select di atas */
+    margin-left: 0;
+    /* pastikan tidak bergeser kanan */
+    padding-left: 0;
+    /* sejajar dengan select di atas */
   }
 
   /* Input tanggal lebih kecil + border lebih halus biar pas di dalam card */
@@ -1158,7 +1251,8 @@ body::before {
     width: 47.5%;
     min-width: 10px;
     padding: 6px 6px;
-    border: 1px solid #ccc; /* border lebih kecil */
+    border: 1px solid #ccc;
+    /* border lebih kecil */
     border-radius: 6px;
     font-size: 10px;
     background-color: #fff;
@@ -1247,7 +1341,7 @@ body::before {
     padding: 4px 6px;
     font-size: 9px;
   }
-  
+
   .page-riwayatpesanan .pesanan-table .badge,
   .page-pesanan .pesanan-table .badge {
     padding: 4px 8px;
@@ -1255,12 +1349,15 @@ body::before {
   }
 
   .pagination {
-    margin-top: 40px; /* ✅ lebih lega dari tabel */
+    margin-top: 40px;
+    /* ✅ lebih lega dari tabel */
     text-align: center;
     display: flex;
-    flex-wrap: wrap; /* ✅ biar bisa turun ke baris kedua */
+    flex-wrap: wrap;
+    /* ✅ biar bisa turun ke baris kedua */
     justify-content: center;
-    gap: 6px 5px; /* ✅ jarak antar tombol (vertical, horizontal) */
+    gap: 6px 5px;
+    /* ✅ jarak antar tombol (vertical, horizontal) */
   }
 
   .pagination a {
@@ -1268,8 +1365,10 @@ body::before {
     font-size: 12px;
     border-radius: 4px;
   }
+
   .rekap-filter {
-    flex-wrap: wrap; /* biar bisa turun ke baris berikut */
+    flex-wrap: wrap;
+    /* biar bisa turun ke baris berikut */
     justify-content: flex-start;
     gap: 8px;
     width: 100%;
@@ -1286,7 +1385,8 @@ body::before {
   .rekap-filter select,
   .rekap-filter button,
   .tanggal-range {
-    flex: 1 1 48%; /* dua item per baris */
+    flex: 1 1 48%;
+    /* dua item per baris */
     min-width: 150px;
     box-sizing: border-box;
   }
@@ -1303,8 +1403,10 @@ body::before {
     flex-basis: 100%;
     justify-content: flex-start;
     gap: 6px;
-    margin-left: 0; /* pastikan tidak bergeser kanan */
-    padding-left: 0; /* sejajar dengan select di atas */
+    margin-left: 0;
+    /* pastikan tidak bergeser kanan */
+    padding-left: 0;
+    /* sejajar dengan select di atas */
   }
 
   /* Input tanggal lebih kecil + border lebih halus biar pas di dalam card */
@@ -1312,7 +1414,8 @@ body::before {
     width: 47.5%;
     min-width: 10px;
     padding: 6px 6px;
-    border: 1px solid #ccc; /* border lebih kecil */
+    border: 1px solid #ccc;
+    /* border lebih kecil */
     border-radius: 6px;
     font-size: 10px;
     background-color: #fff;
@@ -1451,16 +1554,20 @@ body::before {
   }
 
   .menu-toggle {
-    display: none; /* ❌ Tidak tampil di tablet */
+    display: none;
+    /* ❌ Tidak tampil di tablet */
   }
 
   .pagination {
-    margin-top: 40px; /* ✅ lebih lega dari tabel */
+    margin-top: 40px;
+    /* ✅ lebih lega dari tabel */
     text-align: center;
     display: flex;
-    flex-wrap: wrap; /* ✅ biar bisa turun ke baris kedua */
+    flex-wrap: wrap;
+    /* ✅ biar bisa turun ke baris kedua */
     justify-content: center;
-    gap: 6px 5px; /* ✅ jarak antar tombol (vertical, horizontal) */
+    gap: 6px 5px;
+    /* ✅ jarak antar tombol (vertical, horizontal) */
   }
 
   .pagination a {
@@ -1470,7 +1577,8 @@ body::before {
   }
 
   .rekap-filter {
-    flex-wrap: wrap; /* biar bisa turun ke baris berikut */
+    flex-wrap: wrap;
+    /* biar bisa turun ke baris berikut */
     justify-content: flex-start;
     gap: 8px;
     width: 100%;
@@ -1487,7 +1595,8 @@ body::before {
   .rekap-filter select,
   .rekap-filter button,
   .tanggal-range {
-    flex: 1 1 48%; /* dua item per baris */
+    flex: 1 1 48%;
+    /* dua item per baris */
     min-width: 150px;
     box-sizing: border-box;
   }
@@ -1504,8 +1613,10 @@ body::before {
     flex-basis: 100%;
     justify-content: flex-start;
     gap: 6px;
-    margin-left: 0; /* pastikan tidak bergeser kanan */
-    padding-left: 0; /* sejajar dengan select di atas */
+    margin-left: 0;
+    /* pastikan tidak bergeser kanan */
+    padding-left: 0;
+    /* sejajar dengan select di atas */
   }
 
   /* Input tanggal lebih kecil + border lebih halus biar pas di dalam card */
@@ -1513,7 +1624,8 @@ body::before {
     width: 47.5%;
     min-width: 10px;
     padding: 6px 6px;
-    border: 1px solid #ccc; /* border lebih kecil */
+    border: 1px solid #ccc;
+    /* border lebih kecil */
     border-radius: 6px;
     font-size: 10px;
     background-color: #fff;
@@ -1627,7 +1739,8 @@ body::before {
   }
 
   .pagination {
-    margin-top: 40px; /* ✅ jarak cukup jauh dari tabel */
+    margin-top: 40px;
+    /* ✅ jarak cukup jauh dari tabel */
     text-align: center;
   }
 
@@ -1640,7 +1753,8 @@ body::before {
   }
 
   .rekap-filter {
-    flex-wrap: wrap; /* biar bisa turun ke baris berikut */
+    flex-wrap: wrap;
+    /* biar bisa turun ke baris berikut */
     justify-content: flex-start;
     gap: 8px;
     width: 100%;
@@ -1657,7 +1771,8 @@ body::before {
   .rekap-filter select,
   .rekap-filter button,
   .tanggal-range {
-    flex: 1 1 48%; /* dua item per baris */
+    flex: 1 1 48%;
+    /* dua item per baris */
     min-width: 150px;
     box-sizing: border-box;
   }
@@ -1674,8 +1789,10 @@ body::before {
     flex-basis: 100%;
     justify-content: flex-start;
     gap: 6px;
-    margin-left: 0; /* pastikan tidak bergeser kanan */
-    padding-left: 0; /* sejajar dengan select di atas */
+    margin-left: 0;
+    /* pastikan tidak bergeser kanan */
+    padding-left: 0;
+    /* sejajar dengan select di atas */
   }
 
   /* Input tanggal lebih kecil + border lebih halus biar pas di dalam card */
@@ -1683,7 +1800,8 @@ body::before {
     width: 47.5%;
     min-width: 10px;
     padding: 6px 6px;
-    border: 1px solid #ccc; /* border lebih kecil */
+    border: 1px solid #ccc;
+    /* border lebih kecil */
     border-radius: 6px;
     font-size: 10px;
     background-color: #fff;
@@ -1711,6 +1829,7 @@ body::before {
     padding: 15px;
     box-sizing: border-box;
   }
+
   #rekapModal .modal-content {
     width: 100%;
     max-width: 340px;
@@ -1718,15 +1837,201 @@ body::before {
     border-radius: 16px;
     max-height: 85vh;
   }
+
   #rekapModal .modal-content h3 {
     font-size: 18px;
     margin-bottom: 15px;
   }
+
   #rekapModal .modal-content .btn-cetak,
   #rekapModal .modal-content #closeRekapModal {
     width: 100%;
     padding: 10px;
     margin-bottom: 8px;
     font-size: 13px;
+  }
+}
+
+/* ================= RECEIPT MODAL FOR CASHIER ================= */
+.receipt-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 11000; /* Above all other elements */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.receipt-card {
+  background: #fff;
+  width: 100%;
+  max-width: 340px;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  animation: slideUpReceipt 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+@keyframes slideUpReceipt {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.receipt-header h2 {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 5px;
+}
+
+.receipt-header .warkop { color: #1e293b; }
+.receipt-header .seraya { color: #dc143c; }
+
+.receipt-header .receipt-line {
+  height: 2px;
+  background: repeating-linear-gradient(90deg, #cbd5e1 0, #cbd5e1 5px, transparent 5px, transparent 10px);
+  margin: 15px 0;
+}
+
+.receipt-card p.title {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+.receipt-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 8px;
+  color: #1e293b;
+}
+
+.receipt-items {
+  width: 100%;
+  margin: 20px 0;
+  border-collapse: collapse;
+}
+
+.receipt-items th {
+  text-align: left;
+  font-size: 12px;
+  color: #64748b;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 8px;
+}
+
+.receipt-items td {
+  font-size: 13px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f8fafc;
+  text-align: left;
+}
+
+.total-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 800;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px dashed #cbd5e1;
+}
+
+.receipt-footer {
+  display: flex;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.receipt-footer button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.print-btn {
+  background: #10b981;
+  color: #fff;
+}
+
+.print-btn:hover {
+  background: #059669;
+}
+
+.download-btn {
+  background: #dc143c;
+  color: #fff;
+}
+
+.download-btn:hover {
+  background: #b31237;
+}
+
+.close-btn {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.close-btn:hover {
+  background: #e2e8f0;
+}
+
+/* ================= PRINT @MEDIA STYLING (80MM THERMAL) ================= */
+@media print {
+  @page {
+    size: 80mm auto;
+    margin: 0;
+  }
+  body {
+    background: #fff;
+    margin: 0;
+    padding: 0;
+  }
+  /* Sembunyikan semua elemen di body selain modal struk */
+  body > * {
+    display: none !important;
+  }
+  /* Tampilkan overlay modal struk tanpa background blur */
+  .receipt-overlay {
+    display: flex !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80mm;
+    height: auto;
+    background: #fff;
+    padding: 0;
+    margin: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  /* Tampilkan struk card lebar pas 80mm */
+  .receipt-card {
+    width: 80mm;
+    max-width: 80mm;
+    border: none;
+    box-shadow: none;
+    padding: 5mm;
+    margin: 0;
+  }
+  /* Sembunyikan footer cetak/unduh/tutup struk saat mencetak */
+  .receipt-footer {
+    display: none !important;
   }
 }

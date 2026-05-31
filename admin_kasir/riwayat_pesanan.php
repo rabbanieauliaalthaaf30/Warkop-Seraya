@@ -84,17 +84,21 @@ function renderRiwayatTable($conn, $start, $limit) {
             echo "<td><span class='badge-kasir'>".htmlspecialchars($row['nama_kasir'] ?? 'System')."</span></td>";
 
             // ✅ Bukti Pembayaran (gambar mini)
+            echo "<td>";
             if (!empty($row['bukti_file'])) {
                 $bukti_path = "../uploads/" . htmlspecialchars($row['bukti_file']);
-                echo "<td>
-                        <img src='{$bukti_path}' 
+                echo "<img src='{$bukti_path}' 
                              alt='Bukti Pembayaran' 
                              class='bukti-img' 
-                             style='width:60px; height:auto; border-radius:5px; border:1px solid #ccc; cursor:pointer;'>
-                      </td>";
-            } else {
-                echo "<td><span style='color:gray;'>Bayar di kasir</span></td>";
+                             style='width:60px; height:auto; border-radius:5px; border:1px solid #ccc; cursor:pointer; display:block; margin:0 auto;'>";
             }
+
+            // Tampilkan tombol struk hanya jika metode adalah cash/belum diisi (bayar di kasir)
+            $metode_clean = strtolower(trim($row['metode'] ?? ''));
+            if ($metode_clean === 'cash' || empty($metode_clean)) {
+                echo "<button type='button' class='btn btn-warning btn-cetak-struk' data-id='{$id}' style='padding:8px 12px; font-size:13px; font-weight:700; border-radius:8px; margin:8px auto 0; width:100%; display:flex; align-items:center; justify-content:center; gap:6px;'><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-printer\"><polyline points=\"6 9 6 2 18 2 18 9\"></polyline><path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\"></path><rect x=\"6\" y=\"14\" width=\"12\" height=\"8\"></rect></svg>Struk</button>";
+            }
+            echo "</td>";
 
             // ✅ Status
             echo "<td>
@@ -353,6 +357,22 @@ if (isset($_GET['ajax'])) {
     </div>
   </div>
 
+  <!-- Popup Struk Kasir (Identik dengan Struk Pembayaran Pembeli) -->
+  <div id="receiptModal" class="receipt-overlay" style="display:none">
+    <div class="receipt-card" id="receiptContent">
+      <div class="receipt-header">
+        <h2><span class="warkop">Warkop</span> <span class="seraya">Seraya</span></h2>
+        <div class="receipt-line"></div>
+        <p class="title">Bukti Pembayaran</p>
+      </div>
+      <div id="receiptDetails"></div>
+      <div class="receipt-footer">
+        <button id="printReceiptBtn" class="print-btn" style="background:#10b981; color:#fff;">Cetak</button>
+        <button class="close-btn" onclick="closeReceipt()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ✅ Modal preview gambar -->
   <div id="imgModal" class="img-modal">
     <span class="close">&times;</span>
@@ -396,12 +416,124 @@ if (isset($_GET['ajax'])) {
     // =========================
     // Modal Gambar (tetap ada)
     // =========================
+    // Escape HTML (sederhana)
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Format tanggal/waktu kecil
+    function formatDate(date) {
+      const d = new Date(date);
+      const day = String(d.getDate()).padStart(2, "0");
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const year = d.getFullYear();
+      const time = d.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      return `${day}/${month}/${year} ${time}`;
+    }
+
+    function showReceiptKasir(order) {
+      const dateTime = formatDate(order.waktu_bayar || order.waktu_pemesanan || Date.now());
+      const detailsBox = document.getElementById("receiptDetails");
+      if (!detailsBox) return;
+
+      let itemsHtml = "<table class='receipt-items'>";
+      itemsHtml += "<tr><th>Item</th><th>Qty</th><th>Subtotal</th></tr>";
+
+      if (order.items && order.items.length > 0) {
+        order.items.forEach((it) => {
+          itemsHtml += `
+            <tr>
+              <td>${escapeHtml(it.nama_produk)}</td>
+              <td style='text-align:center;'>${escapeHtml(it.quantity)}</td>
+              <td>Rp ${Number(it.subtotal).toLocaleString("id-ID")}</td>
+            </tr>`;
+        });
+      }
+      itemsHtml += "</table>";
+
+      const methodText =
+        order.metode === "cash"
+          ? "Bayar di Kasir"
+          : order.metode === "transfer"
+          ? "Transfer Bank"
+          : "QRIS";
+
+      detailsBox.innerHTML = `
+        <div class="receipt-info"><strong>ID:</strong> ${escapeHtml(order.id)}</div>
+        <div class="receipt-info"><strong>Nama:</strong> ${escapeHtml(
+          order.nama_pemesan
+        )}</div>
+        <div class="receipt-info"><strong>Meja:</strong> ${escapeHtml(
+          order.nomor_meja
+        )}</div>
+        <div class="receipt-info"><strong>Metode:</strong> ${escapeHtml(
+          methodText
+        )}</div>
+        <div class="receipt-info"><strong>Waktu:</strong> ${escapeHtml(
+          dateTime
+        )}</div>
+        <div class="receipt-info"><strong>Kasir:</strong> ${escapeHtml(
+          order.nama_kasir
+        )}</div>
+        <div class="receipt-line"></div>
+        ${itemsHtml}
+        <div class="receipt-line"></div>
+        <div class="total-line"><strong>Total: Rp ${Number(
+          order.total
+        ).toLocaleString("id-ID")}</strong></div>
+      `;
+
+      const modal = document.getElementById("receiptModal");
+      if (modal) modal.style.display = "flex";
+
+      // Print Struk (Window Print)
+      const printBtn = document.getElementById("printReceiptBtn");
+      if (printBtn) {
+        printBtn.onclick = function () {
+          window.print();
+        };
+      }
+    }
+
+    function closeReceipt() {
+      const modal = document.getElementById("receiptModal");
+      if (modal) modal.style.display = "none";
+    }
+
     document.addEventListener("click", e => {
       if (e.target.classList.contains("bukti-img")) {
         const modal = document.getElementById("imgModal");
         const modalImg = document.getElementById("modalImage");
         modal.style.display = "flex";
         modalImg.src = e.target.src;
+      }
+
+      // ✅ Klik Cetak Struk
+      const cetakBtn = e.target.closest(".btn-cetak-struk");
+      if (cetakBtn) {
+        const id = cetakBtn.getAttribute("data-id");
+        fetch("get_detail_pesanan.php?id=" + id)
+          .then(res => res.json())
+          .then(order => {
+            if (order.status === 'error') {
+              alert(order.message);
+              return;
+            }
+            showReceiptKasir(order);
+          })
+          .catch(err => {
+            console.error("Error fetching order details:", err);
+            alert("Gagal memuat detail pesanan.");
+          });
       }
     });
     document.querySelector(".img-modal .close").addEventListener("click", () => {
