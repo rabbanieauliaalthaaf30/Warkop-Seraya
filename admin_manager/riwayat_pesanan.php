@@ -287,8 +287,6 @@ if (isset($_GET['ajax'])) {
           <option value="bulanan">Bulanan</option>
           <option value="custom">Pilih Tanggal</option>
         </select>
-
-        <!-- input tanggal custom (disembunyikan sampai dipilih) -->
         <div id="tanggalRange" class="tanggal-range">
           <input type="date" id="dari" />
           <span class="separator">-</span>

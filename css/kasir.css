@@ -554,6 +554,10 @@ body::before {
   background-color: #f8fafc;
 }
 
+.pesanan-table tbody tr.empty-row:hover {
+  background-color: transparent !important;
+}
+
 .pesanan-table td {
   padding: 16px 14px;
   text-align: center;
@@ -572,7 +576,6 @@ body::before {
 
 .pesanan-table td .item-line:last-child {
   border-bottom: none;
-  /* hilangkan garis di item terakhir */
 }
 
 .page-pesanan .pesanan-table td:nth-child(3),
@@ -793,7 +796,6 @@ body::before {
   border-color: #e74c3c;
   color: #e74c3c;
 }
-
 .pagination {
   text-align: center;
   margin-top: 20px;
@@ -824,8 +826,9 @@ body::before {
 
 .pagination .dots {
   border: none;
-  color: #888;
-  padding: 6px 4px;
+  color: #94a3b8;
+  box-shadow: none;
+  pointer-events: none;
 }
 
 /* === Filter Rekap Modern & Elegan (dengan animasi masuk) === */
