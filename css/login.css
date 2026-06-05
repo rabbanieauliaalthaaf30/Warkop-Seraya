@@ -216,15 +216,19 @@ body::before {
 .input-icon {
   position: absolute;
   left: 14px;
-  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-mid);
   pointer-events: none;
   opacity: 0.55;
   z-index: 1;
-  transition: opacity 0.25s;
+  transition: opacity 0.25s, color 0.25s;
 }
 
 .input-wrap:focus-within .input-icon {
-  opacity: 0.9;
+  opacity: 0.95;
+  color: var(--primary);
 }
 
 .form-group input[type="text"],
@@ -261,14 +265,17 @@ body::before {
   border: none;
   cursor: pointer;
   padding: 4px 6px;
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-mid);
   opacity: 0.5;
-  transition: opacity 0.2s;
-  line-height: 1;
+  transition: opacity 0.2s, color 0.2s;
 }
 
 .toggle-pass:hover {
-  opacity: 1;
+  opacity: 0.95;
+  color: var(--primary);
 }
 
 /* ── Remember me ── */
