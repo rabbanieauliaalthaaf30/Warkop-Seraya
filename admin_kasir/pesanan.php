@@ -118,6 +118,8 @@ function renderPesananTable($conn, $start, $limit) {
                 $metode_text = "Cash";
             } elseif ($metode === 'transfer') {
                 $metode_text = "Transfer";
+            } elseif ($metode === 'qris') {
+                $metode_text = "Qris";
             } else {
                 $metode_text = htmlspecialchars($metode);
             }

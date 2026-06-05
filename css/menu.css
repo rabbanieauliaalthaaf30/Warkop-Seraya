@@ -549,16 +549,24 @@ img.skeleton {
 
 .cart-header button {
   border: none;
-  background: none;
+  background: rgba(255, 255, 255, 0.15);
   color: #fff;
-  font-size: 1.8rem;
+  font-size: 1.1rem;
+  font-weight: 700;
   cursor: pointer;
   transition: 0.3s ease;
   line-height: 1;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .cart-header button:hover {
-  color: var(--accent);
+  background: rgba(255, 255, 255, 0.3);
   transform: scale(1.1);
 }
 
@@ -637,19 +645,27 @@ img.skeleton {
 
 /* Tombol hapus */
 .cart-item-right button {
-  background: none;
+  background: rgba(220, 20, 60, 0.08);
   border: none;
   color: var(--primary);
   cursor: pointer;
-  font-size: 22px;
+  font-size: 14px;
+  font-weight: 700;
   flex-shrink: 0;
   transition: 0.25s ease;
   line-height: 1;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cart-item-right button:hover {
-  color: var(--hv);
-  transform: scale(1.15);
+  background: var(--primary);
+  color: #fff;
+  transform: scale(1.1);
 }
 
 /* Total */
@@ -800,17 +816,25 @@ img.skeleton {
 }
 
 .order-header button {
-  background: none;
+  background: rgba(255, 255, 255, 0.15);
   border: none;
   color: #fff;
-  font-size: 1.8rem;
+  font-size: 1.1rem;
+  font-weight: 700;
   cursor: pointer;
   transition: 0.25s ease;
   line-height: 1;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .order-header button:hover {
-  color: var(--accent);
+  background: rgba(255, 255, 255, 0.3);
   transform: scale(1.1);
 }
 
@@ -870,10 +894,12 @@ img.skeleton {
   margin: 10px 0;
   max-height: 180px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .order-item {
   display: flex;
+  min-width: 0;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
@@ -889,29 +915,51 @@ img.skeleton {
   color: var(--color);
 }
 
-.order-item span {
+.order-item p.order-item-note {
+  font-weight: 400;
+  font-size: 0.75em;
+  color: #888;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.order-item-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.order-item span,
+.order-item-price {
   font-size: 14px;
   font-weight: 600;
   color: var(--primary);
-  margin-left: auto;
-  text-align: right;
-  min-width: 100px;
+  white-space: nowrap;
 }
 
 .order-item button {
-  background: none;
+  background: rgba(220, 20, 60, 0.08);
   border: none;
   color: var(--primary);
   cursor: pointer;
-  font-size: 22px;
-  margin-left: 10px;
+  font-size: 14px;
+  font-weight: 700;
   transition: 0.25s ease;
   line-height: 1;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .order-item button:hover {
-  color: var(--hv);
-  transform: scale(1.15);
+  background: var(--primary);
+  color: #fff;
+  transform: scale(1.1);
 }
 
 /* Total */
@@ -972,6 +1020,7 @@ img.skeleton {
 .cart-item-left,
 .order-item-left {
   flex-grow: 1;
+  min-width: 0;
 }
 
 .cart-item-name,
@@ -981,8 +1030,11 @@ img.skeleton {
 
 .cart-item-note,
 .order-item-note {
-  font-size: 0.85em;
+  font-size: 0.75em;
   color: #888;
+  font-weight: 400 !important;
+  font-style: italic;
+  margin-top: 2px;
 }
 
 /* === RESPONSIVE MOBILE POPUP & ORDER POPUP === */

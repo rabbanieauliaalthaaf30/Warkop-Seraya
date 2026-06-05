@@ -103,7 +103,7 @@ function renderRiwayatTable($conn, $start, $limit) {
             // ✅ Status
             echo "<td>
                     <span class='status-box selesai'>Selesai</span><br>
-                    <span class='status-box bayar'>".htmlspecialchars($row['metode'])."</span>
+                    <span class='status-box bayar'>".ucfirst(htmlspecialchars($row['metode']))."</span>
                   </td>";
 
             echo "</tr>";
