@@ -825,18 +825,27 @@ body::before {
 }
 
 .page-kelolamenu .btn-tambah {
-  background: var(--primary);
+  background: #dc143c;
   color: #fff;
   border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 13.5px;
+  letter-spacing: 0.3px;
   cursor: pointer;
+  box-shadow: 0 2px 0 #a30f2c;
   animation: fadeIn 0.7s ease-in-out;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.15s ease;
 }
 .page-kelolamenu .btn-tambah:hover {
-  background: var(--hv);
+  background: #c41133;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 #a30f2c;
+}
+.page-kelolamenu .btn-tambah:active {
+  transform: translateY(1px);
+  box-shadow: 0 0px 0 #a30f2c;
 }
 
 .page-kelolamenu .menu-grid {
@@ -1040,6 +1049,14 @@ body::before {
   margin: 0 auto 20px;
   font-size: 32px;
   position: relative;
+}
+
+.icon-box svg,
+.icon-box i {
+  width: 32px;
+  height: 32px;
+  color: var(--primary);
+  stroke-width: 1.8;
 }
 
 .icon-box::after {

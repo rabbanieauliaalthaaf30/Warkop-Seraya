@@ -98,7 +98,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
   <div class="popup-kelolamenu" id="popupTambah">
     <div class="popup-content">
       <span class="close-popup" id="closeTambah">&times;</span>
-      <div class="icon-box">🍕</div>
+      <div class="icon-box"><i data-feather="plus-square"></i></div>
       <h3>Tambah Menu Baru</h3>
 
       <form id="formTambah" enctype="multipart/form-data">
@@ -162,7 +162,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
   <div class="popup-kelolamenu" id="popupEdit">
     <div class="popup-content">
       <span class="close-popup" id="closeEdit">&times;</span>
-      <div class="icon-box">📝</div>
+      <div class="icon-box"><i data-feather="edit"></i></div>
       <h3>Edit Menu</h3>
 
       <form id="formEdit" enctype="multipart/form-data">
@@ -218,13 +218,14 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
   </div>
 
   <!-- POPUP HAPUS MENU -->
-  <div id="popupDelete" class="popup-delete">
-    <div class="popup-content">
-      <h3>Konfirmasi Hapus</h3>
-      <p>Apakah kamu yakin ingin menghapus menu ini?</p>
-      <div class="popup-actions">
-        <button id="btnConfirmDelete" class="btn-confirm">Ya, Hapus</button>
-        <button id="btnCancelDelete" class="btn-cancel">Batal</button>
+  <div id="popupDelete" class="modal">
+    <div class="modal-content">
+      <div class="icon-box" style="background: rgba(220, 20, 60, 0.1); color: var(--primary);"><i data-feather="alert-triangle" style="width:32px; height:32px; color:#dc143c; stroke-width:2;"></i></div>
+      <h2>Hapus Menu?</h2>
+      <p>Tindakan ini tidak dapat dibatalkan. Menu ini akan dihapus secara permanen dari sistem.</p>
+      <div class="modal-actions">
+        <button id="btnConfirmDelete" class="btn-confirm" style="background: var(--primary); color: white; font-family: 'Poppins', sans-serif;">Ya, Hapus</button>
+        <button id="btnCancelDelete" class="btn-cancel" style="background: #f1f5f9; color: #1e293b; font-family: 'Poppins', sans-serif;">Batal</button>
       </div>
     </div>
   </div>
@@ -379,9 +380,25 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
 
   function confirmDeleteMenu(id) {
     selectedMenuId = id;
-    popupDelete.classList.add("active");
+    popupDelete.classList.remove("hide");
+    popupDelete.classList.add("show");
   }
-  btnCancelDelete.onclick = () => popupDelete.classList.remove("active");
+  btnCancelDelete.onclick = () => {
+    popupDelete.classList.add("hide");
+    setTimeout(() => {
+      popupDelete.classList.remove("show");
+      popupDelete.classList.remove("hide");
+    }, 280);
+  };
+  popupDelete.addEventListener('click', e => {
+    if (e.target === popupDelete) {
+      popupDelete.classList.add("hide");
+      setTimeout(() => {
+        popupDelete.classList.remove("show");
+        popupDelete.classList.remove("hide");
+      }, 280);
+    }
+  });
 
   btnConfirmDelete.onclick = async () => {
     if (!selectedMenuId) return;
@@ -390,11 +407,21 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
     try {
       const res = await fetch("hapus_menu.php", { method: "POST", body: fd });
       const data = await parseResponse(res);
-      popupDelete.classList.remove("active");
+      
+      popupDelete.classList.add("hide");
+      setTimeout(() => {
+        popupDelete.classList.remove("show");
+        popupDelete.classList.remove("hide");
+      }, 280);
+
       showNotification(data.status, data.message || "Terjadi kesalahan!");
       if (data.status === "success") setTimeout(()=> location.reload(), 800);
     } catch {
-      popupDelete.classList.remove("active");
+      popupDelete.classList.add("hide");
+      setTimeout(() => {
+        popupDelete.classList.remove("show");
+        popupDelete.classList.remove("hide");
+      }, 280);
       showNotification('error', 'Kesalahan jaringan saat menghapus');
     }
   };

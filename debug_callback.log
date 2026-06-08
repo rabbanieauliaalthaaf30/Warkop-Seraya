@@ -1038,3 +1038,63 @@
         waktu_bayar = CURRENT_TIMESTAMP
     WHERE id_transaksi = 379
 
+[2026-06-08 19:44:36] POST DATA: Array
+(
+    [orderId] => 381
+    [method] => cash
+)
+
+[2026-06-08 19:44:36] FILES DATA: Array
+(
+)
+
+
+[2026-06-08 19:44:36] SQL_UPDATE: 
+    UPDATE pembayaran 
+    SET status = 'belum bayar',
+        metode = 'cash',
+        email = '',
+        jumlah = 32000,
+        waktu_bayar = CURRENT_TIMESTAMP
+    WHERE id_transaksi = 381
+
+[2026-06-08 19:59:34] POST DATA: Array
+(
+    [orderId] => 382
+    [method] => cash
+)
+
+[2026-06-08 19:59:34] FILES DATA: Array
+(
+)
+
+
+[2026-06-08 19:59:34] SQL_UPDATE: 
+    UPDATE pembayaran 
+    SET status = 'belum bayar',
+        metode = 'cash',
+        email = '',
+        jumlah = 22000,
+        waktu_bayar = CURRENT_TIMESTAMP
+    WHERE id_transaksi = 382
+
+[2026-06-08 19:59:40] POST DATA: Array
+(
+    [orderId] => 382
+    [method] => cash
+)
+
+[2026-06-08 19:59:40] FILES DATA: Array
+(
+)
+
+
+[2026-06-08 19:59:40] SQL_UPDATE: 
+    UPDATE pembayaran 
+    SET status = 'belum bayar',
+        metode = 'cash',
+        email = '',
+        jumlah = 22000,
+        waktu_bayar = CURRENT_TIMESTAMP
+    WHERE id_transaksi = 382
+

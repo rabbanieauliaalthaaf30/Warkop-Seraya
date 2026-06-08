@@ -465,7 +465,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'manager') {
   <!-- MODAL KONFIRMASI HAPUS (MODERN) -->
   <div id="deleteModal" class="modal">
     <div class="modal-content">
-      <div class="icon-box" style="background: rgba(220, 20, 60, 0.1); color: var(--primary);">⚠️</div>
+      <div class="icon-box" style="background: rgba(220, 20, 60, 0.1); color: var(--primary);"><i data-feather="alert-triangle" style="width:32px; height:32px; color:#dc143c; stroke-width:2;"></i></div>
       <h2>Hapus Akun?</h2>
       <p>Tindakan ini tidak dapat dibatalkan. Akun ini akan dihapus secara permanen dari sistem.</p>
       <div class="modal-actions">

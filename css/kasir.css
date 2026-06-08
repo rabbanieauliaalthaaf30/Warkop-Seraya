@@ -1140,21 +1140,34 @@ body::before {
   color: #1e293b;
 }
 
+#rekapModal #closeRekapModal {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  margin-top: 15px;
+}
+
+#rekapModal #closeRekapModal:hover {
+  background: #cbd5e1;
+  color: #1e293b;
+  border-color: #cbd5e1;
+}
+
 /* Cetak PDF */
 .btn-cetak {
-  background: linear-gradient(135deg, var(--primary), #1e1b4b) !important;
+  background: #4f46e5 !important;
   color: #fff !important;
   font-weight: 700;
   border-radius: 12px;
   padding: 12px 25px;
   margin-top: 15px !important;
-  box-shadow: 0 10px 15px -3px rgba(67, 56, 202, 0.3);
+  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
 }
 
 .btn-cetak:hover {
   transform: translateY(-2px);
   filter: brightness(1.1);
-  box-shadow: 0 20px 25px -5px rgba(67, 56, 202, 0.4);
+  box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.4);
 }
 
 @keyframes popUp {
