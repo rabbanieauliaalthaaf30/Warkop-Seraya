@@ -77,7 +77,7 @@ $stats = getKitchenStats($conn);
     <link rel="stylesheet" href="../css/welcome.css" />
 
     <!-- Feather Icons -->
-    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="../js/feather.min.js"></script>
   </head>
   <body class="page-dashboard">
     <?php if (isset($_SESSION['show_welcome_anim']) && $_SESSION['show_welcome_anim'] === true): ?>

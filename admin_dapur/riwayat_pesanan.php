@@ -98,7 +98,7 @@ if (isset($_GET['ajax'])) {
     <link rel="stylesheet" href="../css/logout.css" />
 
     <!-- Feather Icons -->
-    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="../js/feather.min.js"></script>
   </head>
 
   <body class="page-riwayatpesanan">

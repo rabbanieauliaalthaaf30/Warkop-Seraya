@@ -260,7 +260,7 @@ if (isset($_GET['ajax'])) {
   <title>Admin Manager - Riwayat Pesanan</title>
   <link rel="stylesheet" href="../css/kasir.css" />
   <link rel="stylesheet" href="../css/logout.css" />
-  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="../js/feather.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body class="page-riwayatpesanan">

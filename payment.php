@@ -164,7 +164,7 @@ $orderData = [
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Warkop Seraya - Payment</title>
-  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="js/feather.min.js"></script>
   <link rel="stylesheet" href="css/payment.css" />
 </head>
 <body>
@@ -258,8 +258,8 @@ $orderData = [
   <script>
     const orderFromDB = <?= json_encode($orderData) ?>;
   </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <script src="js/jspdf.umd.min.js"></script>
+  <script src="js/jspdf.plugin.autotable.min.js"></script>
   <script src="js/payment.js"></script>
   <script>feather.replace();</script>
   <!-- Popup Struk -->

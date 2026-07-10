@@ -79,13 +79,11 @@ $displayed = [];
   <title>Warkop Seraya - Menu</title>
 
   <!-- Fonts & CSS -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/fonts.css" />
   <link rel="stylesheet" href="css/menu.css" />
 
   <!-- Feather Icons -->
-  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="js/feather.min.js"></script>
 </head>
 <body>
   <!-- Tombol Keranjang -->

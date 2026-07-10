@@ -1,7 +1,7 @@
 /* ============================================================
    WARKOP SERAYA — WELCOME SPLASH SCREEN (PREMIUM)
    ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap');
+@import url('fonts.css');
 
 /* --- Splash Overlay --- */
 .welcome-splash-overlay {

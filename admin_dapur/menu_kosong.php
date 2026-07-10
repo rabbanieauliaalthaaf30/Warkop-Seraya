@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id'])) {
   <link rel="stylesheet" href="../css/logout.css" />
 
   <!-- Feather Icons -->
-  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="../js/feather.min.js"></script>
 </head>
 <body class="page-menukosong">
   <!-- Tombol toggle untuk mobile -->

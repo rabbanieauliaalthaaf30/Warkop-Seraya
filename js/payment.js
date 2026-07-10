@@ -309,6 +309,57 @@ function showReturnPopup() {
   document.body.appendChild(overlay);
 }
 
+function handlePaymentSuccess() {
+  const btnBatal = document.querySelector(".btn.danger");
+  const btnBayar = document.querySelector(".btn.success");
+
+  if (btnBatal) {
+    btnBatal.disabled = true;
+    btnBatal.style.opacity = "0.5";
+    btnBatal.style.cursor = "not-allowed";
+    btnBatal.removeAttribute("onclick");
+    btnBatal.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+  }
+
+  if (btnBayar) {
+    btnBayar.disabled = true;
+    btnBayar.style.opacity = "0.5";
+    btnBayar.style.cursor = "not-allowed";
+    btnBayar.type = "button";
+    btnBayar.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+  }
+
+  // Tambahkan tombol "Kembali ke Menu" jika belum ada
+  let btnKembali = document.getElementById("btnKembaliMenu");
+  if (!btnKembali) {
+    btnKembali = document.createElement("button");
+    btnKembali.id = "btnKembaliMenu";
+    btnKembali.type = "button";
+    btnKembali.className = "btn";
+    btnKembali.innerHTML = `<i data-feather="arrow-left"></i> Kembali ke Menu`;
+
+    const btnRow = document.querySelector(".btn-row");
+    if (btnRow) {
+      btnRow.parentNode.insertBefore(btnKembali, btnRow.nextSibling);
+    }
+
+    if (typeof feather !== "undefined") {
+      feather.replace();
+    }
+
+    btnKembali.onclick = () => {
+      localStorage.removeItem("cart");
+      window.location.href = "/seraya/menu.php";
+    };
+  }
+}
+
 // MAIN
 document.addEventListener("DOMContentLoaded", () => {
   const orderInfo = document.getElementById("orderInfo");
@@ -334,6 +385,21 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
   const order = orderFromDB;
+
+  // Kunci tombol jika status pesanan sudah bukan draft
+  if (order.status_pesanan && order.status_pesanan.toLowerCase() !== "draft") {
+    handlePaymentSuccess();
+    // Nonaktifkan interaksi metode pembayaran
+    setTimeout(() => {
+      const methods = document.querySelectorAll(".method");
+      methods.forEach((m) => {
+        m.style.pointerEvents = "none";
+        m.style.opacity = "0.7";
+      });
+      if (uploadBukti) uploadBukti.style.display = "none";
+      if (emailInputBox) emailInputBox.style.display = "none";
+    }, 100);
+  }
 
   // Pilih metode
   const methods = document.querySelectorAll(".method");
@@ -425,6 +491,14 @@ document.addEventListener("DOMContentLoaded", () => {
           "Selesai bayar! Silakan menuju kasir.",
           "success"
         );
+        handlePaymentSuccess();
+        const methods = document.querySelectorAll(".method");
+        methods.forEach((m) => {
+          m.style.pointerEvents = "none";
+          m.style.opacity = "0.7";
+        });
+        if (uploadBukti) uploadBukti.style.display = "none";
+        if (emailInputBox) emailInputBox.style.display = "none";
 
         // Munculkan popup kembali ke halaman atau tidak
         setTimeout(() => {
@@ -494,6 +568,14 @@ document.addEventListener("DOMContentLoaded", () => {
         showNotification("Pembayaran berhasil dikonfirmasi.", "success");
         order.paidAt = new Date().toISOString();
         order.method = method;
+        handlePaymentSuccess();
+        const methods = document.querySelectorAll(".method");
+        methods.forEach((m) => {
+          m.style.pointerEvents = "none";
+          m.style.opacity = "0.7";
+        });
+        if (uploadBukti) uploadBukti.style.display = "none";
+        if (emailInputBox) emailInputBox.style.display = "none";
         showReceipt(order, method);
       } catch (err) {
         console.error("❌ Error submit pembayaran:", err);

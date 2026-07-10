@@ -15,7 +15,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'manager') {
   <title>Admin Kasir - Kelola Akun</title>
   <link rel="stylesheet" href="../css/kasir.css">
   <link rel="stylesheet" href="../css/logout.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="../css/fonts.css" rel="stylesheet">
   <style>
     :root {
       --primary: #dc143c;
@@ -393,7 +393,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'manager') {
     </div>
   </div>
 
-  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="../js/feather.min.js"></script>
   <script>feather.replace();</script>
   <script src="../js/admin.js"></script>
   

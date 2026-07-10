@@ -426,7 +426,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
     }
   };
   </script>
-  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="../js/feather.min.js"></script>
   <script>feather.replace();</script>
   <script src="../js/admin.js"></script>
 <!-- 🔔 Notifikasi Pesanan -->

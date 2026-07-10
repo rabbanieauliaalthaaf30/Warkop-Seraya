@@ -21,9 +21,9 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
     <link rel="stylesheet" href="../css/welcome.css" />
 
     <!-- Feather Icons -->
-    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="../js/feather.min.js"></script>
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/chart.min.js"></script>
   </head>
   <body class="page-dashboard">
     <?php if (isset($_SESSION['show_welcome_anim']) && $_SESSION['show_welcome_anim'] === true): ?>

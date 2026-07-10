@@ -194,7 +194,7 @@ if (isset($_GET['ajax'])) {
     <title>Admin Kasir - Pesanan</title>
     <link rel="stylesheet" href="../css/kasir.css" />
     <link rel="stylesheet" href="../css/logout.css" />
-    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="../js/feather.min.js"></script>
     <!-- jsPDF for Struk Print -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>

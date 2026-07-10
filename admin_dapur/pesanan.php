@@ -110,7 +110,7 @@ if (isset($_GET['ajax'])) {
   <title>Admin Dapur - Pesanan</title>
   <link rel="stylesheet" href="../css/dapur.css" />
   <link rel="stylesheet" href="../css/logout.css" />
-  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="../js/feather.min.js"></script>
   <style>
     .fade-out { animation: fadeOutRow 3s forwards; }
     @keyframes fadeOutRow {

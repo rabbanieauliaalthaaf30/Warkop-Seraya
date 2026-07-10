@@ -78,13 +78,72 @@ document.addEventListener("DOMContentLoaded", function () {
   if (cancelLogout) cancelLogout.addEventListener("click", closeModal);
   if (confirmLogout) {
     confirmLogout.addEventListener("click", () => {
-      window.location.href = "../logout.php";
+      playLogoutTransition("../logout.php");
     });
   }
   if (modal) {
     modal.addEventListener("click", (e) => {
       if (e.target === modal) closeModal();
     });
+  }
+
+  function playLogoutTransition(redirectUrl) {
+    // 1. Create overlay if it doesn't exist
+    let overlay = document.getElementById('pageTransition');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'pageTransition';
+      overlay.className = 'page-transition-overlay';
+      overlay.innerHTML = `
+        <div class="transition-wipe"></div>
+        <div class="transition-content">
+          <div class="transition-logo">WARKOP <span>SERAYA</span></div>
+          <div class="transition-loader">
+            <div class="transition-loader-dot"></div>
+            <div class="transition-loader-dot"></div>
+            <div class="transition-loader-dot"></div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+    }
+
+    // 2. Hide logout modal immediately
+    closeModal();
+
+    // 3. Animate main layout out (fade + translate + scale + blur)
+    const main = document.querySelector('.main');
+    const sidebar = document.querySelector('.sidebar');
+    const menuToggle = document.getElementById('menu-toggle');
+
+    if (main) {
+      main.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+      main.style.opacity = '0';
+      main.style.transform = 'scale(0.95) translateY(-20px)';
+      main.style.filter = 'blur(6px)';
+    }
+
+    if (sidebar) {
+      sidebar.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+      sidebar.style.opacity = '0';
+      sidebar.style.transform = 'translateX(-30px)';
+      sidebar.style.filter = 'blur(6px)';
+    }
+
+    if (menuToggle) {
+      menuToggle.style.transition = 'all 0.4s ease';
+      menuToggle.style.opacity = '0';
+    }
+
+    // 4. Trigger wipe transition overlay
+    setTimeout(() => {
+      overlay.classList.add('active');
+    }, 200);
+
+    // 5. Redirect after transition finishes (1.2s)
+    setTimeout(() => {
+      window.location.href = redirectUrl;
+    }, 1100);
   }
 
   // =====================
