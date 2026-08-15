@@ -142,7 +142,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
         </div>
       </div>
     </div>
-     <!-- 🔔 Box Notifikasi -->
+     <!-- 🔔 Box Notifikasi Pesanan -->
     <audio id="notifAudio" src="notif/notif.mp3" preload="auto"></audio>
     <style>
     @keyframes slideInNotif {
@@ -180,6 +180,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'kasir') {
     }
     </style>
 
+    <!-- Toast pesanan baru -->
     <div id="notifBox" class="notif-toast">
       <div style="background: rgba(255, 193, 7, 0.15); color: #ffc107; padding: 10px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">

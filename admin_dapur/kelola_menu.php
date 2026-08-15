@@ -31,6 +31,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
       <li><a href="pesanan.php"><i data-feather="menu"></i> Pesanan</a></li>
       <li><a href="menu_kosong.php"><i data-feather="x-circle"></i> Menu Tidak Tersedia</a></li>
       <li><a href="kelola_menu.php" class="active"><i data-feather="settings"></i> Kelola Menu</a></li>
+      <li><a href="inventory.php"><i data-feather="package"></i> Inventory</a></li>
       <li><a href="riwayat_pesanan.php"><i data-feather="clock"></i> Riwayat Pesanan</a></li>
       <li><a href="#" id="logoutBtn"><i data-feather="log-out"></i> Logout</a></li>
     </ul>
@@ -429,7 +430,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
   <script src="../js/feather.min.js"></script>
   <script>feather.replace();</script>
   <script src="../js/admin.js"></script>
-<!-- 🔔 Notifikasi Pesanan -->
+<!-- 🔔 Notifikasi Pesanan & Stok -->
 <audio id="notifAudio" src="notif/notif.mp3" preload="auto"></audio>
 <style>
 @keyframes slideInNotif {
@@ -465,7 +466,31 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
 .notif-toast.hide {
   animation: fadeOutNotif 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+#stokToastKelolMenu { top: 90px; border-left-color: #ef4444; }
+#stokToastKelolMenu.warning { border-left-color: #f59e0b; }
+.sidebar-stok-badge {
+  display:inline-flex;align-items:center;justify-content:center;
+  background:#ef4444;color:#fff;font-size:10px;font-weight:800;
+  min-width:18px;height:18px;border-radius:9px;padding:0 5px;margin-left:auto;line-height:1;
+  animation:pulse-badge 1.5s infinite;
+}
+@keyframes pulse-badge{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 </style>
+
+<!-- Toast stok -->
+<div id="stokToastKelolMenu" class="notif-toast" onclick="window.location='inventory.php'" style="cursor:pointer">
+  <div id="stokToastKelolMenuIcon" style="background:rgba(239,68,68,.15);color:#ef4444;padding:10px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+      <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>
+  </div>
+  <div style="flex-grow:1;display:flex;flex-direction:column;gap:2px;">
+    <div id="stokToastKelolMenuLabel" style="font-size:11px;font-weight:700;color:#ef4444;letter-spacing:.8px;text-transform:uppercase;">Stok Habis</div>
+    <div id="stokToastKelolMenuMsg" style="font-size:13px;color:#e5e5ea;font-weight:500;line-height:1.4;"></div>
+  </div>
+  <div style="color:#94a3b8;font-size:10px;flex-shrink:0;">Tap →</div>
+</div>
 
 <div id="notifBox" class="notif-toast">
   <div style="background: rgba(255, 193, 7, 0.15); color: #ffc107; padding: 10px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
@@ -532,6 +557,21 @@ function playOrderNotification() {
 
 // 🔁 Jalankan cek otomatis
 setInterval(checkNewOrder, 5000);
+
+// ════ 🔔 Notifikasi Stok ════
+let _stokHashKM = null;
+function _showStokKM(d) {
+  const t=document.getElementById('stokToastKelolMenu'),l=document.getElementById('stokToastKelolMenuLabel'),m=document.getElementById('stokToastKelolMenuMsg'),ic=document.getElementById('stokToastKelolMenuIcon');
+  if(!t)return;
+  if(d.habis>0){t.classList.remove('warning');t.style.borderLeftColor='#ef4444';ic.style.background='rgba(239,68,68,.15)';ic.style.color='#ef4444';l.style.color='#ef4444';l.textContent=d.habis+' Stok HABIS';}
+  else{t.classList.add('warning');t.style.borderLeftColor='#f59e0b';ic.style.background='rgba(245,158,11,.15)';ic.style.color='#f59e0b';l.style.color='#f59e0b';l.textContent=d.menipis+' Stok Menipis';}
+  m.textContent=d.items.slice(0,2).map(i=>i.nama).join(', ')+(d.total>2?' +'+(d.total-2)+' lainnya':'')+' — Tap untuk lihat';
+  t.classList.remove('hide');t.style.display='flex';
+  setTimeout(()=>{t.classList.add('hide');setTimeout(()=>{t.style.display='none';},400);},6000);
+}
+function _badgeKM(n){const a=document.querySelector('.sidebar a[href="inventory.php"]');if(!a)return;let b=a.querySelector('.sidebar-stok-badge');if(n>0){if(!b){b=document.createElement('span');b.className='sidebar-stok-badge';a.appendChild(b);}b.textContent=n>99?'99+':n;}else if(b)b.remove();}
+async function _checkStokKM(){try{const r=await fetch('../get_stok_alert.php'),d=await r.json(),h=JSON.stringify(d.items.map(i=>i.nama+i.stok));_badgeKM(d.total);if(d.ada_alert){if(_stokHashKM===null){_stokHashKM=h;}else if(h!==_stokHashKM){_stokHashKM=h;_showStokKM(d);}}else _stokHashKM=h;}catch(e){console.warn(e);}}
+_checkStokKM();setInterval(_checkStokKM,60000);
 </script>
 </body>
 </html>

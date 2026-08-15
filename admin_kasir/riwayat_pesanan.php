@@ -389,7 +389,7 @@ if (isset($_GET['ajax'])) {
       </div>
     </div>
   </div>
-    <!-- 🔔 Box Notifikasi -->
+    <!-- 🔔 Box Notifikasi Pesanan -->
     <audio id="notifAudio" src="notif/notif.mp3" preload="auto"></audio>
     <style>
     @keyframes slideInNotif {

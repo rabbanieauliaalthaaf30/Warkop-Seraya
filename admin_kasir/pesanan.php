@@ -112,6 +112,7 @@ function renderPesananTable($conn, $start, $limit) {
 
             // Metode pembayaran
             $metode = $row['metode'];
+            $metode_clean = strtolower(trim($row['metode'] ?? ''));
             if ($metode === null || $metode === '') {
                 $metode_text = "Belum ada";
             } elseif ($metode === 'cash') {
@@ -136,12 +137,14 @@ function renderPesananTable($conn, $start, $limit) {
             }
             echo "<td class='status-bayar'><span class='badge {$status_bayar_class}'>".$status_bayar_text."</span></td>";
 
-            // Tombol aksi
+            // Tombol aksi — hanya tampil jika metode cash/belum ada (bayar di kasir)
             echo "<td class='aksi-bayar'>";
-            if ($stat_bayar !== 'sudah bayar') {
-                echo "<button type='button' class='btn btn-success btn-ajax' data-id='{$id}' data-status='dibayar'>Tandai Dibayar</button>";
-            } else {
+            if ($stat_bayar !== 'sudah bayar' && ($metode_clean === 'cash' || empty($metode_clean))) {
+                echo "<button type='button' class='btn btn-success btn-bayar-kasir' data-id='{$id}' data-total='Rp ".number_format($row['total'], 0, ',', '.')."'>Tandai Dibayar</button>";
+            } elseif ($stat_bayar === 'sudah bayar') {
                 echo "<span style='color: gray; font-weight: bold;'>Telah Dibayar</span>";
+            } else {
+                echo "<span style='color:#94a3b8; font-size:13px;'>—</span>";
             }
             echo "</td>";
 
@@ -160,7 +163,6 @@ function renderPesananTable($conn, $start, $limit) {
             }
 
             // Tampilkan tombol struk hanya jika metode adalah cash/belum diisi (bayar di kasir) DAN statusnya sudah bayar
-            $metode_clean = strtolower(trim($row['metode'] ?? ''));
             if (($metode_clean === 'cash' || empty($metode_clean)) && $stat_bayar === 'sudah bayar') {
                 echo "<button type='button' class='btn-cetak-struk' data-id='{$id}'><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-printer\"><polyline points=\"6 9 6 2 18 2 18 9\"></polyline><path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\"></path><rect x=\"6\" y=\"14\" width=\"12\" height=\"8\"></rect></svg>Cetak Struk</button>";
             }
@@ -307,7 +309,53 @@ if (isset($_GET['ajax'])) {
       </div>
     </div>
 
-    <!-- 🔔 Box Notifikasi -->
+    <!-- ✅ Popup Konfirmasi Tandai Dibayar -->
+    <div id="bayarConfirmModal" style="
+      display:none; position:fixed; inset:0; z-index:10000;
+      background:rgba(0,0,0,0.45); backdrop-filter:blur(4px);
+      align-items:center; justify-content:center;
+    ">
+      <div style="
+        background:#fff; border-radius:20px; padding:32px 28px; width:340px;
+        box-shadow:0 20px 60px rgba(0,0,0,0.2); text-align:center;
+        animation: popInKasir 0.3s cubic-bezier(0.16,1,0.3,1);
+      ">
+        <div style="
+          width:64px; height:64px; border-radius:16px; margin:0 auto 16px;
+          background:rgba(16,185,129,0.12);
+          display:flex; align-items:center; justify-content:center; font-size:28px;
+        ">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </div>
+        <h3 style="margin:0 0 8px; font-size:18px; color:#1e293b;">Konfirmasi Pembayaran</h3>
+        <p id="bayarConfirmText" style="margin:0 0 24px; font-size:14px; color:#64748b; line-height:1.5;"></p>
+        <div style="display:flex; gap:12px;">
+          <button id="bayarConfirmCancel" style="
+            flex:1; padding:12px; border:1.5px solid #e2e8f0; background:#fff;
+            border-radius:12px; font-size:14px; font-weight:600; color:#64748b;
+            cursor:pointer; transition:all 0.2s;
+          " onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+            Batal
+          </button>
+          <button id="bayarConfirmOk" style="
+            flex:1; padding:12px; border:none; border-radius:12px;
+            font-size:14px; font-weight:700; color:#fff; cursor:pointer;
+            background:linear-gradient(135deg,#10b981,#059669);
+            box-shadow:0 4px 12px rgba(16,185,129,0.3); transition:all 0.2s;
+          ">
+            Ya, Tandai Dibayar
+          </button>
+        </div>
+      </div>
+    </div>
+    <style>
+      @keyframes popInKasir {
+        from { transform: scale(0.88); opacity: 0; }
+        to   { transform: scale(1);    opacity: 1; }
+      }
+    </style>
+
+    <!-- 🔔 Box Notifikasi Pesanan -->
     <audio id="notifAudio" src="notif/notif.mp3" preload="auto"></audio>
     <style>
     @keyframes slideInNotif {
@@ -345,6 +393,7 @@ if (isset($_GET['ajax'])) {
     }
     </style>
 
+    <!-- Toast pesanan baru -->
     <div id="notifBox" class="notif-toast">
       <div style="background: rgba(255, 193, 7, 0.15); color: #ffc107; padding: 10px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -370,6 +419,21 @@ if (isset($_GET['ajax'])) {
           });
       }
       setInterval(loadPesanan, 5000);
+
+      // ── Popup konfirmasi pembayaran ──
+      const bayarModal      = document.getElementById("bayarConfirmModal");
+      const bayarConfirmOk  = document.getElementById("bayarConfirmOk");
+      const bayarConfirmCancel = document.getElementById("bayarConfirmCancel");
+
+      function closeBayarModal() {
+        bayarModal.style.display = "none";
+        bayarConfirmOk.onclick = null;
+      }
+
+      bayarConfirmCancel.addEventListener("click", closeBayarModal);
+      bayarModal.addEventListener("click", e => {
+        if (e.target === bayarModal) closeBayarModal();
+      });
 
       // Escape HTML (sederhana)
       function escapeHtml(str) {
@@ -466,23 +530,38 @@ if (isset($_GET['ajax'])) {
       }
 
       document.addEventListener("click", function(e) {
-        if (e.target.classList.contains("btn-ajax")) {
-          const id = e.target.getAttribute("data-id");
-          const row = document.querySelector("tr[data-id='" + id + "']");
-          fetch("update_pembayaran.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "id_transaksi=" + id + "&status=dibayar"
-          })
-          .then(res => res.json())
-          .then(data => {
-            if (data.status === 'success') {
-              // Langsung refresh tabel agar status terbaru muncul (Sudah Bayar)
-              loadPesanan();
-            } else {
-              alert(data.message);
-            }
-          });
+        if (e.target.classList.contains("btn-bayar-kasir")) {
+          e.stopPropagation();
+          e.preventDefault();
+          const id    = e.target.getAttribute("data-id");
+          const total = e.target.getAttribute("data-total") || "";
+          const noMeja = e.target.closest("tr")?.querySelector("td")?.textContent?.trim() || "#"+id;
+
+          // Tampilkan popup konfirmasi dulu
+          const modal = document.getElementById("bayarConfirmModal");
+          document.getElementById("bayarConfirmText").innerHTML =
+            `Tandai pesanan <strong>Meja ${noMeja}</strong> senilai <strong style="color:#10b981">${total}</strong> sebagai <strong>Sudah Dibayar</strong>?`;
+
+          modal.style.display = "flex";
+
+          // Set handler sekali pakai — replace onclick agar tidak menumpuk
+          bayarConfirmOk.onclick = function() {
+            closeBayarModal();
+            fetch("update_pembayaran.php", {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: "id_transaksi=" + id + "&status=dibayar"
+            })
+            .then(res => res.json())
+            .then(data => {
+              if (data.status === 'success') {
+                loadPesanan();
+              } else {
+                alert(data.message);
+              }
+            })
+            .catch(() => alert("Gagal memperbarui status pembayaran."));
+          };
         }
         
         // ✅ Klik Cetak Struk
