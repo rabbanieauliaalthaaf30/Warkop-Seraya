@@ -132,7 +132,7 @@ $stats = getKitchenStats($conn);
           >
         </li>
         <li><a href="kelola_menu.php"><i data-feather="settings"></i> Kelola Menu</a></li>
-        <li><a href="inventory.php"><i data-feather="package"></i> Inventory</a></li>
+        <li><a href="inventory.php"><i data-feather="package"></i> Stok Barang</a></li>
         <li>
           <a href="riwayat_pesanan.php"
             ><i data-feather="clock"></i> Riwayat Pesanan</a

@@ -133,7 +133,7 @@ if (isset($_GET['ajax'])) {
       <li><a href="pesanan.php" class="active"><i data-feather="menu"></i> Pesanan</a></li>
       <li><a href="menu_kosong.php"><i data-feather="x-circle"></i> Menu Tidak Tersedia</a></li>
       <li><a href="kelola_menu.php"><i data-feather="settings"></i> Kelola Menu</a></li>
-      <li><a href="inventory.php"><i data-feather="package"></i> Inventory</a></li>
+      <li><a href="inventory.php"><i data-feather="package"></i> Stok Barang</a></li>
       <li><a href="riwayat_pesanan.php"><i data-feather="clock"></i> Riwayat Pesanan</a></li>
       <li><a href="#" id="logoutBtn"><i data-feather="log-out"></i> Logout</a></li>
     </ul>

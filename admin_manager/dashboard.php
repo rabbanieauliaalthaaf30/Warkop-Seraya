@@ -71,10 +71,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'manager') {
           >
         </li>
         <li>
-          <a href="inventory.php"><i data-feather="package"></i> Inventory</a>
-        </li>
-        <li>
-          <a href="laporan_stok.php"><i data-feather="bar-chart-2"></i> Laporan Stok</a>
+          <a href="inventory.php"><i data-feather="package"></i> Stok Barang</a>
         </li>
         <li>
           <a href="kelola_akun.php"><i data-feather="users"></i> Kelola Akun</a>
