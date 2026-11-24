@@ -36,9 +36,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['orderId'])) {
     $total = (float)$trx['total'];
 
     // Tentukan status pembayaran
+    // cash/kasir → belum bayar (kasir konfirmasi manual)
+    // transfer/qris → menunggu verifikasi (kasir cek bukti dulu)
     $method = strtolower($method_raw);
-    $kasirAliases = ['kasir','bayar di kasir','pay at cashier','pay_at_cashier'];
-    $status_bayar = (in_array($method, $kasirAliases, true) || $method === '') ? 'belum bayar' : 'sudah bayar';
+    $kasirAliases = ['kasir','bayar di kasir','pay at cashier','pay_at_cashier','cash'];
+    if (in_array($method, $kasirAliases, true) || $method === '') {
+        $status_bayar = 'belum bayar';
+    } else {
+        $status_bayar = 'menunggu verifikasi';
+    }
 
     $method_safe  = mysqli_real_escape_string($conn, $method);
     $account_safe = mysqli_real_escape_string($conn, $account_raw);
@@ -73,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['orderId'])) {
             "jumlah = {$total}",
             "status = '{$status_bayar}'",
             ($status_bayar === 'sudah bayar') ? "waktu_bayar = CURRENT_TIMESTAMP" : "waktu_bayar = NULL"
+            // waktu_bayar hanya diisi saat kasir konfirmasi (sudah bayar), bukan saat upload bukti
         ];
         if ($hasNomorRek) $sets[] = "nomor_rekening = '{$account_safe}'";
         if ($hasEmailCol) $sets[] = "email = '{$email_safe}'";
@@ -108,8 +115,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['orderId'])) {
         "id"      => $orderId,
         "method"  => $method,
         "status"  => $status_bayar,
-        "message" => ($status_bayar === 'sudah bayar')
-            ? "Pembayaran berhasil dicatat (transfer otomatis sudah bayar)."
+        "message" => ($status_bayar === 'menunggu verifikasi')
+            ? "Bukti pembayaran diterima. Menunggu verifikasi kasir."
             : "Pembayaran dicatat sebagai belum bayar (kasir harus konfirmasi)."
     ]);
     exit;

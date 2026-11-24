@@ -79,7 +79,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['orderId']) && !isset(
     }
 
     // Tentukan status pembayaran
-    $status_bayar = ($metode === 'cash') ? 'belum bayar' : 'sudah bayar';
+    // cash   → belum bayar  (kasir konfirmasi manual saat terima uang)
+    // transfer / qris → menunggu verifikasi (kasir cek bukti dulu)
+    if ($metode === 'cash') {
+        $status_bayar = 'belum bayar';
+    } else {
+        $status_bayar = 'menunggu verifikasi';
+    }
 
     // ===== Update tabel pembayaran =====
     if (!empty($bukti_file)) {
@@ -112,10 +118,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['orderId']) && !isset(
         WHERE id_transaksi = '$id_transaksi'
     ";
     if (!mysqli_query($conn, $updateStatus)) {
-        die('❌ Gagal update status pesanan: ' . mysqli_error($conn));
+        die('Gagal update status pesanan: ' . mysqli_error($conn));
     }
 
-    echo "<script>alert('✅ Pembayaran berhasil diproses!'); window.location='payment.php?id=$id_transaksi';</script>";
+    echo "<script>alert('Pembayaran berhasil diproses!'); window.location='payment.php?id=$id_transaksi';</script>";
     exit;
 }
 
@@ -178,6 +184,57 @@ $orderData = [
         <p><strong>Status Pesanan:</strong> <?= htmlspecialchars($transaksi['status_pesanan']) ?></p>
         <p><strong>Waktu:</strong> <?= htmlspecialchars($transaksi['waktu_pemesanan']) ?></p>
       </div>
+
+      <?php
+        // Ambil status pembayaran terkini untuk pesan info ke customer
+        $qBayar = $conn->prepare("SELECT status, metode FROM pembayaran WHERE id_transaksi = ? ORDER BY id_pembayaran DESC LIMIT 1");
+        $qBayar->bind_param("i", $id_transaksi);
+        $qBayar->execute();
+        $resBayar = $qBayar->get_result()->fetch_assoc();
+        $qBayar->close();
+        $status_bayar_now = $resBayar['status'] ?? '';
+        $metode_now       = $resBayar['metode'] ?? '';
+      ?>
+
+      <?php if ($status_bayar_now === 'menunggu verifikasi'): ?>
+      <div class="info-banner info-banner--waiting">
+        <span class="info-banner__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </span>
+        <div>
+          <strong>Menunggu Verifikasi Kasir</strong>
+          <p>Bukti pembayaran Anda sedang diperiksa. Mohon tunggu konfirmasi dari kasir.</p>
+        </div>
+      </div>
+      <input type="hidden" id="paymentVerifStatus" value="menunggu verifikasi" />
+      <?php elseif ($status_bayar_now === 'sudah bayar'): ?>
+      <div class="info-banner info-banner--success">
+        <span class="info-banner__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </span>
+        <div>
+          <strong>Pembayaran Dikonfirmasi</strong>
+          <p>Pembayaran Anda telah diverifikasi oleh kasir.</p>
+        </div>
+      </div>
+      <input type="hidden" id="paymentConfirmedStatus" value="sudah bayar" />
+      <input type="hidden" id="confirmedMetode" value="<?= htmlspecialchars($metode_now) ?>" />
+      <?php elseif ($status_bayar_now === 'belum bayar' && in_array($metode_now, ['transfer','qris'])): ?>
+      <div class="info-banner info-banner--rejected">
+        <span class="info-banner__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        </span>
+        <div>
+          <strong>Bukti Ditolak — Silakan Upload Ulang</strong>
+          <p>Kasir tidak dapat memverifikasi bukti sebelumnya. Mohon upload ulang bukti pembayaran yang valid.</p>
+        </div>
+      </div>
+      <?php
+        // Sinyal ke JS: status ditolak, customer boleh upload ulang
+      ?>
+      <input type="hidden" id="paymentRejectedStatus" value="ditolak" />
+      <input type="hidden" id="rejectedMetode" value="<?= htmlspecialchars($metode_now) ?>" />
+      <?php endif; ?>
 
       <form method="POST" action="" id="paymentForm" enctype="multipart/form-data">
         <input type="hidden" name="orderId" value="<?= (int)$id_transaksi ?>" />

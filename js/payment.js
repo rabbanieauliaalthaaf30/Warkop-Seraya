@@ -309,7 +309,7 @@ function showReturnPopup() {
   document.body.appendChild(overlay);
 }
 
-function handlePaymentSuccess() {
+function handlePaymentSuccess(isWaiting = false) {
   const btnBatal = document.querySelector(".btn.danger");
   const btnBayar = document.querySelector(".btn.success");
 
@@ -358,6 +358,24 @@ function handlePaymentSuccess() {
       window.location.href = "/seraya/menu.php";
     };
   }
+
+  // Disable tombol kembali saat menunggu verifikasi
+  if (isWaiting) {
+    btnKembali.disabled = true;
+    btnKembali.style.opacity = "0.5";
+    btnKembali.style.cursor = "not-allowed";
+    btnKembali.title = "Mohon tunggu — pembayaran sedang diverifikasi kasir";
+    btnKembali.onclick = (e) => { e.preventDefault(); e.stopPropagation(); };
+  } else {
+    btnKembali.disabled = false;
+    btnKembali.style.opacity = "1";
+    btnKembali.style.cursor = "pointer";
+    btnKembali.title = "";
+    btnKembali.onclick = () => {
+      localStorage.removeItem("cart");
+      window.location.href = "/seraya/menu.php";
+    };
+  }
 }
 
 // MAIN
@@ -386,19 +404,71 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   const order = orderFromDB;
 
-  // Kunci tombol jika status pesanan sudah bukan draft
+  // Kunci / buka interaksi berdasarkan status pembayaran terkini
   if (order.status_pesanan && order.status_pesanan.toLowerCase() !== "draft") {
-    handlePaymentSuccess();
-    // Nonaktifkan interaksi metode pembayaran
-    setTimeout(() => {
-      const methods = document.querySelectorAll(".method");
-      methods.forEach((m) => {
-        m.style.pointerEvents = "none";
-        m.style.opacity = "0.7";
-      });
-      if (uploadBukti) uploadBukti.style.display = "none";
-      if (emailInputBox) emailInputBox.style.display = "none";
-    }, 100);
+    const verifEl    = document.getElementById("paymentVerifStatus");
+    const verifVal   = verifEl ? verifEl.value : "";
+    const rejectedEl = document.getElementById("paymentRejectedStatus");
+    const isRejected = rejectedEl ? rejectedEl.value === "ditolak" : false;
+
+    if (verifVal === "menunggu verifikasi") {
+      // Bukti sudah dikirim, menunggu kasir — kunci semua + disable tombol kembali
+      handlePaymentSuccess(true);
+      setTimeout(() => {
+        document.querySelectorAll(".method").forEach((m) => {
+          m.style.pointerEvents = "none";
+          m.style.opacity = "0.7";
+        });
+        if (uploadBukti) uploadBukti.style.display = "none";
+        if (emailInputBox) emailInputBox.style.display = "none";
+      }, 100);
+
+    } else if (isRejected) {
+      // Bukti ditolak kasir — customer boleh upload ulang
+      // Kunci pilihan metode (metode sudah dipilih sebelumnya), buka upload
+      setTimeout(() => {
+        // Isi hidden input method otomatis dari metode sebelumnya
+        const prevMetode = document.getElementById("rejectedMetode");
+        if (prevMetode && methodInput) {
+          methodInput.value = prevMetode.value;
+          // Tandai visual metode yang sesuai sebagai aktif (read-only)
+          document.querySelectorAll(".method").forEach((m) => {
+            m.style.pointerEvents = "none";
+            m.style.opacity = "0.7";
+            if (m.dataset.method === prevMetode.value) {
+              m.style.opacity = "1";
+              m.classList.add("active");
+              // Tampilkan info rekening/QRIS sesuai metode
+              if (prevMetode.value === "transfer" && rekeningInfo) rekeningInfo.style.display = "block";
+              if (prevMetode.value === "qris" && qrisImage) qrisImage.style.display = "block";
+            }
+          });
+        }
+        // Tampilkan area upload & email agar customer bisa upload ulang
+        if (uploadBukti) uploadBukti.style.display = "block";
+        if (emailInputBox) emailInputBox.style.display = "block";
+      }, 100);
+
+    } else {
+      // Sudah selesai / sudah dibayar — kunci semua dan tampilkan struk
+      handlePaymentSuccess(false);
+      setTimeout(() => {
+        document.querySelectorAll(".method").forEach((m) => {
+          m.style.pointerEvents = "none";
+          m.style.opacity = "0.7";
+        });
+        if (uploadBukti) uploadBukti.style.display = "none";
+        if (emailInputBox) emailInputBox.style.display = "none";
+
+        // Tampilkan struk otomatis jika pembayaran sudah dikonfirmasi
+        const confirmedEl = document.getElementById("paymentConfirmedStatus");
+        if (confirmedEl && confirmedEl.value === "sudah bayar") {
+          const metodeEl = document.getElementById("confirmedMetode");
+          const metode   = metodeEl ? metodeEl.value : "cash";
+          showReceipt(order, metode);
+        }
+      }, 300);
+    }
   }
 
   // Pilih metode
@@ -491,7 +561,7 @@ document.addEventListener("DOMContentLoaded", () => {
           "Selesai bayar! Silakan menuju kasir.",
           "success"
         );
-        handlePaymentSuccess();
+        handlePaymentSuccess(false); // cash: tombol kembali langsung aktif
         const methods = document.querySelectorAll(".method");
         methods.forEach((m) => {
           m.style.pointerEvents = "none";
@@ -500,6 +570,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (uploadBukti) uploadBukti.style.display = "none";
         if (emailInputBox) emailInputBox.style.display = "none";
 
+        // Cash: tidak ada struk digital — kasir memberikan struk fisik langsung
         // Munculkan popup kembali ke halaman atau tidak
         setTimeout(() => {
           showReturnPopup();
@@ -565,18 +636,22 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        showNotification("Pembayaran berhasil dikonfirmasi.", "success");
-        order.paidAt = new Date().toISOString();
-        order.method = method;
-        handlePaymentSuccess();
-        const methods = document.querySelectorAll(".method");
-        methods.forEach((m) => {
+        // Bukti diterima — tapi BELUM selesai, kasir masih perlu verifikasi.
+        // Jangan tampilkan struk dan jangan hapus cart dulu.
+        showNotification("Bukti pembayaran dikirim! Menunggu verifikasi kasir.", "success");
+        handlePaymentSuccess(true); // disable tombol kembali selama menunggu
+        const methodEls = document.querySelectorAll(".method");
+        methodEls.forEach((m) => {
           m.style.pointerEvents = "none";
           m.style.opacity = "0.7";
         });
         if (uploadBukti) uploadBukti.style.display = "none";
         if (emailInputBox) emailInputBox.style.display = "none";
-        showReceipt(order, method);
+
+        // Reload halaman setelah 1.5 detik agar banner "Menunggu Verifikasi" muncul
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } catch (err) {
         console.error("❌ Error submit pembayaran:", err);
         showToast("Terjadi kesalahan saat memproses pembayaran.", "error");
@@ -586,4 +661,90 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     // === END FIX LOGIC TRANSFER & QRIS ===
   });
+
+  // =====================================================================
+  // POLLING REALTIME — cek status pembayaran setiap 3 detik
+  // Aktif hanya jika status masih 'menunggu verifikasi'
+  // Begitu kasir konfirmasi → banner berubah + struk muncul otomatis
+  // =====================================================================
+  const verifStatusEl = document.getElementById("paymentVerifStatus");
+  const isWaiting     = verifStatusEl && verifStatusEl.value === "menunggu verifikasi";
+
+  if (isWaiting && order && order.id) {
+    let pollingInterval = null;
+
+    function showConfirmedUI(metode) {
+      // 1. Ganti banner menunggu → dikonfirmasi
+      const bannerWaiting = document.querySelector(".info-banner--waiting");
+      if (bannerWaiting) {
+        bannerWaiting.className = "info-banner info-banner--success";
+        bannerWaiting.innerHTML = `
+          <span class="info-banner__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </span>
+          <div>
+            <strong>Pembayaran Dikonfirmasi!</strong>
+            <p>Pembayaran Anda telah diverifikasi oleh kasir.</p>
+          </div>
+        `;
+      }
+
+      // 2. Sembunyikan form upload & metode
+      document.querySelectorAll(".method").forEach((m) => {
+        m.style.pointerEvents = "none";
+        m.style.opacity = "0.7";
+      });
+      if (uploadBukti)   uploadBukti.style.display   = "none";
+      if (emailInputBox) emailInputBox.style.display = "none";
+
+      // 3. Kunci tombol bayar (enable tombol kembali karena sudah dikonfirmasi)
+      handlePaymentSuccess(false);
+
+      // 4. Tampilkan struk digital
+      setTimeout(() => showReceipt(order, metode), 400);
+    }
+
+    function showRejectedUI() {
+      // Kasir tolak — banner berubah + halaman reload agar form upload ulang muncul
+      const bannerWaiting = document.querySelector(".info-banner--waiting");
+      if (bannerWaiting) {
+        bannerWaiting.className = "info-banner info-banner--rejected";
+        bannerWaiting.innerHTML = `
+          <span class="info-banner__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </span>
+          <div>
+            <strong>Bukti Ditolak — Silakan Upload Ulang</strong>
+            <p>Kasir tidak dapat memverifikasi bukti sebelumnya. Mohon upload ulang bukti pembayaran yang valid.</p>
+          </div>
+        `;
+      }
+      setTimeout(() => window.location.reload(), 2000);
+    }
+
+    async function pollPaymentStatus() {
+      try {
+        const res  = await fetch("get_payment_status.php?id=" + order.id);
+        const data = await res.json();
+
+        if (!data.success) return;
+
+        if (data.status_bayar === "sudah bayar") {
+          clearInterval(pollingInterval);
+          showConfirmedUI(data.metode || "transfer");
+        } else if (data.status_bayar === "belum bayar") {
+          // Kasir tolak — status kembali ke belum bayar
+          clearInterval(pollingInterval);
+          showRejectedUI();
+        }
+        // Jika masih 'menunggu verifikasi' → lanjut polling
+      } catch (err) {
+        // Network error — diam saja, polling tetap jalan
+      }
+    }
+
+    // Mulai polling tiap 3 detik
+    pollingInterval = setInterval(pollPaymentStatus, 3000);
+  }
+
 }); // end DOMContentLoaded

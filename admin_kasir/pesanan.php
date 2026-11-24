@@ -15,6 +15,7 @@ if ($page < 1) $page = 1;
 $start = ($page - 1) * $limit;
 
 // Hitung total data
+// Tampilkan: pesanan aktif (pending/diproses) + selesai yang belum/menunggu bayar
 $countSql = "
   SELECT COUNT(DISTINCT t.id_transaksi) as total
   FROM transaksi t
@@ -29,7 +30,10 @@ $countSql = "
   ) pm ON t.id_transaksi = pm.id_transaksi
   WHERE 
     t.status_pesanan IN ('pending','diproses')
-    OR (t.status_pesanan = 'selesai' AND (pm.status IS NULL OR pm.status <> 'sudah bayar'))
+    OR (
+      t.status_pesanan = 'selesai' 
+      AND (pm.status IS NULL OR pm.status NOT IN ('sudah bayar'))
+    )
 ";
 $countRes = mysqli_query($conn, $countSql);
 $totalRow = mysqli_fetch_assoc($countRes)['total'];
@@ -81,7 +85,10 @@ function renderPesananTable($conn, $start, $limit) {
       ) pm ON t.id_transaksi = pm.id_transaksi
       WHERE 
         t.status_pesanan IN ('pending','diproses')
-        OR (t.status_pesanan = 'selesai' AND (pm.status IS NULL OR pm.status <> 'sudah bayar'))
+        OR (
+          t.status_pesanan = 'selesai' 
+          AND (pm.status IS NULL OR pm.status NOT IN ('sudah bayar'))
+        )
       GROUP BY t.id_transaksi
       ORDER BY t.waktu_pemesanan ASC
       LIMIT $start, $limit
@@ -129,26 +136,48 @@ function renderPesananTable($conn, $start, $limit) {
             // Status pembayaran
             $stat_bayar = strtolower(trim($row['status_pembayaran'] ?? ''));
             if ($stat_bayar === 'sudah bayar') {
-                $status_bayar_text = 'Sudah Bayar';
+                $status_bayar_text  = 'Sudah Bayar';
                 $status_bayar_class = 'badge-success';
+            } elseif ($stat_bayar === 'menunggu verifikasi') {
+                $status_bayar_text  = 'Menunggu Verifikasi';
+                $status_bayar_class = 'badge-warning';
             } else {
-                $status_bayar_text = 'Belum Bayar';
+                $status_bayar_text  = 'Belum Bayar';
                 $status_bayar_class = 'badge-danger';
             }
             echo "<td class='status-bayar'><span class='badge {$status_bayar_class}'>".$status_bayar_text."</span></td>";
 
-            // Tombol aksi — hanya tampil jika metode cash/belum ada (bayar di kasir)
+            // Tombol aksi
             echo "<td class='aksi-bayar'>";
-            if ($stat_bayar !== 'sudah bayar' && ($metode_clean === 'cash' || empty($metode_clean))) {
-                echo "<button type='button' class='btn btn-success btn-bayar-kasir' data-id='{$id}' data-total='Rp ".number_format($row['total'], 0, ',', '.')."'>Tandai Dibayar</button>";
-            } elseif ($stat_bayar === 'sudah bayar') {
-                echo "<span style='color: gray; font-weight: bold;'>Telah Dibayar</span>";
+            if ($stat_bayar === 'sudah bayar') {
+                // Sudah selesai — tidak ada tombol
+                echo "<span style='color:gray; font-weight:bold;'>Telah Dibayar</span>";
+            } elseif ($stat_bayar === 'menunggu verifikasi' && ($metode_clean === 'transfer' || $metode_clean === 'qris')) {
+                // Transfer / QRIS — kasir perlu verifikasi bukti dulu
+                $total_fmt = number_format($row['total'], 0, ',', '.');
+                echo "<div style='display:flex; flex-direction:column; gap:6px;'>";
+                echo "<button type='button' class='btn btn-success btn-konfirmasi-bukti' 
+                        data-id='{$id}' data-total='Rp {$total_fmt}' 
+                        style='font-size:12px; padding:6px 10px;'>
+                        <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M22 11.08V12a10 10 0 1 1-5.93-9.14\"/><polyline points=\"22 4 12 14.01 9 11.01\"/></svg>
+                        Konfirmasi</button>";
+                echo "<button type='button' class='btn btn-danger btn-tolak-bukti' 
+                        data-id='{$id}' 
+                        style='font-size:12px; padding:6px 10px; background:#ef4444; color:#fff; border:none; border-radius:8px; cursor:pointer;'>
+                        <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"15\" y1=\"9\" x2=\"9\" y2=\"15\"/><line x1=\"9\" y1=\"9\" x2=\"15\" y2=\"15\"/></svg>
+                        Tolak</button>";
+                echo "</div>";
+            } elseif ($metode_clean === 'cash' || empty($metode_clean)) {
+                // Cash — kasir konfirmasi saat terima uang tunai
+                $total_fmt = number_format($row['total'], 0, ',', '.');
+                echo "<button type='button' class='btn btn-success btn-bayar-kasir' 
+                        data-id='{$id}' data-total='Rp {$total_fmt}'>Tandai Dibayar</button>";
             } else {
                 echo "<span style='color:#94a3b8; font-size:13px;'>—</span>";
             }
             echo "</td>";
 
-            // ✅ Bukti Pembayaran dengan modal preview
+            // Bukti Pembayaran dengan modal preview
             echo "<td>";
             if (!empty($row['bukti_file'])) {
                 $bukti_path = "../uploads/" . htmlspecialchars($row['bukti_file']);
@@ -158,11 +187,11 @@ function renderPesananTable($conn, $start, $limit) {
                              style='width:60px; height:auto; border-radius:5px; border:1px solid #ccc; cursor:pointer; display:block; margin:0 auto;'>";
             } else {
                 if ($stat_bayar !== 'sudah bayar') {
-                    echo "<span style='color:gray; display:block; margin-bottom:8px;'>Bayar dikasir</span>";
+                    echo "<span style='color:gray; display:block; margin-bottom:8px;'>Bayar di kasir</span>";
                 }
             }
 
-            // Tampilkan tombol struk hanya jika metode adalah cash/belum diisi (bayar di kasir) DAN statusnya sudah bayar
+            // Tombol struk — hanya untuk cash yang sudah bayar
             if (($metode_clean === 'cash' || empty($metode_clean)) && $stat_bayar === 'sudah bayar') {
                 echo "<button type='button' class='btn-cetak-struk' data-id='{$id}'><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-printer\"><polyline points=\"6 9 6 2 18 2 18 9\"></polyline><path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\"></path><rect x=\"6\" y=\"14\" width=\"12\" height=\"8\"></rect></svg>Cetak Struk</button>";
             }
@@ -428,6 +457,10 @@ if (isset($_GET['ajax'])) {
       function closeBayarModal() {
         bayarModal.style.display = "none";
         bayarConfirmOk.onclick = null;
+        // Reset tampilan tombol ke default hijau (kalau sempat diubah saat aksi tolak)
+        bayarConfirmOk.style.background    = "linear-gradient(135deg,#10b981,#059669)";
+        bayarConfirmOk.style.boxShadow     = "0 4px 12px rgba(16,185,129,0.3)";
+        bayarConfirmOk.textContent         = "Ya, Tandai Dibayar";
       }
 
       bayarConfirmCancel.addEventListener("click", closeBayarModal);
@@ -564,6 +597,77 @@ if (isset($_GET['ajax'])) {
           };
         }
         
+        // ✅ Konfirmasi bukti transfer/QRIS
+        if (e.target.classList.contains("btn-konfirmasi-bukti")) {
+          e.stopPropagation();
+          const id    = e.target.getAttribute("data-id");
+          const total = e.target.getAttribute("data-total") || "";
+          const noMeja = e.target.closest("tr")?.querySelector("td")?.textContent?.trim() || "#"+id;
+
+          const modal = document.getElementById("bayarConfirmModal");
+          document.getElementById("bayarConfirmText").innerHTML =
+            `Konfirmasi bukti pembayaran pesanan <strong>Meja ${noMeja}</strong> senilai <strong style="color:#10b981">${total}</strong> sebagai <strong>Sudah Dibayar</strong>?`;
+          modal.style.display = "flex";
+
+          bayarConfirmOk.onclick = function() {
+            closeBayarModal();
+            fetch("update_pembayaran.php", {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: "id_transaksi=" + id + "&status=dibayar"
+            })
+            .then(res => res.json())
+            .then(data => {
+              if (data.status === 'success') {
+                loadPesanan();
+              } else {
+                alert("Gagal: " + data.message);
+              }
+            })
+            .catch(() => alert("Gagal memperbarui status pembayaran."));
+          };
+        }
+
+        // ✅ Tolak bukti transfer/QRIS
+        if (e.target.classList.contains("btn-tolak-bukti")) {
+          e.stopPropagation();
+          const id    = e.target.getAttribute("data-id");
+          const noMeja = e.target.closest("tr")?.querySelector("td")?.textContent?.trim() || "#"+id;
+
+          const modal = document.getElementById("bayarConfirmModal");
+          // Ganti warna tombol konfirmasi jadi merah untuk aksi tolak
+          bayarConfirmOk.style.background = "linear-gradient(135deg,#ef4444,#dc2626)";
+          bayarConfirmOk.style.boxShadow  = "0 4px 12px rgba(239,68,68,0.3)";
+          bayarConfirmOk.textContent = "Ya, Tolak Bukti";
+
+          document.getElementById("bayarConfirmText").innerHTML =
+            `Tolak bukti pembayaran pesanan <strong>Meja ${noMeja}</strong>?<br><small style="color:#ef4444">Customer akan diminta upload ulang bukti pembayaran.</small>`;
+          modal.style.display = "flex";
+
+          bayarConfirmOk.onclick = function() {
+            // Reset tampilan tombol
+            bayarConfirmOk.style.background = "linear-gradient(135deg,#10b981,#059669)";
+            bayarConfirmOk.style.boxShadow  = "0 4px 12px rgba(16,185,129,0.3)";
+            bayarConfirmOk.textContent = "Ya, Tandai Dibayar";
+            closeBayarModal();
+
+            fetch("update_pembayaran.php", {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: "id_transaksi=" + id + "&status=tolak"
+            })
+            .then(res => res.json())
+            .then(data => {
+              if (data.status === 'success') {
+                loadPesanan();
+              } else {
+                alert("Gagal: " + data.message);
+              }
+            })
+            .catch(() => alert("Gagal menolak bukti pembayaran."));
+          };
+        }
+
         // ✅ Klik Cetak Struk
         const cetakBtn = e.target.closest(".btn-cetak-struk");
         if (cetakBtn) {

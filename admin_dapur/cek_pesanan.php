@@ -1,5 +1,12 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) session_start();
 include "../koneksi.php";
+
+// Validasi session — hanya dapur yang boleh akses
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'dapur') {
+    echo json_encode(["ada_pesanan" => false, "id" => null]);
+    exit;
+}
 
 // 🔍 Ambil transaksi terakhir yang SUDAH MASUK KE KASIR/DAPUR
 $sql = "

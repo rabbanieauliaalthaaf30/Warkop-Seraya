@@ -676,3 +676,56 @@ input[type="file"]::file-selector-button:hover {
   .total-amount { font-size: 24px; }
   .btn { padding: 12px 15px; font-size: 14px; }
 }
+
+/* ================= INFO BANNER (status verifikasi) ================= */
+.info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  line-height: 1.5;
+  animation: floatIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.info-banner__icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.info-banner strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.info-banner p {
+  margin: 0;
+  color: inherit;
+  opacity: 0.85;
+}
+
+/* Waiting — kuning */
+.info-banner--waiting {
+  background: #fffbeb;
+  border: 1.5px solid #fcd34d;
+  color: #92400e;
+}
+
+/* Success — hijau */
+.info-banner--success {
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  color: #14532d;
+}
+
+/* Rejected — merah */
+.info-banner--rejected {
+  background: #fff1f2;
+  border: 1.5px solid #fca5a5;
+  color: #991b1b;
+}

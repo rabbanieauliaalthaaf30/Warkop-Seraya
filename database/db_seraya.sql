@@ -588,7 +588,7 @@ CREATE TABLE `pembayaran` (
   `id_transaksi` int NOT NULL,
   `metode` enum('cash','transfer','qris') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'cash',
   `jumlah` decimal(10,2) NOT NULL,
-  `status` enum('belum bayar','sudah bayar') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'belum bayar',
+  `status` enum('belum bayar','menunggu verifikasi','sudah bayar') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'belum bayar',
   `waktu_bayar` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `email` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `bukti_file` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
